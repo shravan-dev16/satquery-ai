@@ -1,0 +1,1729 @@
+{
+  "benchmark_type": "formal_levir_cd_validation",
+  "manifest_path": "docs/evaluation/levir_cd_subset.json",
+  "sample_count": 20,
+  "models": {
+    "TinyCD": {
+      "benchmark_id": "bm_levir_cd_subset_tinycd",
+      "model_name": "TinyCD",
+      "model_type": "neural_siamese_attention",
+      "manifest_id": "levir_cd_subset",
+      "dataset_name": "LEVIR-CD",
+      "total_samples": 20,
+      "quantitative_samples": 20,
+      "qualitative_samples": 0,
+      "hardware": {
+        "device": "cuda",
+        "gpu_name": "NVIDIA GeForce RTX 4070 SUPER",
+        "cuda_version": "12.4"
+      },
+      "latency": {
+        "mean_ms": 95.45,
+        "median_ms": 93.99,
+        "min_ms": 89.27,
+        "max_ms": 116.45
+      },
+      "peak_vram_mb": 219.4,
+      "macro_metrics": {
+        "sample_count": 20,
+        "mean_iou": 0.8347,
+        "median_iou": 0.8526,
+        "std_iou": 0.0475,
+        "min_iou": 0.7233,
+        "max_iou": 0.8846,
+        "mean_precision": 0.9216,
+        "median_precision": 0.9224,
+        "std_precision": 0.028,
+        "min_precision": 0.8328,
+        "max_precision": 0.9532,
+        "mean_recall": 0.8985,
+        "median_recall": 0.9109,
+        "std_recall": 0.0448,
+        "min_recall": 0.7564,
+        "max_recall": 0.9388,
+        "mean_f1": 0.9091,
+        "median_f1": 0.9205,
+        "std_f1": 0.029,
+        "min_f1": 0.8394,
+        "max_f1": 0.9388,
+        "mean_fpr": 0.0052,
+        "empty_prediction_rate": 0.0,
+        "full_image_prediction_rate": 0.0
+      },
+      "pixel_global_metrics": {
+        "sample_count": 20,
+        "total_pixels": 20971520,
+        "total_tp": 1234635,
+        "total_fp": 97994,
+        "total_fn": 118260,
+        "total_tn": 19520631,
+        "global_iou": 0.851,
+        "global_precision": 0.9265,
+        "global_recall": 0.9126,
+        "global_f1": 0.9195,
+        "global_fpr": 0.005,
+        "global_changed_pixel_ratio": 0.0635
+      },
+      "failure_distribution": {
+        "unclassified_failure": 4
+      },
+      "per_sample_results": [
+        {
+          "sample_id": "levir_cd_val_001",
+          "filename": "val_1.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 103.0,
+          "predicted_changed_pixels": 5821,
+          "predicted_change_ratio_pct": 0.5551,
+          "ground_truth_changed_pixels": 7257,
+          "metrics": {
+            "iou": 0.7233,
+            "precision": 0.943,
+            "recall": 0.7564,
+            "f1": 0.8394,
+            "false_positive_ratio": 0.0003,
+            "changed_pixel_ratio": 0.0056,
+            "confusion": {
+              "tp": 5489,
+              "fp": 332,
+              "fn": 1768,
+              "tn": 1040987,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_001",
+            "category": "unclassified_failure",
+            "severity": 0.1606,
+            "rationale": "Unclassified error (F1=0.8394, IoU=0.7233).",
+            "metrics_summary": {
+              "iou": 0.7233,
+              "precision": 0.943,
+              "recall": 0.7564,
+              "f1": 0.8394,
+              "fpr": 0.0003
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_002",
+          "filename": "val_2.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 101.3,
+          "predicted_changed_pixels": 26614,
+          "predicted_change_ratio_pct": 2.5381,
+          "ground_truth_changed_pixels": 26546,
+          "metrics": {
+            "iou": 0.8415,
+            "precision": 0.9128,
+            "recall": 0.9151,
+            "f1": 0.914,
+            "false_positive_ratio": 0.0023,
+            "changed_pixel_ratio": 0.0254,
+            "confusion": {
+              "tp": 24293,
+              "fp": 2321,
+              "fn": 2253,
+              "tn": 1019709,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_003",
+          "filename": "val_3.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 99.46,
+          "predicted_changed_pixels": 35101,
+          "predicted_change_ratio_pct": 3.3475,
+          "ground_truth_changed_pixels": 35849,
+          "metrics": {
+            "iou": 0.8803,
+            "precision": 0.9463,
+            "recall": 0.9266,
+            "f1": 0.9363,
+            "false_positive_ratio": 0.0019,
+            "changed_pixel_ratio": 0.0335,
+            "confusion": {
+              "tp": 33217,
+              "fp": 1884,
+              "fn": 2632,
+              "tn": 1010843,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_004",
+          "filename": "val_4.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 116.45,
+          "predicted_changed_pixels": 65021,
+          "predicted_change_ratio_pct": 6.2009,
+          "ground_truth_changed_pixels": 65813,
+          "metrics": {
+            "iou": 0.8833,
+            "precision": 0.9438,
+            "recall": 0.9324,
+            "f1": 0.938,
+            "false_positive_ratio": 0.0037,
+            "changed_pixel_ratio": 0.062,
+            "confusion": {
+              "tp": 61364,
+              "fp": 3657,
+              "fn": 4449,
+              "tn": 979106,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_005",
+          "filename": "val_5.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 93.46,
+          "predicted_changed_pixels": 49254,
+          "predicted_change_ratio_pct": 4.6972,
+          "ground_truth_changed_pixels": 48689,
+          "metrics": {
+            "iou": 0.8564,
+            "precision": 0.9173,
+            "recall": 0.928,
+            "f1": 0.9226,
+            "false_positive_ratio": 0.0041,
+            "changed_pixel_ratio": 0.047,
+            "confusion": {
+              "tp": 45183,
+              "fp": 4071,
+              "fn": 3506,
+              "tn": 995816,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_006",
+          "filename": "val_6.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 93.06,
+          "predicted_changed_pixels": 46979,
+          "predicted_change_ratio_pct": 4.4803,
+          "ground_truth_changed_pixels": 45235,
+          "metrics": {
+            "iou": 0.8503,
+            "precision": 0.902,
+            "recall": 0.9368,
+            "f1": 0.9191,
+            "false_positive_ratio": 0.0046,
+            "changed_pixel_ratio": 0.0448,
+            "confusion": {
+              "tp": 42377,
+              "fp": 4602,
+              "fn": 2858,
+              "tn": 998739,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_007",
+          "filename": "val_7.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 89.27,
+          "predicted_changed_pixels": 153265,
+          "predicted_change_ratio_pct": 14.6165,
+          "ground_truth_changed_pixels": 148033,
+          "metrics": {
+            "iou": 0.8561,
+            "precision": 0.9067,
+            "recall": 0.9388,
+            "f1": 0.9225,
+            "false_positive_ratio": 0.0159,
+            "changed_pixel_ratio": 0.1462,
+            "confusion": {
+              "tp": 138968,
+              "fp": 14297,
+              "fn": 9065,
+              "tn": 886246,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_007",
+            "category": "unclassified_failure",
+            "severity": 0.0775,
+            "rationale": "Unclassified error (F1=0.9225, IoU=0.8561).",
+            "metrics_summary": {
+              "iou": 0.8561,
+              "precision": 0.9067,
+              "recall": 0.9388,
+              "f1": 0.9225,
+              "fpr": 0.0159
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_008",
+          "filename": "val_8.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 89.8,
+          "predicted_changed_pixels": 70271,
+          "predicted_change_ratio_pct": 6.7016,
+          "ground_truth_changed_pixels": 73746,
+          "metrics": {
+            "iou": 0.8696,
+            "precision": 0.9532,
+            "recall": 0.9083,
+            "f1": 0.9302,
+            "false_positive_ratio": 0.0034,
+            "changed_pixel_ratio": 0.067,
+            "confusion": {
+              "tp": 66985,
+              "fp": 3286,
+              "fn": 6761,
+              "tn": 971544,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_009",
+          "filename": "val_9.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 92.56,
+          "predicted_changed_pixels": 37045,
+          "predicted_change_ratio_pct": 3.5329,
+          "ground_truth_changed_pixels": 37356,
+          "metrics": {
+            "iou": 0.8713,
+            "precision": 0.9352,
+            "recall": 0.9274,
+            "f1": 0.9313,
+            "false_positive_ratio": 0.0024,
+            "changed_pixel_ratio": 0.0353,
+            "confusion": {
+              "tp": 34643,
+              "fp": 2402,
+              "fn": 2713,
+              "tn": 1008818,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_010",
+          "filename": "val_10.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 94.65,
+          "predicted_changed_pixels": 25421,
+          "predicted_change_ratio_pct": 2.4243,
+          "ground_truth_changed_pixels": 24233,
+          "metrics": {
+            "iou": 0.7433,
+            "precision": 0.8328,
+            "recall": 0.8736,
+            "f1": 0.8527,
+            "false_positive_ratio": 0.0041,
+            "changed_pixel_ratio": 0.0242,
+            "confusion": {
+              "tp": 21171,
+              "fp": 4250,
+              "fn": 3062,
+              "tn": 1020093,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_011",
+          "filename": "val_11.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 94.42,
+          "predicted_changed_pixels": 35337,
+          "predicted_change_ratio_pct": 3.37,
+          "ground_truth_changed_pixels": 40434,
+          "metrics": {
+            "iou": 0.7621,
+            "precision": 0.9274,
+            "recall": 0.8105,
+            "f1": 0.865,
+            "false_positive_ratio": 0.0025,
+            "changed_pixel_ratio": 0.0337,
+            "confusion": {
+              "tp": 32771,
+              "fp": 2566,
+              "fn": 7663,
+              "tn": 1005576,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_012",
+          "filename": "val_12.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 93.81,
+          "predicted_changed_pixels": 52925,
+          "predicted_change_ratio_pct": 5.0473,
+          "ground_truth_changed_pixels": 53678,
+          "metrics": {
+            "iou": 0.8228,
+            "precision": 0.9092,
+            "recall": 0.8964,
+            "f1": 0.9028,
+            "false_positive_ratio": 0.0048,
+            "changed_pixel_ratio": 0.0505,
+            "confusion": {
+              "tp": 48119,
+              "fp": 4806,
+              "fn": 5559,
+              "tn": 990092,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_013",
+          "filename": "val_13.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 93.21,
+          "predicted_changed_pixels": 44723,
+          "predicted_change_ratio_pct": 4.2651,
+          "ground_truth_changed_pixels": 44247,
+          "metrics": {
+            "iou": 0.8141,
+            "precision": 0.8927,
+            "recall": 0.9023,
+            "f1": 0.8975,
+            "false_positive_ratio": 0.0048,
+            "changed_pixel_ratio": 0.0427,
+            "confusion": {
+              "tp": 39926,
+              "fp": 4797,
+              "fn": 4321,
+              "tn": 999532,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_014",
+          "filename": "val_14.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 93.46,
+          "predicted_changed_pixels": 44211,
+          "predicted_change_ratio_pct": 4.2163,
+          "ground_truth_changed_pixels": 46558,
+          "metrics": {
+            "iou": 0.7711,
+            "precision": 0.8939,
+            "recall": 0.8488,
+            "f1": 0.8708,
+            "false_positive_ratio": 0.0047,
+            "changed_pixel_ratio": 0.0422,
+            "confusion": {
+              "tp": 39520,
+              "fp": 4691,
+              "fn": 7038,
+              "tn": 997327,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_015",
+          "filename": "val_15.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 95.23,
+          "predicted_changed_pixels": 79911,
+          "predicted_change_ratio_pct": 7.6209,
+          "ground_truth_changed_pixels": 82670,
+          "metrics": {
+            "iou": 0.8804,
+            "precision": 0.9526,
+            "recall": 0.9208,
+            "f1": 0.9364,
+            "false_positive_ratio": 0.0039,
+            "changed_pixel_ratio": 0.0762,
+            "confusion": {
+              "tp": 76120,
+              "fp": 3791,
+              "fn": 6550,
+              "tn": 962115,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_016",
+          "filename": "val_16.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 94.68,
+          "predicted_changed_pixels": 34556,
+          "predicted_change_ratio_pct": 3.2955,
+          "ground_truth_changed_pixels": 35633,
+          "metrics": {
+            "iou": 0.8202,
+            "precision": 0.9153,
+            "recall": 0.8876,
+            "f1": 0.9012,
+            "false_positive_ratio": 0.0029,
+            "changed_pixel_ratio": 0.033,
+            "confusion": {
+              "tp": 31628,
+              "fp": 2928,
+              "fn": 4005,
+              "tn": 1010015,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_017",
+          "filename": "val_17.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 90.32,
+          "predicted_changed_pixels": 148521,
+          "predicted_change_ratio_pct": 14.1641,
+          "ground_truth_changed_pixels": 149133,
+          "metrics": {
+            "iou": 0.8421,
+            "precision": 0.9162,
+            "recall": 0.9124,
+            "f1": 0.9143,
+            "false_positive_ratio": 0.0138,
+            "changed_pixel_ratio": 0.1416,
+            "confusion": {
+              "tp": 136069,
+              "fp": 12452,
+              "fn": 13064,
+              "tn": 886991,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_017",
+            "category": "unclassified_failure",
+            "severity": 0.0857,
+            "rationale": "Unclassified error (F1=0.9143, IoU=0.8421).",
+            "metrics_summary": {
+              "iou": 0.8421,
+              "precision": 0.9162,
+              "recall": 0.9124,
+              "f1": 0.9143,
+              "fpr": 0.0138
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_018",
+          "filename": "val_18.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 91.0,
+          "predicted_changed_pixels": 103915,
+          "predicted_change_ratio_pct": 9.9101,
+          "ground_truth_changed_pixels": 107182,
+          "metrics": {
+            "iou": 0.855,
+            "precision": 0.9363,
+            "recall": 0.9078,
+            "f1": 0.9219,
+            "false_positive_ratio": 0.007,
+            "changed_pixel_ratio": 0.0991,
+            "confusion": {
+              "tp": 97300,
+              "fp": 6615,
+              "fn": 9882,
+              "tn": 934779,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_019",
+          "filename": "val_19.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 95.72,
+          "predicted_changed_pixels": 64220,
+          "predicted_change_ratio_pct": 6.1245,
+          "ground_truth_changed_pixels": 66902,
+          "metrics": {
+            "iou": 0.8657,
+            "precision": 0.9474,
+            "recall": 0.9094,
+            "f1": 0.928,
+            "false_positive_ratio": 0.0034,
+            "changed_pixel_ratio": 0.0612,
+            "confusion": {
+              "tp": 60843,
+              "fp": 3377,
+              "fn": 6059,
+              "tn": 978297,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_020",
+          "filename": "val_20.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 94.16,
+          "predicted_changed_pixels": 209518,
+          "predicted_change_ratio_pct": 19.9812,
+          "ground_truth_changed_pixels": 213701,
+          "metrics": {
+            "iou": 0.8846,
+            "precision": 0.9481,
+            "recall": 0.9296,
+            "f1": 0.9388,
+            "false_positive_ratio": 0.013,
+            "changed_pixel_ratio": 0.1998,
+            "confusion": {
+              "tp": 198649,
+              "fp": 10869,
+              "fn": 15052,
+              "tn": 824006,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_020",
+            "category": "unclassified_failure",
+            "severity": 0.0612,
+            "rationale": "Unclassified error (F1=0.9388, IoU=0.8846).",
+            "metrics_summary": {
+              "iou": 0.8846,
+              "precision": 0.9481,
+              "recall": 0.9296,
+              "f1": 0.9388,
+              "fpr": 0.013
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        }
+      ],
+      "conclusions": {
+        "evaluated_samples": 20,
+        "quantitative_evaluated": 20,
+        "qualitative_evaluated": 0,
+        "total_failure_diagnoses": 4,
+        "primary_failure_mode": "unclassified_failure"
+      }
+    },
+    "CVA_Baseline": {
+      "benchmark_id": "bm_levir_cd_subset_cva_baseline",
+      "model_name": "CVA_Baseline",
+      "model_type": "deterministic_cva",
+      "manifest_id": "levir_cd_subset",
+      "dataset_name": "LEVIR-CD",
+      "total_samples": 20,
+      "quantitative_samples": 20,
+      "qualitative_samples": 0,
+      "hardware": {
+        "device": "cuda",
+        "gpu_name": "NVIDIA GeForce RTX 4070 SUPER",
+        "cuda_version": "12.4"
+      },
+      "latency": {
+        "mean_ms": 52.64,
+        "median_ms": 52.69,
+        "min_ms": 49.51,
+        "max_ms": 54.95
+      },
+      "peak_vram_mb": 0.0,
+      "macro_metrics": {
+        "sample_count": 20,
+        "mean_iou": 0.0327,
+        "median_iou": 0.022,
+        "std_iou": 0.0273,
+        "min_iou": 0.0059,
+        "max_iou": 0.0934,
+        "mean_precision": 0.0913,
+        "median_precision": 0.0568,
+        "std_precision": 0.0907,
+        "min_precision": 0.0107,
+        "max_precision": 0.3407,
+        "mean_recall": 0.0547,
+        "median_recall": 0.0385,
+        "std_recall": 0.0461,
+        "min_recall": 0.0093,
+        "max_recall": 0.1879,
+        "mean_f1": 0.0619,
+        "median_f1": 0.043,
+        "std_f1": 0.0499,
+        "min_f1": 0.0117,
+        "max_f1": 0.1709,
+        "mean_fpr": 0.0346,
+        "empty_prediction_rate": 0.0,
+        "full_image_prediction_rate": 0.0
+      },
+      "pixel_global_metrics": {
+        "sample_count": 20,
+        "total_pixels": 20971520,
+        "total_tp": 83012,
+        "total_fp": 674153,
+        "total_fn": 1269883,
+        "total_tn": 18944472,
+        "global_iou": 0.041,
+        "global_precision": 0.1096,
+        "global_recall": 0.0614,
+        "global_f1": 0.0787,
+        "global_fpr": 0.0344,
+        "global_changed_pixel_ratio": 0.0361
+      },
+      "failure_distribution": {
+        "boundary_error": 20
+      },
+      "per_sample_results": [
+        {
+          "sample_id": "levir_cd_val_001",
+          "filename": "val_1.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 50.87,
+          "predicted_changed_pixels": 23999,
+          "predicted_change_ratio_pct": 2.2887,
+          "ground_truth_changed_pixels": 7257,
+          "metrics": {
+            "iou": 0.017,
+            "precision": 0.0218,
+            "recall": 0.0719,
+            "f1": 0.0334,
+            "false_positive_ratio": 0.0225,
+            "changed_pixel_ratio": 0.0229,
+            "confusion": {
+              "tp": 522,
+              "fp": 23477,
+              "fn": 6735,
+              "tn": 1017842,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_001",
+            "category": "boundary_error",
+            "severity": 0.9666,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0170).",
+            "metrics_summary": {
+              "iou": 0.017,
+              "precision": 0.0218,
+              "recall": 0.0719,
+              "f1": 0.0334,
+              "fpr": 0.0225
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_002",
+          "filename": "val_2.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 50.9,
+          "predicted_changed_pixels": 31545,
+          "predicted_change_ratio_pct": 3.0084,
+          "ground_truth_changed_pixels": 26546,
+          "metrics": {
+            "iou": 0.0068,
+            "precision": 0.0124,
+            "recall": 0.0147,
+            "f1": 0.0135,
+            "false_positive_ratio": 0.0305,
+            "changed_pixel_ratio": 0.0301,
+            "confusion": {
+              "tp": 391,
+              "fp": 31154,
+              "fn": 26155,
+              "tn": 990876,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_002",
+            "category": "boundary_error",
+            "severity": 0.9865,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0068).",
+            "metrics_summary": {
+              "iou": 0.0068,
+              "precision": 0.0124,
+              "recall": 0.0147,
+              "f1": 0.0135,
+              "fpr": 0.0305
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_003",
+          "filename": "val_3.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 52.92,
+          "predicted_changed_pixels": 29611,
+          "predicted_change_ratio_pct": 2.8239,
+          "ground_truth_changed_pixels": 35849,
+          "metrics": {
+            "iou": 0.0228,
+            "precision": 0.0494,
+            "recall": 0.0408,
+            "f1": 0.0447,
+            "false_positive_ratio": 0.0278,
+            "changed_pixel_ratio": 0.0282,
+            "confusion": {
+              "tp": 1462,
+              "fp": 28149,
+              "fn": 34387,
+              "tn": 984578,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_003",
+            "category": "boundary_error",
+            "severity": 0.9553,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0228).",
+            "metrics_summary": {
+              "iou": 0.0228,
+              "precision": 0.0494,
+              "recall": 0.0408,
+              "f1": 0.0447,
+              "fpr": 0.0278
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_004",
+          "filename": "val_4.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 52.55,
+          "predicted_changed_pixels": 49054,
+          "predicted_change_ratio_pct": 4.6782,
+          "ground_truth_changed_pixels": 65813,
+          "metrics": {
+            "iou": 0.0282,
+            "precision": 0.0643,
+            "recall": 0.0479,
+            "f1": 0.0549,
+            "false_positive_ratio": 0.0467,
+            "changed_pixel_ratio": 0.0468,
+            "confusion": {
+              "tp": 3153,
+              "fp": 45901,
+              "fn": 62660,
+              "tn": 936862,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_004",
+            "category": "boundary_error",
+            "severity": 0.9451,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0282).",
+            "metrics_summary": {
+              "iou": 0.0282,
+              "precision": 0.0643,
+              "recall": 0.0479,
+              "f1": 0.0549,
+              "fpr": 0.0467
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_005",
+          "filename": "val_5.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 49.51,
+          "predicted_changed_pixels": 24881,
+          "predicted_change_ratio_pct": 2.3728,
+          "ground_truth_changed_pixels": 48689,
+          "metrics": {
+            "iou": 0.0108,
+            "precision": 0.0317,
+            "recall": 0.0162,
+            "f1": 0.0214,
+            "false_positive_ratio": 0.0241,
+            "changed_pixel_ratio": 0.0237,
+            "confusion": {
+              "tp": 789,
+              "fp": 24092,
+              "fn": 47900,
+              "tn": 975795,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_005",
+            "category": "boundary_error",
+            "severity": 0.9786,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0108).",
+            "metrics_summary": {
+              "iou": 0.0108,
+              "precision": 0.0317,
+              "recall": 0.0162,
+              "f1": 0.0214,
+              "fpr": 0.0241
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_006",
+          "filename": "val_6.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 53.56,
+          "predicted_changed_pixels": 25826,
+          "predicted_change_ratio_pct": 2.463,
+          "ground_truth_changed_pixels": 45235,
+          "metrics": {
+            "iou": 0.0542,
+            "precision": 0.1414,
+            "recall": 0.0807,
+            "f1": 0.1028,
+            "false_positive_ratio": 0.0221,
+            "changed_pixel_ratio": 0.0246,
+            "confusion": {
+              "tp": 3651,
+              "fp": 22175,
+              "fn": 41584,
+              "tn": 981166,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_006",
+            "category": "boundary_error",
+            "severity": 0.8972,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0542).",
+            "metrics_summary": {
+              "iou": 0.0542,
+              "precision": 0.1414,
+              "recall": 0.0807,
+              "f1": 0.1028,
+              "fpr": 0.0221
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_007",
+          "filename": "val_7.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 51.83,
+          "predicted_changed_pixels": 44992,
+          "predicted_change_ratio_pct": 4.2908,
+          "ground_truth_changed_pixels": 148033,
+          "metrics": {
+            "iou": 0.0863,
+            "precision": 0.3407,
+            "recall": 0.1036,
+            "f1": 0.1588,
+            "false_positive_ratio": 0.0329,
+            "changed_pixel_ratio": 0.0429,
+            "confusion": {
+              "tp": 15330,
+              "fp": 29662,
+              "fn": 132703,
+              "tn": 870881,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_007",
+            "category": "boundary_error",
+            "severity": 0.8412,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0863).",
+            "metrics_summary": {
+              "iou": 0.0863,
+              "precision": 0.3407,
+              "recall": 0.1036,
+              "f1": 0.1588,
+              "fpr": 0.0329
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_008",
+          "filename": "val_8.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 52.71,
+          "predicted_changed_pixels": 28872,
+          "predicted_change_ratio_pct": 2.7534,
+          "ground_truth_changed_pixels": 73746,
+          "metrics": {
+            "iou": 0.0098,
+            "precision": 0.0344,
+            "recall": 0.0135,
+            "f1": 0.0194,
+            "false_positive_ratio": 0.0286,
+            "changed_pixel_ratio": 0.0275,
+            "confusion": {
+              "tp": 993,
+              "fp": 27879,
+              "fn": 72753,
+              "tn": 946951,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_008",
+            "category": "boundary_error",
+            "severity": 0.9806,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0098).",
+            "metrics_summary": {
+              "iou": 0.0098,
+              "precision": 0.0344,
+              "recall": 0.0135,
+              "f1": 0.0194,
+              "fpr": 0.0286
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_009",
+          "filename": "val_9.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 53.01,
+          "predicted_changed_pixels": 44873,
+          "predicted_change_ratio_pct": 4.2794,
+          "ground_truth_changed_pixels": 37356,
+          "metrics": {
+            "iou": 0.0059,
+            "precision": 0.0107,
+            "recall": 0.0129,
+            "f1": 0.0117,
+            "false_positive_ratio": 0.0439,
+            "changed_pixel_ratio": 0.0428,
+            "confusion": {
+              "tp": 481,
+              "fp": 44392,
+              "fn": 36875,
+              "tn": 966828,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_009",
+            "category": "boundary_error",
+            "severity": 0.9883,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0059).",
+            "metrics_summary": {
+              "iou": 0.0059,
+              "precision": 0.0107,
+              "recall": 0.0129,
+              "f1": 0.0117,
+              "fpr": 0.0439
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_010",
+          "filename": "val_10.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 51.69,
+          "predicted_changed_pixels": 41989,
+          "predicted_change_ratio_pct": 4.0044,
+          "ground_truth_changed_pixels": 24233,
+          "metrics": {
+            "iou": 0.0117,
+            "precision": 0.0183,
+            "recall": 0.0317,
+            "f1": 0.0232,
+            "false_positive_ratio": 0.0402,
+            "changed_pixel_ratio": 0.04,
+            "confusion": {
+              "tp": 767,
+              "fp": 41222,
+              "fn": 23466,
+              "tn": 983121,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_010",
+            "category": "boundary_error",
+            "severity": 0.9768,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0117).",
+            "metrics_summary": {
+              "iou": 0.0117,
+              "precision": 0.0183,
+              "recall": 0.0317,
+              "f1": 0.0232,
+              "fpr": 0.0402
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_011",
+          "filename": "val_11.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 53.64,
+          "predicted_changed_pixels": 32185,
+          "predicted_change_ratio_pct": 3.0694,
+          "ground_truth_changed_pixels": 40434,
+          "metrics": {
+            "iou": 0.0199,
+            "precision": 0.044,
+            "recall": 0.035,
+            "f1": 0.039,
+            "false_positive_ratio": 0.0305,
+            "changed_pixel_ratio": 0.0307,
+            "confusion": {
+              "tp": 1415,
+              "fp": 30770,
+              "fn": 39019,
+              "tn": 977372,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_011",
+            "category": "boundary_error",
+            "severity": 0.961,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0199).",
+            "metrics_summary": {
+              "iou": 0.0199,
+              "precision": 0.044,
+              "recall": 0.035,
+              "f1": 0.039,
+              "fpr": 0.0305
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_012",
+          "filename": "val_12.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 52.66,
+          "predicted_changed_pixels": 31618,
+          "predicted_change_ratio_pct": 3.0153,
+          "ground_truth_changed_pixels": 53678,
+          "metrics": {
+            "iou": 0.0277,
+            "precision": 0.0728,
+            "recall": 0.0429,
+            "f1": 0.054,
+            "false_positive_ratio": 0.0295,
+            "changed_pixel_ratio": 0.0302,
+            "confusion": {
+              "tp": 2301,
+              "fp": 29317,
+              "fn": 51377,
+              "tn": 965581,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_012",
+            "category": "boundary_error",
+            "severity": 0.946,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0277).",
+            "metrics_summary": {
+              "iou": 0.0277,
+              "precision": 0.0728,
+              "recall": 0.0429,
+              "f1": 0.054,
+              "fpr": 0.0295
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_013",
+          "filename": "val_13.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 52.56,
+          "predicted_changed_pixels": 26208,
+          "predicted_change_ratio_pct": 2.4994,
+          "ground_truth_changed_pixels": 44247,
+          "metrics": {
+            "iou": 0.0426,
+            "precision": 0.1098,
+            "recall": 0.065,
+            "f1": 0.0817,
+            "false_positive_ratio": 0.0232,
+            "changed_pixel_ratio": 0.025,
+            "confusion": {
+              "tp": 2878,
+              "fp": 23330,
+              "fn": 41369,
+              "tn": 980999,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_013",
+            "category": "boundary_error",
+            "severity": 0.9183,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0426).",
+            "metrics_summary": {
+              "iou": 0.0426,
+              "precision": 0.1098,
+              "recall": 0.065,
+              "f1": 0.0817,
+              "fpr": 0.0232
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_014",
+          "filename": "val_14.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 52.02,
+          "predicted_changed_pixels": 35113,
+          "predicted_change_ratio_pct": 3.3486,
+          "ground_truth_changed_pixels": 46558,
+          "metrics": {
+            "iou": 0.0211,
+            "precision": 0.048,
+            "recall": 0.0362,
+            "f1": 0.0412,
+            "false_positive_ratio": 0.0334,
+            "changed_pixel_ratio": 0.0335,
+            "confusion": {
+              "tp": 1684,
+              "fp": 33429,
+              "fn": 44874,
+              "tn": 968589,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_014",
+            "category": "boundary_error",
+            "severity": 0.9588,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0211).",
+            "metrics_summary": {
+              "iou": 0.0211,
+              "precision": 0.048,
+              "recall": 0.0362,
+              "f1": 0.0412,
+              "fpr": 0.0334
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_015",
+          "filename": "val_15.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 53.58,
+          "predicted_changed_pixels": 25306,
+          "predicted_change_ratio_pct": 2.4134,
+          "ground_truth_changed_pixels": 82670,
+          "metrics": {
+            "iou": 0.0072,
+            "precision": 0.0304,
+            "recall": 0.0093,
+            "f1": 0.0142,
+            "false_positive_ratio": 0.0254,
+            "changed_pixel_ratio": 0.0241,
+            "confusion": {
+              "tp": 769,
+              "fp": 24537,
+              "fn": 81901,
+              "tn": 941369,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_015",
+            "category": "boundary_error",
+            "severity": 0.9858,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0072).",
+            "metrics_summary": {
+              "iou": 0.0072,
+              "precision": 0.0304,
+              "recall": 0.0093,
+              "f1": 0.0142,
+              "fpr": 0.0254
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_016",
+          "filename": "val_16.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 54.71,
+          "predicted_changed_pixels": 57533,
+          "predicted_change_ratio_pct": 5.4868,
+          "ground_truth_changed_pixels": 35633,
+          "metrics": {
+            "iou": 0.0774,
+            "precision": 0.1164,
+            "recall": 0.1879,
+            "f1": 0.1438,
+            "false_positive_ratio": 0.0502,
+            "changed_pixel_ratio": 0.0549,
+            "confusion": {
+              "tp": 6697,
+              "fp": 50836,
+              "fn": 28936,
+              "tn": 962107,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_016",
+            "category": "boundary_error",
+            "severity": 0.8562,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0774).",
+            "metrics_summary": {
+              "iou": 0.0774,
+              "precision": 0.1164,
+              "recall": 0.1879,
+              "f1": 0.1438,
+              "fpr": 0.0502
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_017",
+          "filename": "val_17.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 52.44,
+          "predicted_changed_pixels": 49521,
+          "predicted_change_ratio_pct": 4.7227,
+          "ground_truth_changed_pixels": 149133,
+          "metrics": {
+            "iou": 0.0275,
+            "precision": 0.1074,
+            "recall": 0.0357,
+            "f1": 0.0535,
+            "false_positive_ratio": 0.0491,
+            "changed_pixel_ratio": 0.0472,
+            "confusion": {
+              "tp": 5318,
+              "fp": 44203,
+              "fn": 143815,
+              "tn": 855240,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_017",
+            "category": "boundary_error",
+            "severity": 0.9465,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0275).",
+            "metrics_summary": {
+              "iou": 0.0275,
+              "precision": 0.1074,
+              "recall": 0.0357,
+              "f1": 0.0535,
+              "fpr": 0.0491
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_018",
+          "filename": "val_18.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 53.16,
+          "predicted_changed_pixels": 79014,
+          "predicted_change_ratio_pct": 7.5354,
+          "ground_truth_changed_pixels": 107182,
+          "metrics": {
+            "iou": 0.0934,
+            "precision": 0.2014,
+            "recall": 0.1484,
+            "f1": 0.1709,
+            "false_positive_ratio": 0.067,
+            "changed_pixel_ratio": 0.0754,
+            "confusion": {
+              "tp": 15911,
+              "fp": 63103,
+              "fn": 91271,
+              "tn": 878291,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_018",
+            "category": "boundary_error",
+            "severity": 0.8291,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0934).",
+            "metrics_summary": {
+              "iou": 0.0934,
+              "precision": 0.2014,
+              "recall": 0.1484,
+              "f1": 0.1709,
+              "fpr": 0.067
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_019",
+          "filename": "val_19.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 54.95,
+          "predicted_changed_pixels": 18323,
+          "predicted_change_ratio_pct": 1.7474,
+          "ground_truth_changed_pixels": 66902,
+          "metrics": {
+            "iou": 0.0146,
+            "precision": 0.0667,
+            "recall": 0.0183,
+            "f1": 0.0287,
+            "false_positive_ratio": 0.0174,
+            "changed_pixel_ratio": 0.0175,
+            "confusion": {
+              "tp": 1223,
+              "fp": 17100,
+              "fn": 65679,
+              "tn": 964574,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_019",
+            "category": "boundary_error",
+            "severity": 0.9713,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0146).",
+            "metrics_summary": {
+              "iou": 0.0146,
+              "precision": 0.0667,
+              "recall": 0.0183,
+              "f1": 0.0287,
+              "fpr": 0.0174
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "levir_cd_val_020",
+          "filename": "val_20.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 53.44,
+          "predicted_changed_pixels": 56702,
+          "predicted_change_ratio_pct": 5.4075,
+          "ground_truth_changed_pixels": 213701,
+          "metrics": {
+            "iou": 0.0683,
+            "precision": 0.3047,
+            "recall": 0.0808,
+            "f1": 0.1278,
+            "false_positive_ratio": 0.0472,
+            "changed_pixel_ratio": 0.0541,
+            "confusion": {
+              "tp": 17277,
+              "fp": 39425,
+              "fn": 196424,
+              "tn": 795450,
+              "total_pixels": 1048576
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "levir_cd_val_020",
+            "category": "boundary_error",
+            "severity": 0.8722,
+            "rationale": "Boundary localization discrepancies around target structures (IoU=0.0683).",
+            "metrics_summary": {
+              "iou": 0.0683,
+              "precision": 0.3047,
+              "recall": 0.0808,
+              "f1": 0.1278,
+              "fpr": 0.0472
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        }
+      ],
+      "conclusions": {
+        "evaluated_samples": 20,
+        "quantitative_evaluated": 20,
+        "qualitative_evaluated": 0,
+        "total_failure_diagnoses": 20,
+        "primary_failure_mode": "boundary_error"
+      }
+    }
+  },
+  "comparison_delta": {
+    "mean_iou_delta": 0.802,
+    "mean_f1_delta": 0.8472,
+    "latency_delta_ms": 42.8,
+    "vram_delta_mb": 219.4
+  }
+}

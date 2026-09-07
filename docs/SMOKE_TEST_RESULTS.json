@@ -1,0 +1,30 @@
+{
+  "status": "success",
+  "smoke_test_valid": true,
+  "model_id": "Qwen/Qwen2-VL-2B-Instruct",
+  "specialist_role": "initial VQA specialist candidate using zero-shot Qwen2-VL-2B-Instruct",
+  "device": "cuda",
+  "gpu_name": "NVIDIA GeForce RTX 4070 SUPER",
+  "image": {
+    "name": "real_rs_sample.tif",
+    "provenance": "Rasterio repository GeoTIFF test image used for geospatial pipeline smoke testing.",
+    "source_url": "https://raw.githubusercontent.com/rasterio/rasterio/master/tests/data/RGB.byte.tif",
+    "license": "BSD 3-Clause",
+    "crs": "EPSG:32618",
+    "dimensions": [
+      791,
+      718
+    ]
+  },
+  "metrics": {
+    "initialization_time_ms": 367934,
+    "inference_latency_ms": 4671,
+    "vram_allocated_after_load_mb": 4213.31,
+    "peak_vram_allocated_mb": 4367.46,
+    "peak_vram_reserved_mb": 4616.0,
+    "vram_after_cleanup_mb": 8.12
+  },
+  "query": "Describe the prominent geographical features, coastlines, and land use visible in this satellite imagery.",
+  "answer": "This satellite imagery depicts a coastal region with several notable geographical features and land use patterns. Here are the key observations:\n\n1. **Coastline**: The coastline is characterized by a series of islands and peninsulas. The coastline appears to be relatively straight and straightened, suggesting human intervention in the natural coastline formation. The islands and peninsulas are separated by narrow channels or bays, which are visible in the image.\n\n2. **Land Use**: The land cover in this region is predominantly agricultural. The areas appear to be lush and green, indicating a significant amount of vegetation. The presence of white patches, which could be crops",
+  "confidence": 1.0
+}

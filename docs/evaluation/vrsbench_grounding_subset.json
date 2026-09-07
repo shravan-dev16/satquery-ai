@@ -1,0 +1,877 @@
+[
+  {
+    "sample_id": "vrsbench_eval_001",
+    "question_id": 21,
+    "image_id": "P0019_0002.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0002.png",
+    "category": "harbor",
+    "referring_expression": "The harbor located near the top right corner of the image extending into the water.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      340.0,
+      0.0,
+      496.0,
+      119.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.6641,
+      0.0,
+      0.9688,
+      0.2324
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_002",
+    "question_id": 22,
+    "image_id": "P0019_0002.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0002.png",
+    "category": "harbor",
+    "referring_expression": "The harbor at the bottom edge of the image, projecting from the shore into the water.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      164.0,
+      445.0,
+      358.0,
+      505.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3203,
+      0.8691,
+      0.6992,
+      0.9863
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_003",
+    "question_id": 23,
+    "image_id": "P0019_0003.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0003.png",
+    "category": "ship",
+    "referring_expression": "The small ship is positioned out of the water surface towards the top-middle area of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      181.0,
+      104.0,
+      211.0,
+      143.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3535,
+      0.2031,
+      0.4121,
+      0.2793
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_004",
+    "question_id": 24,
+    "image_id": "P0019_0003.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0003.png",
+    "category": "harbor",
+    "referring_expression": "The top-most harbor is located along the coastline, stretching from the center towards the right edge of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      194.0,
+      128.0,
+      358.0,
+      182.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3789,
+      0.25,
+      0.6992,
+      0.3555
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_005",
+    "question_id": 25,
+    "image_id": "P0019_0003.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0003.png",
+    "category": "harbor",
+    "referring_expression": "The bottom-most harbor is situated at the lower part of the coastline.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      270.0,
+      410.0,
+      391.0,
+      494.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.5273,
+      0.8008,
+      0.7637,
+      0.9648
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_006",
+    "question_id": 26,
+    "image_id": "P0019_0004.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0004.png",
+    "category": "harbor",
+    "referring_expression": "The harbor partially enclosed by land and situated at the top-right corner of the image is surrounded by lush vegetation.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      374.0,
+      1.0,
+      458.0,
+      72.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.7305,
+      0.002,
+      0.8945,
+      0.1406
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_007",
+    "question_id": 36,
+    "image_id": "P0019_0009.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0009.png",
+    "category": "ship",
+    "referring_expression": "The ship is docked near a harbor on the left side of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      162.0,
+      343.0,
+      194.0,
+      372.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3164,
+      0.6699,
+      0.3789,
+      0.7266
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_008",
+    "question_id": 55,
+    "image_id": "P0019_0032.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0032.png",
+    "category": "ship",
+    "referring_expression": "The ship is docked at the bottom-left side of the image, positioned near the edge of the water.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      109.0,
+      453.0,
+      145.0,
+      503.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.2129,
+      0.8848,
+      0.2832,
+      0.9824
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_009",
+    "question_id": 56,
+    "image_id": "P0019_0037.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0037.png",
+    "category": "ship",
+    "referring_expression": "The ship is located at the central left part of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      143.0,
+      346.0,
+      194.0,
+      393.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.2793,
+      0.6758,
+      0.3789,
+      0.7676
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_010",
+    "question_id": 59,
+    "image_id": "P0019_0040.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0019_0040.png",
+    "category": "ship",
+    "referring_expression": "The ship docked on the grassy shore near the center of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      196.0,
+      305.0,
+      214.0,
+      335.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3828,
+      0.5957,
+      0.418,
+      0.6543
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_011",
+    "question_id": 282,
+    "image_id": "P0161_0007.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0161_0007.png",
+    "category": "airplane",
+    "referring_expression": "The small airplane is located near the center of the image, with its body aligned along the diagonal axis from top-left to bottom-right.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      345.0,
+      334.0,
+      432.0,
+      440.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.6738,
+      0.6523,
+      0.8438,
+      0.8594
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_012",
+    "question_id": 283,
+    "image_id": "P0161_0016.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0161_0016.png",
+    "category": "airplane",
+    "referring_expression": "The plane closest to the top of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      188.0,
+      0.0,
+      324.0,
+      104.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3672,
+      0.0,
+      0.6328,
+      0.2031
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_013",
+    "question_id": 285,
+    "image_id": "P0161_0017.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0161_0017.png",
+    "category": "airplane",
+    "referring_expression": "The plane is positioned at the top end of the tarmac and is the closest to the terminal.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      208.0,
+      0.0,
+      342.0,
+      83.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.4062,
+      0.0,
+      0.668,
+      0.1621
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_014",
+    "question_id": 288,
+    "image_id": "P0168_0005.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0168_0005.png",
+    "category": "airplane",
+    "referring_expression": "The plane located at the topmost part of the image, positioned horizontally.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      146.0,
+      0.0,
+      308.0,
+      98.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.2852,
+      0.0,
+      0.6016,
+      0.1914
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_015",
+    "question_id": 289,
+    "image_id": "P0168_0005.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P0168_0005.png",
+    "category": "airplane",
+    "referring_expression": "The plane situated at the top-right corner of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      365.0,
+      0.0,
+      509.0,
+      78.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.7129,
+      0.0,
+      0.9941,
+      0.1523
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_016",
+    "question_id": 2923,
+    "image_id": "P1179_0094.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1179_0094.png",
+    "category": "storage-tank",
+    "referring_expression": "The storage tank located towards the bottom right of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      441.0,
+      452.0,
+      483.0,
+      497.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.8613,
+      0.8828,
+      0.9434,
+      0.9707
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_017",
+    "question_id": 2924,
+    "image_id": "P1179_0095.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1179_0095.png",
+    "category": "storage-tank",
+    "referring_expression": "The storage tank located at the top right corner of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      345.0,
+      0.0,
+      384.0,
+      26.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.6738,
+      0.0,
+      0.75,
+      0.0508
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_018",
+    "question_id": 2925,
+    "image_id": "P1179_0095.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1179_0095.png",
+    "category": "storage-tank",
+    "referring_expression": "The storage tank situated in the middle right of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      426.0,
+      177.0,
+      468.0,
+      219.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.832,
+      0.3457,
+      0.9141,
+      0.4277
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_019",
+    "question_id": 2927,
+    "image_id": "P1179_0107.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1179_0107.png",
+    "category": "storage-tank",
+    "referring_expression": "The round storage tank with a domed roof is situated in the center of the image on a concrete foundation.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      172.0,
+      212.0,
+      284.0,
+      333.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3359,
+      0.4141,
+      0.5547,
+      0.6504
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_020",
+    "question_id": 2928,
+    "image_id": "P1179_0108.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1179_0108.png",
+    "category": "storage-tank",
+    "referring_expression": "The storage tank located at the top left of the image, near the edge of the frame.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      0.0,
+      81.0,
+      38.0,
+      137.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.0,
+      0.1582,
+      0.0742,
+      0.2676
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_021",
+    "question_id": 2958,
+    "image_id": "P1210_0009.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1210_0009.png",
+    "category": "bridge",
+    "referring_expression": "The small bridge visible in the image connects the land on either side of the water body with a distinctive irregular polygonal shape.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      166.0,
+      134.0,
+      212.0,
+      168.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3242,
+      0.2617,
+      0.4141,
+      0.3281
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_022",
+    "question_id": 2971,
+    "image_id": "P1225_0002.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1225_0002.png",
+    "category": "bridge",
+    "referring_expression": "The bridge extends from the bottom left towards the middle top of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      106.0,
+      0.0,
+      251.0,
+      318.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.207,
+      0.0,
+      0.4902,
+      0.6211
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_023",
+    "question_id": 2972,
+    "image_id": "P1225_0002.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1225_0002.png",
+    "category": "bridge",
+    "referring_expression": "The wider bridge running from the bottom center to the top edge in the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      169.0,
+      0.0,
+      276.0,
+      322.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3301,
+      0.0,
+      0.5391,
+      0.6289
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_024",
+    "question_id": 2973,
+    "image_id": "P1225_0007.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1225_0007.png",
+    "category": "bridge",
+    "referring_expression": "The bridge crossing the river is positioned at the far right edge of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      490.0,
+      321.0,
+      511.0,
+      340.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.957,
+      0.627,
+      0.998,
+      0.6641
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_025",
+    "question_id": 2974,
+    "image_id": "P1225_0014.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P1225_0014.png",
+    "category": "bridge",
+    "referring_expression": "The bridge in the image spans through the left center, crossing over a road or railway.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      164.0,
+      193.0,
+      207.0,
+      267.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3203,
+      0.377,
+      0.4043,
+      0.5215
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_026",
+    "question_id": 7621,
+    "image_id": "P2912_0002.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P2912_0002.png",
+    "category": "airport",
+    "referring_expression": "The airport is situated at the bottom of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      112.0,
+      460.0,
+      325.0,
+      512.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.2188,
+      0.8984,
+      0.6348,
+      1.0
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_027",
+    "question_id": 7625,
+    "image_id": "P2982_0002.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P2982_0002.png",
+    "category": "airport",
+    "referring_expression": "The airport is located on the left side of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      0.0,
+      320.0,
+      144.0,
+      435.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.0,
+      0.625,
+      0.2812,
+      0.8496
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_028",
+    "question_id": 7677,
+    "image_id": "P4055_0002.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P4055_0002.png",
+    "category": "airport",
+    "referring_expression": "The airport with an elongated runway, located on the left side of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      0.0,
+      63.0,
+      132.0,
+      512.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.0,
+      0.123,
+      0.2578,
+      1.0
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_029",
+    "question_id": 7839,
+    "image_id": "P4265_0003.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P4265_0003.png",
+    "category": "airport",
+    "referring_expression": "The airport is located at the left part of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      0.0,
+      0.0,
+      292.0,
+      457.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.0,
+      0.0,
+      0.5703,
+      0.8926
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_030",
+    "question_id": 7843,
+    "image_id": "P4627_0000.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/P4627_0000.png",
+    "category": "airport",
+    "referring_expression": "The small airport is located at the bottom of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      270.0,
+      419.0,
+      512.0,
+      512.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.5273,
+      0.8184,
+      1.0,
+      1.0
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_031",
+    "question_id": 8787,
+    "image_id": "05866_0000.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/05866_0000.png",
+    "category": "overpass",
+    "referring_expression": "The object crossing over the highway towards the bottom part of the image is the overpass.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      79.0,
+      422.0,
+      344.0,
+      480.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.1543,
+      0.8242,
+      0.6719,
+      0.9375
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_032",
+    "question_id": 8788,
+    "image_id": "05867_0000.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/05867_0000.png",
+    "category": "overpass",
+    "referring_expression": "The overpass located at the bottom of the image spans horizontally across the view.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      199.0,
+      361.0,
+      512.0,
+      485.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3887,
+      0.7051,
+      1.0,
+      0.9473
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_033",
+    "question_id": 8794,
+    "image_id": "05871_0000.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/05871_0000.png",
+    "category": "trainstation",
+    "referring_expression": "The train station is distinguished by an elongated structure at the bottom of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      319.0,
+      366.0,
+      512.0,
+      454.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.623,
+      0.7148,
+      1.0,
+      0.8867
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_034",
+    "question_id": 8799,
+    "image_id": "05875_0000.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/05875_0000.png",
+    "category": "trainstation",
+    "referring_expression": "The elongated train station is visible in the image with a multi-section roof.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      21.0,
+      284.0,
+      512.0,
+      421.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.041,
+      0.5547,
+      1.0,
+      0.8223
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  },
+  {
+    "sample_id": "vrsbench_eval_035",
+    "question_id": 8800,
+    "image_id": "05877_0000.png",
+    "local_image_path": "datasets/grounding_eval_subset/images/05877_0000.png",
+    "category": "trainstation",
+    "referring_expression": "The train station in the center of the image.",
+    "image_dimensions": [
+      512,
+      512
+    ],
+    "ground_truth_bbox_pixel": [
+      154.0,
+      189.0,
+      271.0,
+      512.0
+    ],
+    "ground_truth_bbox_normalized": [
+      0.3008,
+      0.3691,
+      0.5293,
+      1.0
+    ],
+    "dataset_provenance": "VRSBench (validation split, xiang709/VRSBench, Apache 2.0)"
+  }
+]

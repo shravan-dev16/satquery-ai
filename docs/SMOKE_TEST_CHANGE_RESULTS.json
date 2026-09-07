@@ -1,0 +1,77 @@
+{
+  "status": "PASSED",
+  "timestamp": "2026-09-07T16:24:08Z",
+  "test_type": "synthetic_pipeline_smoke_test",
+  "input_t1": "tests\\fixtures\\bitemporal\\time1_pre_change.tif",
+  "input_t2": "tests\\fixtures\\bitemporal\\time2_post_change.tif",
+  "known_change_region": {
+    "bbox_pixel": [
+      90,
+      90,
+      169,
+      169
+    ],
+    "expected_pixels": 6400,
+    "expected_area_m2": 640000.0,
+    "expected_area_hectares": 64.0
+  },
+  "measured_results": {
+    "detected_pixels": 6400,
+    "detected_area_m2": 640000.0,
+    "detected_area_ha": 64.0,
+    "detected_bbox_pixel": [
+      90,
+      90,
+      170,
+      170
+    ],
+    "geojson": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            725900.0,
+            3129100.0
+          ],
+          [
+            726700.0,
+            3129100.0
+          ],
+          [
+            726700.0,
+            3128300.0
+          ],
+          [
+            725900.0,
+            3128300.0
+          ],
+          [
+            725900.0,
+            3129100.0
+          ]
+        ]
+      ]
+    },
+    "confidence": 0.7303,
+    "execution_time_ms": 526
+  },
+  "execution_trace": [
+    "InputValidation",
+    "TemporalValidation",
+    "SpatialCompatibility",
+    "Alignment",
+    "SpecialistSelection",
+    "ModelExecution",
+    "ChangeMaskValidation",
+    "Statistics",
+    "EvidenceAssembly"
+  ],
+  "preview_artifacts": {
+    "mask_url": [
+      "/api/v1/static/previews/change_mask_cd_48564.png"
+    ],
+    "overlay_url": [
+      "/api/v1/static/previews/change_overlay_cd_48564.png"
+    ]
+  }
+}

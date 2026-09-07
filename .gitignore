@@ -179,3 +179,36 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Local datasets / downloaded benchmark data
+datasets/
+
+# Model weights / checkpoints
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+
+# Hugging Face / Transformers local caches
+.cache/
+huggingface/
+transformers_cache/
+
+# Generated previews / outputs
+previews/
+backend/**/previews/
+frontend/**/previews/
+
+# Local IDE / Antigravity files
+.vscode/
+.idea/
+.gemini/
+
+# Local logs / temporary files
+*.tmp
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db

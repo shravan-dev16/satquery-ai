@@ -1,0 +1,22 @@
+# SatQuery AI — Python Dependencies
+# Environment: Python 3.11.x on Windows 11 / Linux with NVIDIA CUDA 12.x
+
+# Core Web & Data Modeling
+fastapi>=0.115.0
+uvicorn>=0.30.0
+pydantic>=2.8.0
+python-multipart>=0.0.9
+
+# Geospatial Engine
+rasterio>=1.4.0
+shapely>=2.0.0
+numpy>=1.26.0,<3.0.0
+pillow>=10.4.0
+
+# Testing
+pytest>=8.3.0
+httpx>=0.27.0
+
+# PyTorch & Torchvision (install via CUDA 12.4 index: --index-url https://download.pytorch.org/whl/cu124)
+# torch>=2.5.0
+# torchvision>=0.20.0

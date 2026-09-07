@@ -1,0 +1,263 @@
+{
+  "status": "success",
+  "model_id": "IDEA-Research/grounding-dino-base",
+  "specialist_role": "dedicated zero-shot grounding detector candidate (IDEA-Research/grounding-dino-base)",
+  "device": "cuda",
+  "gpu_name": "NVIDIA GeForce RTX 4070 SUPER",
+  "image": {
+    "name": "real_rs_sample.tif",
+    "provenance": "Rasterio repository GeoTIFF test image used for geospatial pipeline smoke testing.",
+    "source_url": "https://raw.githubusercontent.com/rasterio/rasterio/master/tests/data/RGB.byte.tif",
+    "license": "BSD 3-Clause",
+    "crs": "EPSG:32618",
+    "dimensions": [
+      791,
+      718
+    ]
+  },
+  "initialization_time_ms": 7435,
+  "vram_allocated_after_load_mb": 892.11,
+  "vram_after_cleanup_mb": 8.12,
+  "queries_evaluated": [
+    {
+      "image_identifier": "real_rs_sample.tif",
+      "query": "Where is the water body?",
+      "normalized_query": "water body.",
+      "latency_ms": 612,
+      "peak_vram_allocated_mb": 1806.13,
+      "peak_vram_reserved_mb": 2060.0,
+      "valid_boxes_count": 1,
+      "boxes": [
+        {
+          "box_id": "box_001",
+          "label": "water body",
+          "pixel_bbox": [
+            15,
+            14,
+            762,
+            700
+          ],
+          "normalized_bbox": [
+            0.0192,
+            0.0199,
+            0.964,
+            0.9758
+          ],
+          "model_score": 0.6451,
+          "confidence": 0.6451,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "geojson": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  106542.5761,
+                  2822630.4033
+                ],
+                [
+                  330781.9214,
+                  2822630.4033
+                ],
+                [
+                  330781.9214,
+                  2616693.7253
+                ],
+                [
+                  106542.5761,
+                  2616693.7253
+                ],
+                [
+                  106542.5761,
+                  2822630.4033
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "answer_summary": "Detected 1 grounded region(s) for 'Where is the water body?' (normalized: 'water body.').",
+      "warnings": []
+    },
+    {
+      "image_identifier": "real_rs_sample.tif",
+      "query": "Find the road.",
+      "normalized_query": "road.",
+      "latency_ms": 206,
+      "peak_vram_allocated_mb": 1803.79,
+      "peak_vram_reserved_mb": 2062.0,
+      "valid_boxes_count": 1,
+      "boxes": [
+        {
+          "box_id": "box_001",
+          "label": "road",
+          "pixel_bbox": [
+            13,
+            16,
+            766,
+            702
+          ],
+          "normalized_bbox": [
+            0.0175,
+            0.0231,
+            0.9689,
+            0.9782
+          ],
+          "model_score": 0.4737,
+          "confidence": 0.4737,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "geojson": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  106149.5264,
+                  2821934.3064
+                ],
+                [
+                  331928.0662,
+                  2821934.3064
+                ],
+                [
+                  331928.0662,
+                  2616174.6531
+                ],
+                [
+                  106149.5264,
+                  2616174.6531
+                ],
+                [
+                  106149.5264,
+                  2821934.3064
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "answer_summary": "Detected 1 grounded region(s) for 'Find the road.' (normalized: 'road.').",
+      "warnings": []
+    },
+    {
+      "image_identifier": "real_rs_sample.tif",
+      "query": "Locate the built-up area.",
+      "normalized_query": "built-up area.",
+      "latency_ms": 221,
+      "peak_vram_allocated_mb": 1808.17,
+      "peak_vram_reserved_mb": 2062.0,
+      "valid_boxes_count": 1,
+      "boxes": [
+        {
+          "box_id": "box_001",
+          "label": "built - up area",
+          "pixel_bbox": [
+            11,
+            13,
+            771,
+            702
+          ],
+          "normalized_bbox": [
+            0.0145,
+            0.0195,
+            0.9757,
+            0.9782
+          ],
+          "model_score": 0.5779,
+          "confidence": 0.5779,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "geojson": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  105429.4354,
+                  2822720.4159
+                ],
+                [
+                  333545.2707,
+                  2822720.4159
+                ],
+                [
+                  333545.2707,
+                  2616180.6539
+                ],
+                [
+                  105429.4354,
+                  2616180.6539
+                ],
+                [
+                  105429.4354,
+                  2822720.4159
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "answer_summary": "Detected 1 grounded region(s) for 'Locate the built-up area.' (normalized: 'built-up area.').",
+      "warnings": []
+    },
+    {
+      "image_identifier": "real_rs_sample.tif",
+      "query": "Detect the runway.",
+      "normalized_query": "runway.",
+      "latency_ms": 212,
+      "peak_vram_allocated_mb": 1803.79,
+      "peak_vram_reserved_mb": 2062.0,
+      "valid_boxes_count": 1,
+      "boxes": [
+        {
+          "box_id": "box_001",
+          "label": "runway",
+          "pixel_bbox": [
+            14,
+            14,
+            767,
+            701
+          ],
+          "normalized_bbox": [
+            0.0186,
+            0.0204,
+            0.97,
+            0.9775
+          ],
+          "model_score": 0.4649,
+          "confidence": 0.4649,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "geojson": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  106389.5568,
+                  2822513.387
+                ],
+                [
+                  332204.1011,
+                  2822513.387
+                ],
+                [
+                  332204.1011,
+                  2616336.6756
+                ],
+                [
+                  106389.5568,
+                  2616336.6756
+                ],
+                [
+                  106389.5568,
+                  2822513.387
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "answer_summary": "Detected 1 grounded region(s) for 'Detect the runway.' (normalized: 'runway.').",
+      "warnings": []
+    }
+  ]
+}

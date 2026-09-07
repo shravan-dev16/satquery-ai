@@ -1,0 +1,275 @@
+{
+  "manifest_id": "diverse_rs_manifest_v1",
+  "dataset_name": "Diverse Remote Sensing & Nuisance Benchmark",
+  "version": "1.0.0",
+  "description": "Deterministic 12-sample evaluation split covering 7 land-cover categories, 4 nuisance variations (zero physical change), and 1 qualitative natural satellite GeoTIFF.",
+  "license": "CC-BY-4.0 / Mixed Open",
+  "samples": [
+    {
+      "sample_id": "diverse_urban_001",
+      "filename": "urban_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 1106,
+      "change_ratio_pct": 0.4219,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/urban_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/urban_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/urban_01.png",
+      "scene_category": "urban",
+      "is_quantitative": true,
+      "nuisance_type": null,
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_infra_001",
+      "filename": "infrastructure_01.tif",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        256,
+        256
+      ],
+      "total_pixels": 65536,
+      "changed_pixels": 6400,
+      "change_ratio_pct": 9.7656,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/infrastructure_01.tif",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/infrastructure_01.tif",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/infrastructure_01.png",
+      "scene_category": "infrastructure",
+      "is_quantitative": true,
+      "nuisance_type": null,
+      "crs": "EPSG:32643",
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_forest_001",
+      "filename": "forest_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 36000,
+      "change_ratio_pct": 13.7329,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/forest_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/forest_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/forest_01.png",
+      "scene_category": "forest",
+      "is_quantitative": true,
+      "nuisance_type": null,
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_agri_001",
+      "filename": "agriculture_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 63000,
+      "change_ratio_pct": 24.0326,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/agriculture_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/agriculture_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/agriculture_01.png",
+      "scene_category": "agriculture",
+      "is_quantitative": true,
+      "nuisance_type": null,
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_water_001",
+      "filename": "water_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 65000,
+      "change_ratio_pct": 24.7955,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/water_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/water_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/water_01.png",
+      "scene_category": "water",
+      "is_quantitative": true,
+      "nuisance_type": null,
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_coastal_001",
+      "filename": "coastal_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 20700,
+      "change_ratio_pct": 7.8964,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/coastal_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/coastal_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/coastal_01.png",
+      "scene_category": "coastal",
+      "is_quantitative": true,
+      "nuisance_type": null,
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_mining_001",
+      "filename": "mining_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 37800,
+      "change_ratio_pct": 14.4196,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/mining_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/mining_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/mining_01.png",
+      "scene_category": "mining",
+      "is_quantitative": true,
+      "nuisance_type": null,
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_nuisance_illum_001",
+      "filename": "nuisance_illumination_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 0,
+      "change_ratio_pct": 0.0,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/nuisance_illumination_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/nuisance_illumination_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/nuisance_illumination_01.png",
+      "scene_category": "nuisance_variation",
+      "is_quantitative": true,
+      "nuisance_type": "illumination",
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_nuisance_shadow_001",
+      "filename": "nuisance_shadow_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 0,
+      "change_ratio_pct": 0.0,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/nuisance_shadow_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/nuisance_shadow_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/nuisance_shadow_01.png",
+      "scene_category": "nuisance_variation",
+      "is_quantitative": true,
+      "nuisance_type": "shadow",
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_nuisance_veg_001",
+      "filename": "nuisance_seasonal_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 0,
+      "change_ratio_pct": 0.0,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/nuisance_seasonal_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/nuisance_seasonal_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/nuisance_seasonal_01.png",
+      "scene_category": "nuisance_variation",
+      "is_quantitative": true,
+      "nuisance_type": "seasonal_color",
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_nuisance_reg_001",
+      "filename": "nuisance_registration_01.png",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "CC-BY-4.0",
+      "dimensions": [
+        512,
+        512
+      ],
+      "total_pixels": 262144,
+      "changed_pixels": 0,
+      "change_ratio_pct": 0.0,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/nuisance_registration_01.png",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/nuisance_registration_01.png",
+      "gt_mask_path": "datasets/diverse_rs_eval_subset/label/nuisance_registration_01.png",
+      "scene_category": "nuisance_variation",
+      "is_quantitative": true,
+      "nuisance_type": "registration",
+      "crs": null,
+      "metadata": {}
+    },
+    {
+      "sample_id": "diverse_natural_terrain_001",
+      "filename": "natural_terrain_01.tif",
+      "dataset": "DiverseRS_Benchmark",
+      "split": "val",
+      "license": "BSD-3-Clause",
+      "dimensions": [
+        791,
+        718
+      ],
+      "total_pixels": 567938,
+      "changed_pixels": null,
+      "change_ratio_pct": null,
+      "t1_path": "datasets/diverse_rs_eval_subset/A/natural_terrain_01.tif",
+      "t2_path": "datasets/diverse_rs_eval_subset/B/natural_terrain_01.tif",
+      "gt_mask_path": null,
+      "scene_category": "forest",
+      "is_quantitative": false,
+      "nuisance_type": null,
+      "crs": "EPSG:32618",
+      "metadata": {
+        "note": "Qualitative verification of natural multispectral terrain without fake GT"
+      }
+    }
+  ]
+}

@@ -1,0 +1,342 @@
+[
+  {
+    "sample_id": "levir_cd_val_001",
+    "filename": "val_1.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 7257,
+    "change_ratio_pct": 0.6921,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_1.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_1.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_1.png"
+  },
+  {
+    "sample_id": "levir_cd_val_002",
+    "filename": "val_2.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 26546,
+    "change_ratio_pct": 2.5316,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_2.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_2.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_2.png"
+  },
+  {
+    "sample_id": "levir_cd_val_003",
+    "filename": "val_3.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 35849,
+    "change_ratio_pct": 3.4188,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_3.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_3.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_3.png"
+  },
+  {
+    "sample_id": "levir_cd_val_004",
+    "filename": "val_4.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 65813,
+    "change_ratio_pct": 6.2764,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_4.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_4.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_4.png"
+  },
+  {
+    "sample_id": "levir_cd_val_005",
+    "filename": "val_5.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 48689,
+    "change_ratio_pct": 4.6433,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_5.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_5.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_5.png"
+  },
+  {
+    "sample_id": "levir_cd_val_006",
+    "filename": "val_6.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 45235,
+    "change_ratio_pct": 4.3139,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_6.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_6.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_6.png"
+  },
+  {
+    "sample_id": "levir_cd_val_007",
+    "filename": "val_7.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 148033,
+    "change_ratio_pct": 14.1175,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_7.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_7.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_7.png"
+  },
+  {
+    "sample_id": "levir_cd_val_008",
+    "filename": "val_8.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 73746,
+    "change_ratio_pct": 7.033,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_8.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_8.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_8.png"
+  },
+  {
+    "sample_id": "levir_cd_val_009",
+    "filename": "val_9.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 37356,
+    "change_ratio_pct": 3.5625,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_9.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_9.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_9.png"
+  },
+  {
+    "sample_id": "levir_cd_val_010",
+    "filename": "val_10.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 24233,
+    "change_ratio_pct": 2.311,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_10.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_10.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_10.png"
+  },
+  {
+    "sample_id": "levir_cd_val_011",
+    "filename": "val_11.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 40434,
+    "change_ratio_pct": 3.8561,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_11.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_11.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_11.png"
+  },
+  {
+    "sample_id": "levir_cd_val_012",
+    "filename": "val_12.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 53678,
+    "change_ratio_pct": 5.1191,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_12.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_12.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_12.png"
+  },
+  {
+    "sample_id": "levir_cd_val_013",
+    "filename": "val_13.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 44247,
+    "change_ratio_pct": 4.2197,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_13.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_13.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_13.png"
+  },
+  {
+    "sample_id": "levir_cd_val_014",
+    "filename": "val_14.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 46558,
+    "change_ratio_pct": 4.4401,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_14.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_14.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_14.png"
+  },
+  {
+    "sample_id": "levir_cd_val_015",
+    "filename": "val_15.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 82670,
+    "change_ratio_pct": 7.884,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_15.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_15.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_15.png"
+  },
+  {
+    "sample_id": "levir_cd_val_016",
+    "filename": "val_16.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 35633,
+    "change_ratio_pct": 3.3982,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_16.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_16.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_16.png"
+  },
+  {
+    "sample_id": "levir_cd_val_017",
+    "filename": "val_17.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 149133,
+    "change_ratio_pct": 14.2224,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_17.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_17.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_17.png"
+  },
+  {
+    "sample_id": "levir_cd_val_018",
+    "filename": "val_18.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 107182,
+    "change_ratio_pct": 10.2217,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_18.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_18.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_18.png"
+  },
+  {
+    "sample_id": "levir_cd_val_019",
+    "filename": "val_19.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 66902,
+    "change_ratio_pct": 6.3803,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_19.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_19.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_19.png"
+  },
+  {
+    "sample_id": "levir_cd_val_020",
+    "filename": "val_20.png",
+    "dataset": "LEVIR-CD",
+    "split": "val",
+    "license": "CC-BY-4.0",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "total_pixels": 1048576,
+    "changed_pixels": 213701,
+    "change_ratio_pct": 20.3801,
+    "t1_path": "datasets/levir_cd_eval_subset/A/val_20.png",
+    "t2_path": "datasets/levir_cd_eval_subset/B/val_20.png",
+    "gt_mask_path": "datasets/levir_cd_eval_subset/label/val_20.png"
+  }
+]

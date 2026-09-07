@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "task": "vqa",
+    "query": "Is there a water body in the top-left section?",
+    "expected": "Yes"
+  },
+  {
+    "id": "q2",
+    "task": "grounding",
+    "query": "Ground the urban structures in the bottom-right",
+    "expected_boxes": 1
+  },
+  {
+    "id": "q3",
+    "task": "change_detection",
+    "query": "What changed between time 1 and time 2?",
+    "expected_change": true
+  },
+  {
+    "id": "q4",
+    "task": "optical_sar_analysis",
+    "query": "Identify cloud-penetrated structures using optical and SAR",
+    "expected_fusion": true
+  }
+]

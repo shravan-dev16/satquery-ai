@@ -1,0 +1,1673 @@
+{
+  "evaluation_dataset": "VRSBench Validation Referring Expressions Subset",
+  "provenance": "xiang709/VRSBench (Apache 2.0 / CC-BY)",
+  "sample_count": 35,
+  "device": "cuda",
+  "gpu_name": "NVIDIA GeForce RTX 4070 SUPER",
+  "models": {
+    "qwen2_vl_baseline": {
+      "model_name": "Qwen2-VL-2B-Instruct (Zero-Shot VLM Baseline)",
+      "model_id": "Qwen/Qwen2-VL-2B-Instruct",
+      "sample_count": 35,
+      "mean_iou": 0.0728,
+      "median_iou": 0.0,
+      "success_at_0_5_pct": 0.0,
+      "valid_prediction_rate_pct": 60.0,
+      "degenerate_box_rate_pct": 11.43,
+      "empty_result_rate_pct": 40.0,
+      "mean_latency_ms": 1740.4,
+      "initialization_time_ms": 10860,
+      "peak_vram_allocated_mb": 4288.48,
+      "peak_vram_reserved_mb": 4362.0,
+      "sample_results": [
+        {
+          "sample_id": "vrsbench_eval_001",
+          "category": "harbor",
+          "query": "The harbor located near the top right corner of the image extending into the water.",
+          "normalized_query": "harbor located near the top right corner of the image extending into the water.",
+          "ground_truth_bbox": [
+            340.0,
+            0.0,
+            496.0,
+            119.0
+          ],
+          "predicted_bbox": [
+            51,
+            340,
+            340,
+            512
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 2411.8,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_002",
+          "category": "harbor",
+          "query": "The harbor at the bottom edge of the image, projecting from the shore into the water.",
+          "normalized_query": "harbor at the bottom edge of the image, projecting from the shore into the water.",
+          "ground_truth_bbox": [
+            164.0,
+            445.0,
+            358.0,
+            505.0
+          ],
+          "predicted_bbox": [
+            0,
+            170,
+            512,
+            397
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1869.9,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_003",
+          "category": "ship",
+          "query": "The small ship is positioned out of the water surface towards the top-middle area of the image.",
+          "normalized_query": "small ship is positioned out of the water surface towards the top-middle area of the image.",
+          "ground_truth_bbox": [
+            181.0,
+            104.0,
+            211.0,
+            143.0
+          ],
+          "predicted_bbox": [
+            51,
+            153,
+            204,
+            358
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 2005.6,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_004",
+          "category": "harbor",
+          "query": "The top-most harbor is located along the coastline, stretching from the center towards the right edge of the image.",
+          "normalized_query": "top-most harbor is located along the coastline, stretching from the center towards the right edge of the image.",
+          "ground_truth_bbox": [
+            194.0,
+            128.0,
+            358.0,
+            182.0
+          ],
+          "predicted_bbox": [
+            51,
+            153,
+            256,
+            358
+          ],
+          "score": 0.5,
+          "iou": 0.0366,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 2035.2,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_005",
+          "category": "harbor",
+          "query": "The bottom-most harbor is situated at the lower part of the coastline.",
+          "normalized_query": "bottom-most harbor is situated at the lower part of the coastline.",
+          "ground_truth_bbox": [
+            270.0,
+            410.0,
+            391.0,
+            494.0
+          ],
+          "predicted_bbox": [
+            153,
+            153,
+            358,
+            358
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1773.2,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_006",
+          "category": "harbor",
+          "query": "The harbor partially enclosed by land and situated at the top-right corner of the image is surrounded by lush vegetation.",
+          "normalized_query": "harbor partially enclosed by land and situated at the top-right corner of the image is surrounded by lush vegetation.",
+          "ground_truth_bbox": [
+            374.0,
+            1.0,
+            458.0,
+            72.0
+          ],
+          "predicted_bbox": [
+            51,
+            340,
+            512,
+            512
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1999.5,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_007",
+          "category": "ship",
+          "query": "The ship is docked near a harbor on the left side of the image.",
+          "normalized_query": "ship is docked near a harbor on the left side of the image.",
+          "ground_truth_bbox": [
+            162.0,
+            343.0,
+            194.0,
+            372.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": true,
+          "degenerate_reason": "full_image_fallback",
+          "latency_ms": 1731.0,
+          "warnings": [
+            "Qwen produced 1 degenerate full-image fallback box(es) which were excluded from valid results.",
+            "No valid grounded regions were detected for query 'The ship is docked near a harbor on the left side of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_008",
+          "category": "ship",
+          "query": "The ship is docked at the bottom-left side of the image, positioned near the edge of the water.",
+          "normalized_query": "ship is docked at the bottom-left side of the image, positioned near the edge of the water.",
+          "ground_truth_bbox": [
+            109.0,
+            453.0,
+            145.0,
+            503.0
+          ],
+          "predicted_bbox": [
+            384,
+            102,
+            435,
+            153
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1979.5,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_009",
+          "category": "ship",
+          "query": "The ship is located at the central left part of the image.",
+          "normalized_query": "ship is located at the central left part of the image.",
+          "ground_truth_bbox": [
+            143.0,
+            346.0,
+            194.0,
+            393.0
+          ],
+          "predicted_bbox": [
+            102,
+            102,
+            307,
+            204
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1794.7,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_010",
+          "category": "ship",
+          "query": "The ship docked on the grassy shore near the center of the image.",
+          "normalized_query": "ship docked on the grassy shore near the center of the image.",
+          "ground_truth_bbox": [
+            196.0,
+            305.0,
+            214.0,
+            335.0
+          ],
+          "predicted_bbox": [
+            230,
+            230,
+            281,
+            281
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1873.7,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_011",
+          "category": "airplane",
+          "query": "The small airplane is located near the center of the image, with its body aligned along the diagonal axis from top-left to bottom-right.",
+          "normalized_query": "small airplane is located near the center of the image, with its body aligned along the diagonal axis from top-left to bottom-right.",
+          "ground_truth_bbox": [
+            345.0,
+            334.0,
+            432.0,
+            440.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1594.0,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The small airplane is located near the center of the image, with its body aligned along the diagonal axis from top-left to bottom-right.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_012",
+          "category": "airplane",
+          "query": "The plane closest to the top of the image.",
+          "normalized_query": "plane closest to the top of the image.",
+          "ground_truth_bbox": [
+            188.0,
+            0.0,
+            324.0,
+            104.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1082.6,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The plane closest to the top of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_013",
+          "category": "airplane",
+          "query": "The plane is positioned at the top end of the tarmac and is the closest to the terminal.",
+          "normalized_query": "plane is positioned at the top end of the tarmac and is the closest to the terminal.",
+          "ground_truth_bbox": [
+            208.0,
+            0.0,
+            342.0,
+            83.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": true,
+          "degenerate_reason": "full_image_fallback",
+          "latency_ms": 1824.3,
+          "warnings": [
+            "Qwen produced 1 degenerate full-image fallback box(es) which were excluded from valid results.",
+            "No valid grounded regions were detected for query 'The plane is positioned at the top end of the tarmac and is the closest to the terminal.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_014",
+          "category": "airplane",
+          "query": "The plane located at the topmost part of the image, positioned horizontally.",
+          "normalized_query": "plane located at the topmost part of the image, positioned horizontally.",
+          "ground_truth_bbox": [
+            146.0,
+            0.0,
+            308.0,
+            98.0
+          ],
+          "predicted_bbox": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1852.6,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_015",
+          "category": "airplane",
+          "query": "The plane situated at the top-right corner of the image.",
+          "normalized_query": "plane situated at the top-right corner of the image.",
+          "ground_truth_bbox": [
+            365.0,
+            0.0,
+            509.0,
+            78.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1143.9,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The plane situated at the top-right corner of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_016",
+          "category": "storage-tank",
+          "query": "The storage tank located towards the bottom right of the image.",
+          "normalized_query": "storage tank located towards the bottom right of the image.",
+          "ground_truth_bbox": [
+            441.0,
+            452.0,
+            483.0,
+            497.0
+          ],
+          "predicted_bbox": [
+            384,
+            340,
+            512,
+            512
+          ],
+          "score": 0.5,
+          "iou": 0.0858,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1898.1,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_017",
+          "category": "storage-tank",
+          "query": "The storage tank located at the top right corner of the image.",
+          "normalized_query": "storage tank located at the top right corner of the image.",
+          "ground_truth_bbox": [
+            345.0,
+            0.0,
+            384.0,
+            26.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1283.2,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The storage tank located at the top right corner of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_018",
+          "category": "storage-tank",
+          "query": "The storage tank situated in the middle right of the image.",
+          "normalized_query": "storage tank situated in the middle right of the image.",
+          "ground_truth_bbox": [
+            426.0,
+            177.0,
+            468.0,
+            219.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1349.8,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The storage tank situated in the middle right of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_019",
+          "category": "storage-tank",
+          "query": "The round storage tank with a domed roof is situated in the center of the image on a concrete foundation.",
+          "normalized_query": "round storage tank with a domed roof is situated in the center of the image on a concrete foundation.",
+          "ground_truth_bbox": [
+            172.0,
+            212.0,
+            284.0,
+            333.0
+          ],
+          "predicted_bbox": [
+            153,
+            153,
+            358,
+            358
+          ],
+          "score": 0.5,
+          "iou": 0.3225,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 2271.7,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_020",
+          "category": "storage-tank",
+          "query": "The storage tank located at the top left of the image, near the edge of the frame.",
+          "normalized_query": "storage tank located at the top left of the image, near the edge of the frame.",
+          "ground_truth_bbox": [
+            0.0,
+            81.0,
+            38.0,
+            137.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1307.1,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The storage tank located at the top left of the image, near the edge of the frame.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_021",
+          "category": "bridge",
+          "query": "The small bridge visible in the image connects the land on either side of the water body with a distinctive irregular polygonal shape.",
+          "normalized_query": "small bridge visible in the image connects the land on either side of the water body with a distinctive irregular polygonal shape.",
+          "ground_truth_bbox": [
+            166.0,
+            134.0,
+            212.0,
+            168.0
+          ],
+          "predicted_bbox": [
+            128,
+            128,
+            384,
+            384
+          ],
+          "score": 0.5,
+          "iou": 0.0239,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 2320.1,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_022",
+          "category": "bridge",
+          "query": "The bridge extends from the bottom left towards the middle top of the image.",
+          "normalized_query": "bridge extends from the bottom left towards the middle top of the image.",
+          "ground_truth_bbox": [
+            106.0,
+            0.0,
+            251.0,
+            318.0
+          ],
+          "predicted_bbox": [
+            102,
+            102,
+            409,
+            409
+          ],
+          "score": 0.5,
+          "iou": 0.2872,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1797.7,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_023",
+          "category": "bridge",
+          "query": "The wider bridge running from the bottom center to the top edge in the image.",
+          "normalized_query": "wider bridge running from the bottom center to the top edge in the image.",
+          "ground_truth_bbox": [
+            169.0,
+            0.0,
+            276.0,
+            322.0
+          ],
+          "predicted_bbox": [
+            102,
+            153,
+            409,
+            358
+          ],
+          "score": 0.5,
+          "iou": 0.228,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1973.6,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_024",
+          "category": "bridge",
+          "query": "The bridge crossing the river is positioned at the far right edge of the image.",
+          "normalized_query": "bridge crossing the river is positioned at the far right edge of the image.",
+          "ground_truth_bbox": [
+            490.0,
+            321.0,
+            511.0,
+            340.0
+          ],
+          "predicted_bbox": [
+            102,
+            384,
+            204,
+            512
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1955.5,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_025",
+          "category": "bridge",
+          "query": "The bridge in the image spans through the left center, crossing over a road or railway.",
+          "normalized_query": "bridge in the image spans through the left center, crossing over a road or railway.",
+          "ground_truth_bbox": [
+            164.0,
+            193.0,
+            207.0,
+            267.0
+          ],
+          "predicted_bbox": [
+            102,
+            153,
+            307,
+            358
+          ],
+          "score": 0.5,
+          "iou": 0.0757,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1938.2,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_026",
+          "category": "airport",
+          "query": "The airport is situated at the bottom of the image.",
+          "normalized_query": "airport is situated at the bottom of the image.",
+          "ground_truth_bbox": [
+            112.0,
+            460.0,
+            325.0,
+            512.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1124.3,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The airport is situated at the bottom of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_027",
+          "category": "airport",
+          "query": "The airport is located on the left side of the image.",
+          "normalized_query": "airport is located on the left side of the image.",
+          "ground_truth_bbox": [
+            0.0,
+            320.0,
+            144.0,
+            435.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": true,
+          "degenerate_reason": "full_image_fallback",
+          "latency_ms": 1620.0,
+          "warnings": [
+            "Qwen produced 1 degenerate full-image fallback box(es) which were excluded from valid results.",
+            "No valid grounded regions were detected for query 'The airport is located on the left side of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_028",
+          "category": "airport",
+          "query": "The airport with an elongated runway, located on the left side of the image.",
+          "normalized_query": "airport with an elongated runway, located on the left side of the image.",
+          "ground_truth_bbox": [
+            0.0,
+            63.0,
+            132.0,
+            512.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": true,
+          "degenerate_reason": "full_image_fallback",
+          "latency_ms": 1781.2,
+          "warnings": [
+            "Qwen produced 1 degenerate full-image fallback box(es) which were excluded from valid results.",
+            "No valid grounded regions were detected for query 'The airport with an elongated runway, located on the left side of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_029",
+          "category": "airport",
+          "query": "The airport is located at the left part of the image.",
+          "normalized_query": "airport is located at the left part of the image.",
+          "ground_truth_bbox": [
+            0.0,
+            0.0,
+            292.0,
+            457.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 999.2,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The airport is located at the left part of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_030",
+          "category": "airport",
+          "query": "The small airport is located at the bottom of the image.",
+          "normalized_query": "small airport is located at the bottom of the image.",
+          "ground_truth_bbox": [
+            270.0,
+            419.0,
+            512.0,
+            512.0
+          ],
+          "predicted_bbox": [
+            230,
+            230,
+            281,
+            281
+          ],
+          "score": 0.5,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1710.8,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_031",
+          "category": "overpass",
+          "query": "The object crossing over the highway towards the bottom part of the image is the overpass.",
+          "normalized_query": "object crossing over the highway towards the bottom part of the image is the overpass.",
+          "ground_truth_bbox": [
+            79.0,
+            422.0,
+            344.0,
+            480.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1374.7,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The object crossing over the highway towards the bottom part of the image is the overpass.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_032",
+          "category": "overpass",
+          "query": "The overpass located at the bottom of the image spans horizontally across the view.",
+          "normalized_query": "overpass located at the bottom of the image spans horizontally across the view.",
+          "ground_truth_bbox": [
+            199.0,
+            361.0,
+            512.0,
+            485.0
+          ],
+          "predicted_bbox": [
+            307,
+            230,
+            384,
+            511
+          ],
+          "score": 0.5,
+          "iou": 0.1876,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 2026.8,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_033",
+          "category": "trainstation",
+          "query": "The train station is distinguished by an elongated structure at the bottom of the image.",
+          "normalized_query": "train station is distinguished by an elongated structure at the bottom of the image.",
+          "ground_truth_bbox": [
+            319.0,
+            366.0,
+            512.0,
+            454.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1536.1,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The train station is distinguished by an elongated structure at the bottom of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_034",
+          "category": "trainstation",
+          "query": "The elongated train station is visible in the image with a multi-section roof.",
+          "normalized_query": "elongated train station is visible in the image with a multi-section roof.",
+          "ground_truth_bbox": [
+            21.0,
+            284.0,
+            512.0,
+            421.0
+          ],
+          "predicted_bbox": [
+            204,
+            102,
+            307,
+            358
+          ],
+          "score": 0.5,
+          "iou": 0.0886,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1912.4,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_035",
+          "category": "trainstation",
+          "query": "The train station in the center of the image.",
+          "normalized_query": "train station in the center of the image.",
+          "ground_truth_bbox": [
+            154.0,
+            189.0,
+            271.0,
+            512.0
+          ],
+          "predicted_bbox": [
+            102,
+            153,
+            409,
+            307
+          ],
+          "score": 0.5,
+          "iou": 0.1937,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 1761.7,
+          "warnings": []
+        }
+      ]
+    },
+    "grounding_dino": {
+      "model_name": "Grounding DINO Base (Dedicated Grounding Candidate)",
+      "model_id": "IDEA-Research/grounding-dino-base",
+      "sample_count": 35,
+      "mean_iou": 0.2469,
+      "median_iou": 0.0587,
+      "success_at_0_5_pct": 22.86,
+      "valid_prediction_rate_pct": 85.71,
+      "degenerate_box_rate_pct": 8.57,
+      "empty_result_rate_pct": 14.29,
+      "mean_latency_ms": 189.9,
+      "initialization_time_ms": 5033,
+      "peak_vram_allocated_mb": 1732.17,
+      "peak_vram_reserved_mb": 4406.0,
+      "sample_results": [
+        {
+          "sample_id": "vrsbench_eval_001",
+          "category": "harbor",
+          "query": "The harbor located near the top right corner of the image extending into the water.",
+          "normalized_query": "harbor located near the top right corner of the image extending into the water.",
+          "ground_truth_bbox": [
+            340.0,
+            0.0,
+            496.0,
+            119.0
+          ],
+          "predicted_bbox": [
+            191,
+            0,
+            509,
+            508
+          ],
+          "score": 0.2965,
+          "iou": 0.1149,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 427.7,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_002",
+          "category": "harbor",
+          "query": "The harbor at the bottom edge of the image, projecting from the shore into the water.",
+          "normalized_query": "harbor at the bottom edge of the image, projecting from the shore into the water.",
+          "ground_truth_bbox": [
+            164.0,
+            445.0,
+            358.0,
+            505.0
+          ],
+          "predicted_bbox": [
+            198,
+            0,
+            512,
+            510
+          ],
+          "score": 0.3404,
+          "iou": 0.0592,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 182.7,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_003",
+          "category": "ship",
+          "query": "The small ship is positioned out of the water surface towards the top-middle area of the image.",
+          "normalized_query": "small ship is positioned out of the water surface towards the top-middle area of the image.",
+          "ground_truth_bbox": [
+            181.0,
+            104.0,
+            211.0,
+            143.0
+          ],
+          "predicted_bbox": [
+            137,
+            77,
+            361,
+            176
+          ],
+          "score": 0.348,
+          "iou": 0.0528,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 182.3,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_004",
+          "category": "harbor",
+          "query": "The top-most harbor is located along the coastline, stretching from the center towards the right edge of the image.",
+          "normalized_query": "top-most harbor is located along the coastline, stretching from the center towards the right edge of the image.",
+          "ground_truth_bbox": [
+            194.0,
+            128.0,
+            358.0,
+            182.0
+          ],
+          "predicted_bbox": [
+            44,
+            0,
+            512,
+            511
+          ],
+          "score": 0.254,
+          "iou": 0.037,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 182.3,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_005",
+          "category": "harbor",
+          "query": "The bottom-most harbor is situated at the lower part of the coastline.",
+          "normalized_query": "bottom-most harbor is situated at the lower part of the coastline.",
+          "ground_truth_bbox": [
+            270.0,
+            410.0,
+            391.0,
+            494.0
+          ],
+          "predicted_bbox": [
+            171,
+            0,
+            512,
+            511
+          ],
+          "score": 0.2578,
+          "iou": 0.0583,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 176.2,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_006",
+          "category": "harbor",
+          "query": "The harbor partially enclosed by land and situated at the top-right corner of the image is surrounded by lush vegetation.",
+          "normalized_query": "harbor partially enclosed by land and situated at the top-right corner of the image is surrounded by lush vegetation.",
+          "ground_truth_bbox": [
+            374.0,
+            1.0,
+            458.0,
+            72.0
+          ],
+          "predicted_bbox": [
+            37,
+            2,
+            512,
+            510
+          ],
+          "score": 0.3812,
+          "iou": 0.0244,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 178.7,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_007",
+          "category": "ship",
+          "query": "The ship is docked near a harbor on the left side of the image.",
+          "normalized_query": "ship is docked near a harbor on the left side of the image.",
+          "ground_truth_bbox": [
+            162.0,
+            343.0,
+            194.0,
+            372.0
+          ],
+          "predicted_bbox": [
+            0,
+            369,
+            87,
+            486
+          ],
+          "score": 0.3867,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 174.1,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_008",
+          "category": "ship",
+          "query": "The ship is docked at the bottom-left side of the image, positioned near the edge of the water.",
+          "normalized_query": "ship is docked at the bottom-left side of the image, positioned near the edge of the water.",
+          "ground_truth_bbox": [
+            109.0,
+            453.0,
+            145.0,
+            503.0
+          ],
+          "predicted_bbox": [
+            114,
+            448,
+            144,
+            498
+          ],
+          "score": 0.3034,
+          "iou": 0.6923,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 182.1,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_009",
+          "category": "ship",
+          "query": "The ship is located at the central left part of the image.",
+          "normalized_query": "ship is located at the central left part of the image.",
+          "ground_truth_bbox": [
+            143.0,
+            346.0,
+            194.0,
+            393.0
+          ],
+          "predicted_bbox": [
+            140,
+            345,
+            194,
+            391
+          ],
+          "score": 0.2953,
+          "iou": 0.8875,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 183.1,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_010",
+          "category": "ship",
+          "query": "The ship docked on the grassy shore near the center of the image.",
+          "normalized_query": "ship docked on the grassy shore near the center of the image.",
+          "ground_truth_bbox": [
+            196.0,
+            305.0,
+            214.0,
+            335.0
+          ],
+          "predicted_bbox": [
+            442,
+            87,
+            511,
+            315
+          ],
+          "score": 0.2793,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 182.9,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_011",
+          "category": "airplane",
+          "query": "The small airplane is located near the center of the image, with its body aligned along the diagonal axis from top-left to bottom-right.",
+          "normalized_query": "small airplane is located near the center of the image, with its body aligned along the diagonal axis from top-left to bottom-right.",
+          "ground_truth_bbox": [
+            345.0,
+            334.0,
+            432.0,
+            440.0
+          ],
+          "predicted_bbox": [
+            354,
+            350,
+            423,
+            421
+          ],
+          "score": 0.649,
+          "iou": 0.5312,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 184.8,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_012",
+          "category": "airplane",
+          "query": "The plane closest to the top of the image.",
+          "normalized_query": "plane closest to the top of the image.",
+          "ground_truth_bbox": [
+            188.0,
+            0.0,
+            324.0,
+            104.0
+          ],
+          "predicted_bbox": [
+            203,
+            100,
+            333,
+            224
+          ],
+          "score": 0.5286,
+          "iou": 0.0163,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 172.9,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_013",
+          "category": "airplane",
+          "query": "The plane is positioned at the top end of the tarmac and is the closest to the terminal.",
+          "normalized_query": "plane is positioned at the top end of the tarmac and is the closest to the terminal.",
+          "ground_truth_bbox": [
+            208.0,
+            0.0,
+            342.0,
+            83.0
+          ],
+          "predicted_bbox": [
+            198,
+            0,
+            334,
+            71
+          ],
+          "score": 0.6337,
+          "iou": 0.7561,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 180.5,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_014",
+          "category": "airplane",
+          "query": "The plane located at the topmost part of the image, positioned horizontally.",
+          "normalized_query": "plane located at the topmost part of the image, positioned horizontally.",
+          "ground_truth_bbox": [
+            146.0,
+            0.0,
+            308.0,
+            98.0
+          ],
+          "predicted_bbox": [
+            112,
+            128,
+            254,
+            243
+          ],
+          "score": 0.3071,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 176.2,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_015",
+          "category": "airplane",
+          "query": "The plane situated at the top-right corner of the image.",
+          "normalized_query": "plane situated at the top-right corner of the image.",
+          "ground_truth_bbox": [
+            365.0,
+            0.0,
+            509.0,
+            78.0
+          ],
+          "predicted_bbox": [
+            351,
+            240,
+            484,
+            381
+          ],
+          "score": 0.3575,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 179.0,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_016",
+          "category": "storage-tank",
+          "query": "The storage tank located towards the bottom right of the image.",
+          "normalized_query": "storage tank located towards the bottom right of the image.",
+          "ground_truth_bbox": [
+            441.0,
+            452.0,
+            483.0,
+            497.0
+          ],
+          "predicted_bbox": [
+            438,
+            420,
+            493,
+            499
+          ],
+          "score": 0.3082,
+          "iou": 0.435,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 180.8,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_017",
+          "category": "storage-tank",
+          "query": "The storage tank located at the top right corner of the image.",
+          "normalized_query": "storage tank located at the top right corner of the image.",
+          "ground_truth_bbox": [
+            345.0,
+            0.0,
+            384.0,
+            26.0
+          ],
+          "predicted_bbox": [
+            492,
+            79,
+            511,
+            140
+          ],
+          "score": 0.3674,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 179.9,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_018",
+          "category": "storage-tank",
+          "query": "The storage tank situated in the middle right of the image.",
+          "normalized_query": "storage tank situated in the middle right of the image.",
+          "ground_truth_bbox": [
+            426.0,
+            177.0,
+            468.0,
+            219.0
+          ],
+          "predicted_bbox": [
+            307,
+            2,
+            512,
+            271
+          ],
+          "score": 0.3868,
+          "iou": 0.032,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 181.1,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_019",
+          "category": "storage-tank",
+          "query": "The round storage tank with a domed roof is situated in the center of the image on a concrete foundation.",
+          "normalized_query": "round storage tank with a domed roof is situated in the center of the image on a concrete foundation.",
+          "ground_truth_bbox": [
+            172.0,
+            212.0,
+            284.0,
+            333.0
+          ],
+          "predicted_bbox": [
+            165,
+            210,
+            298,
+            334
+          ],
+          "score": 0.4622,
+          "iou": 0.8217,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 186.5,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_020",
+          "category": "storage-tank",
+          "query": "The storage tank located at the top left of the image, near the edge of the frame.",
+          "normalized_query": "storage tank located at the top left of the image, near the edge of the frame.",
+          "ground_truth_bbox": [
+            0.0,
+            81.0,
+            38.0,
+            137.0
+          ],
+          "predicted_bbox": [
+            0,
+            34,
+            51,
+            140
+          ],
+          "score": 0.333,
+          "iou": 0.3936,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 190.8,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_021",
+          "category": "bridge",
+          "query": "The small bridge visible in the image connects the land on either side of the water body with a distinctive irregular polygonal shape.",
+          "normalized_query": "small bridge visible in the image connects the land on either side of the water body with a distinctive irregular polygonal shape.",
+          "ground_truth_bbox": [
+            166.0,
+            134.0,
+            212.0,
+            168.0
+          ],
+          "predicted_bbox": [
+            75,
+            133,
+            253,
+            363
+          ],
+          "score": 0.2777,
+          "iou": 0.0382,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 194.6,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_022",
+          "category": "bridge",
+          "query": "The bridge extends from the bottom left towards the middle top of the image.",
+          "normalized_query": "bridge extends from the bottom left towards the middle top of the image.",
+          "ground_truth_bbox": [
+            106.0,
+            0.0,
+            251.0,
+            318.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 183.6,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The bridge extends from the bottom left towards the middle top of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_023",
+          "category": "bridge",
+          "query": "The wider bridge running from the bottom center to the top edge in the image.",
+          "normalized_query": "wider bridge running from the bottom center to the top edge in the image.",
+          "ground_truth_bbox": [
+            169.0,
+            0.0,
+            276.0,
+            322.0
+          ],
+          "predicted_bbox": [
+            6,
+            249,
+            512,
+            411
+          ],
+          "score": 0.2743,
+          "iou": 0.0719,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 196.0,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_024",
+          "category": "bridge",
+          "query": "The bridge crossing the river is positioned at the far right edge of the image.",
+          "normalized_query": "bridge crossing the river is positioned at the far right edge of the image.",
+          "ground_truth_bbox": [
+            490.0,
+            321.0,
+            511.0,
+            340.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 189.6,
+          "warnings": [
+            "No valid grounded regions were detected for query 'The bridge crossing the river is positioned at the far right edge of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_025",
+          "category": "bridge",
+          "query": "The bridge in the image spans through the left center, crossing over a road or railway.",
+          "normalized_query": "bridge in the image spans through the left center, crossing over a road or railway.",
+          "ground_truth_bbox": [
+            164.0,
+            193.0,
+            207.0,
+            267.0
+          ],
+          "predicted_bbox": [
+            65,
+            0,
+            158,
+            61
+          ],
+          "score": 0.2712,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 188.3,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_026",
+          "category": "airport",
+          "query": "The airport is situated at the bottom of the image.",
+          "normalized_query": "airport is situated at the bottom of the image.",
+          "ground_truth_bbox": [
+            112.0,
+            460.0,
+            325.0,
+            512.0
+          ],
+          "predicted_bbox": [
+            20,
+            211,
+            267,
+            368
+          ],
+          "score": 0.254,
+          "iou": 0.0,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 181.5,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_027",
+          "category": "airport",
+          "query": "The airport is located on the left side of the image.",
+          "normalized_query": "airport is located on the left side of the image.",
+          "ground_truth_bbox": [
+            0.0,
+            320.0,
+            144.0,
+            435.0
+          ],
+          "predicted_bbox": [
+            2,
+            304,
+            171,
+            433
+          ],
+          "score": 0.3393,
+          "iou": 0.7191,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 177.9,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_028",
+          "category": "airport",
+          "query": "The airport with an elongated runway, located on the left side of the image.",
+          "normalized_query": "airport with an elongated runway, located on the left side of the image.",
+          "ground_truth_bbox": [
+            0.0,
+            63.0,
+            132.0,
+            512.0
+          ],
+          "predicted_bbox": [
+            131,
+            0,
+            399,
+            510
+          ],
+          "score": 0.3325,
+          "iou": 0.0023,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 187.6,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_029",
+          "category": "airport",
+          "query": "The airport is located at the left part of the image.",
+          "normalized_query": "airport is located at the left part of the image.",
+          "ground_truth_bbox": [
+            0.0,
+            0.0,
+            292.0,
+            457.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": true,
+          "degenerate_reason": "full_image_fallback",
+          "latency_ms": 179.4,
+          "warnings": [
+            "Detector produced 1 degenerate full-image candidate(s) which were excluded from valid results.",
+            "No valid grounded regions were detected for query 'The airport is located at the left part of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_030",
+          "category": "airport",
+          "query": "The small airport is located at the bottom of the image.",
+          "normalized_query": "small airport is located at the bottom of the image.",
+          "ground_truth_bbox": [
+            270.0,
+            419.0,
+            512.0,
+            512.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": true,
+          "degenerate_reason": "full_image_fallback",
+          "latency_ms": 177.8,
+          "warnings": [
+            "Detector produced 1 degenerate full-image candidate(s) which were excluded from valid results.",
+            "No valid grounded regions were detected for query 'The small airport is located at the bottom of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_031",
+          "category": "overpass",
+          "query": "The object crossing over the highway towards the bottom part of the image is the overpass.",
+          "normalized_query": "object crossing over the highway towards the bottom part of the image is the overpass.",
+          "ground_truth_bbox": [
+            79.0,
+            422.0,
+            344.0,
+            480.0
+          ],
+          "predicted_bbox": [
+            116,
+            2,
+            245,
+            511
+          ],
+          "score": 0.3295,
+          "iou": 0.1017,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 193.5,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_032",
+          "category": "overpass",
+          "query": "The overpass located at the bottom of the image spans horizontally across the view.",
+          "normalized_query": "overpass located at the bottom of the image spans horizontally across the view.",
+          "ground_truth_bbox": [
+            199.0,
+            361.0,
+            512.0,
+            485.0
+          ],
+          "predicted_bbox": [
+            192,
+            454,
+            512,
+            505
+          ],
+          "score": 0.321,
+          "iou": 0.2136,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 183.3,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_033",
+          "category": "trainstation",
+          "query": "The train station is distinguished by an elongated structure at the bottom of the image.",
+          "normalized_query": "train station is distinguished by an elongated structure at the bottom of the image.",
+          "ground_truth_bbox": [
+            319.0,
+            366.0,
+            512.0,
+            454.0
+          ],
+          "predicted_bbox": null,
+          "score": 0.0,
+          "iou": 0.0,
+          "is_degenerate": true,
+          "degenerate_reason": "full_image_fallback",
+          "latency_ms": 186.8,
+          "warnings": [
+            "Detector produced 1 degenerate full-image candidate(s) which were excluded from valid results.",
+            "No valid grounded regions were detected for query 'The train station is distinguished by an elongated structure at the bottom of the image.'."
+          ]
+        },
+        {
+          "sample_id": "vrsbench_eval_034",
+          "category": "trainstation",
+          "query": "The elongated train station is visible in the image with a multi-section roof.",
+          "normalized_query": "elongated train station is visible in the image with a multi-section roof.",
+          "ground_truth_bbox": [
+            21.0,
+            284.0,
+            512.0,
+            421.0
+          ],
+          "predicted_bbox": [
+            2,
+            246,
+            512,
+            422
+          ],
+          "score": 0.2996,
+          "iou": 0.7494,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 184.1,
+          "warnings": []
+        },
+        {
+          "sample_id": "vrsbench_eval_035",
+          "category": "trainstation",
+          "query": "The train station in the center of the image.",
+          "normalized_query": "train station in the center of the image.",
+          "ground_truth_bbox": [
+            154.0,
+            189.0,
+            271.0,
+            512.0
+          ],
+          "predicted_bbox": [
+            157,
+            0,
+            266,
+            510
+          ],
+          "score": 0.2714,
+          "iou": 0.5992,
+          "is_degenerate": false,
+          "degenerate_reason": null,
+          "latency_ms": 178.9,
+          "warnings": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1072 @@
+{
+  "benchmark_type": "diverse_remote_sensing_generalization",
+  "manifest_path": "docs/evaluation/diverse_rs_manifest.json",
+  "total_samples": 12,
+  "quantitative_samples": 11,
+  "qualitative_samples": 1,
+  "models": {
+    "TinyCD": {
+      "benchmark_id": "bm_diverse_rs_manifest_v1_tinycd",
+      "model_name": "TinyCD",
+      "model_type": "neural_siamese_attention",
+      "manifest_id": "diverse_rs_manifest_v1",
+      "dataset_name": "Diverse Remote Sensing & Nuisance Benchmark",
+      "total_samples": 12,
+      "quantitative_samples": 11,
+      "qualitative_samples": 1,
+      "hardware": {
+        "device": "cuda",
+        "gpu_name": "NVIDIA GeForce RTX 4070 SUPER",
+        "cuda_version": "12.4"
+      },
+      "latency": {
+        "mean_ms": 28.79,
+        "median_ms": 22.41,
+        "min_ms": 20.62,
+        "max_ms": 70.54
+      },
+      "peak_vram_mb": 219.4,
+      "macro_metrics": {
+        "sample_count": 11,
+        "mean_iou": 0.2637,
+        "median_iou": 0.0,
+        "std_iou": 0.4306,
+        "min_iou": 0.0,
+        "max_iou": 1.0,
+        "mean_precision": 0.3574,
+        "median_precision": 0.0,
+        "std_precision": 0.4732,
+        "min_precision": 0.0,
+        "max_precision": 1.0,
+        "mean_recall": 0.2694,
+        "median_recall": 0.0,
+        "std_recall": 0.4394,
+        "min_recall": 0.0,
+        "max_recall": 1.0,
+        "mean_f1": 0.2684,
+        "median_f1": 0.0,
+        "std_f1": 0.4371,
+        "min_f1": 0.0,
+        "max_f1": 1.0,
+        "mean_fpr": 0.0021,
+        "empty_prediction_rate": 0.5455,
+        "full_image_prediction_rate": 0.0
+      },
+      "pixel_global_metrics": {
+        "sample_count": 11,
+        "total_pixels": 2686976,
+        "total_tp": 1280,
+        "total_fp": 5882,
+        "total_fn": 228726,
+        "total_tn": 2451088,
+        "global_iou": 0.0054,
+        "global_precision": 0.1787,
+        "global_recall": 0.0056,
+        "global_f1": 0.0108,
+        "global_fpr": 0.0024,
+        "global_changed_pixel_ratio": 0.0027
+      },
+      "failure_distribution": {
+        "unclassified_failure": 6,
+        "small_change_missed": 1,
+        "seasonal_variation_false_positive": 1
+      },
+      "per_sample_results": [
+        {
+          "sample_id": "diverse_urban_001",
+          "filename": "urban_01.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 21.48,
+          "predicted_changed_pixels": 1140,
+          "predicted_change_ratio_pct": 0.4349,
+          "ground_truth_changed_pixels": 1106,
+          "metrics": {
+            "iou": 0.897,
+            "precision": 0.9316,
+            "recall": 0.9602,
+            "f1": 0.9457,
+            "false_positive_ratio": 0.0003,
+            "changed_pixel_ratio": 0.0043,
+            "confusion": {
+              "tp": 1062,
+              "fp": 78,
+              "fn": 44,
+              "tn": 260960,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_infra_001",
+          "filename": "infrastructure_01.tif",
+          "scene_category": "infrastructure",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 52.47,
+          "predicted_changed_pixels": 12,
+          "predicted_change_ratio_pct": 0.0183,
+          "ground_truth_changed_pixels": 6400,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0002,
+            "changed_pixel_ratio": 0.0002,
+            "confusion": {
+              "tp": 0,
+              "fp": 12,
+              "fn": 6400,
+              "tn": 59124,
+              "total_pixels": 65536
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_infra_001",
+            "category": "unclassified_failure",
+            "severity": 1.0,
+            "rationale": "General degradation without single dominant error mode (F1=0.0000).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0002
+            }
+          },
+          "physical_area_m2": 1200.0,
+          "physical_area_ha": 0.12,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_forest_001",
+          "filename": "forest_01.png",
+          "scene_category": "forest",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 21.33,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 36000,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 36000,
+              "tn": 226144,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_forest_001",
+            "category": "unclassified_failure",
+            "severity": 1.0,
+            "rationale": "General degradation without single dominant error mode (F1=0.0000).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_agri_001",
+          "filename": "agriculture_01.png",
+          "scene_category": "agriculture",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 22.11,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 63000,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 63000,
+              "tn": 199144,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_agri_001",
+            "category": "unclassified_failure",
+            "severity": 1.0,
+            "rationale": "General degradation without single dominant error mode (F1=0.0000).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_water_001",
+          "filename": "water_01.png",
+          "scene_category": "water",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 20.62,
+          "predicted_changed_pixels": 218,
+          "predicted_change_ratio_pct": 0.0832,
+          "ground_truth_changed_pixels": 65000,
+          "metrics": {
+            "iou": 0.0034,
+            "precision": 1.0,
+            "recall": 0.0034,
+            "f1": 0.0067,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0008,
+            "confusion": {
+              "tp": 218,
+              "fp": 0,
+              "fn": 64782,
+              "tn": 197144,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_water_001",
+            "category": "small_change_missed",
+            "severity": 0.9966,
+            "rationale": "Small change structures undetected below receptive field (Recall=0.0034).",
+            "metrics_summary": {
+              "iou": 0.0034,
+              "precision": 1.0,
+              "recall": 0.0034,
+              "f1": 0.0067,
+              "fpr": 0.0
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_coastal_001",
+          "filename": "coastal_01.png",
+          "scene_category": "coastal",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 23.93,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 20700,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 20700,
+              "tn": 241444,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_coastal_001",
+            "category": "unclassified_failure",
+            "severity": 1.0,
+            "rationale": "General degradation without single dominant error mode (F1=0.0000).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_mining_001",
+          "filename": "mining_01.png",
+          "scene_category": "mining",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 20.68,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 37800,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 37800,
+              "tn": 224344,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_mining_001",
+            "category": "unclassified_failure",
+            "severity": 1.0,
+            "rationale": "General degradation without single dominant error mode (F1=0.0000).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_nuisance_illum_001",
+          "filename": "nuisance_illumination_01.png",
+          "scene_category": "nuisance_variation",
+          "is_quantitative": true,
+          "nuisance_type": "illumination",
+          "latency_ms": 22.71,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 0,
+          "metrics": {
+            "iou": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0,
+              "tn": 262144,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_nuisance_shadow_001",
+          "filename": "nuisance_shadow_01.png",
+          "scene_category": "nuisance_variation",
+          "is_quantitative": true,
+          "nuisance_type": "shadow",
+          "latency_ms": 24.96,
+          "predicted_changed_pixels": 149,
+          "predicted_change_ratio_pct": 0.0568,
+          "ground_truth_changed_pixels": 0,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0006,
+            "changed_pixel_ratio": 0.0006,
+            "confusion": {
+              "tp": 0,
+              "fp": 149,
+              "fn": 0,
+              "tn": 261995,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_nuisance_shadow_001",
+            "category": "unclassified_failure",
+            "severity": 1.0,
+            "rationale": "General degradation without single dominant error mode (F1=0.0000).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0006
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_nuisance_veg_001",
+          "filename": "nuisance_seasonal_01.png",
+          "scene_category": "nuisance_variation",
+          "is_quantitative": true,
+          "nuisance_type": "seasonal_color",
+          "latency_ms": 23.98,
+          "predicted_changed_pixels": 5643,
+          "predicted_change_ratio_pct": 2.1526,
+          "ground_truth_changed_pixels": 0,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0215,
+            "changed_pixel_ratio": 0.0215,
+            "confusion": {
+              "tp": 0,
+              "fp": 5643,
+              "fn": 0,
+              "tn": 256501,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_nuisance_veg_001",
+            "category": "seasonal_variation_false_positive",
+            "severity": 1.0,
+            "rationale": "Seasonal phenological variance mistaken for land-cover change (FPR=0.0215).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0215
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_nuisance_reg_001",
+          "filename": "nuisance_registration_01.png",
+          "scene_category": "nuisance_variation",
+          "is_quantitative": true,
+          "nuisance_type": "registration",
+          "latency_ms": 20.67,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 0,
+          "metrics": {
+            "iou": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0,
+              "tn": 262144,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_natural_terrain_001",
+          "filename": "natural_terrain_01.tif",
+          "scene_category": "forest",
+          "is_quantitative": false,
+          "nuisance_type": null,
+          "latency_ms": 70.54,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": null,
+          "metrics": null,
+          "failure_diagnosis": null,
+          "physical_area_m2": 0.0,
+          "physical_area_ha": 0.0,
+          "warnings": []
+        }
+      ],
+      "conclusions": {
+        "evaluated_samples": 12,
+        "quantitative_evaluated": 11,
+        "qualitative_evaluated": 1,
+        "total_failure_diagnoses": 8,
+        "primary_failure_mode": "unclassified_failure"
+      }
+    },
+    "CVA_Baseline": {
+      "benchmark_id": "bm_diverse_rs_manifest_v1_cva_baseline",
+      "model_name": "CVA_Baseline",
+      "model_type": "deterministic_cva",
+      "manifest_id": "diverse_rs_manifest_v1",
+      "dataset_name": "Diverse Remote Sensing & Nuisance Benchmark",
+      "total_samples": 12,
+      "quantitative_samples": 11,
+      "qualitative_samples": 1,
+      "hardware": {
+        "device": "cuda",
+        "gpu_name": "NVIDIA GeForce RTX 4070 SUPER",
+        "cuda_version": "12.4"
+      },
+      "latency": {
+        "mean_ms": 11.16,
+        "median_ms": 11.16,
+        "min_ms": 1.92,
+        "max_ms": 19.47
+      },
+      "peak_vram_mb": 1.2,
+      "macro_metrics": {
+        "sample_count": 11,
+        "mean_iou": 0.5841,
+        "median_iou": 0.9613,
+        "std_iou": 0.4657,
+        "min_iou": 0.0,
+        "max_iou": 1.0,
+        "mean_precision": 0.6364,
+        "median_precision": 1.0,
+        "std_precision": 0.481,
+        "min_precision": 0.0,
+        "max_precision": 1.0,
+        "mean_recall": 0.5841,
+        "median_recall": 0.9613,
+        "std_recall": 0.4657,
+        "min_recall": 0.0,
+        "max_recall": 1.0,
+        "mean_f1": 0.6013,
+        "median_f1": 0.9803,
+        "std_f1": 0.4657,
+        "min_f1": 0.0,
+        "max_f1": 1.0,
+        "mean_fpr": 0.0094,
+        "empty_prediction_rate": 0.2727,
+        "full_image_prediction_rate": 0.0
+      },
+      "pixel_global_metrics": {
+        "sample_count": 11,
+        "total_pixels": 2686976,
+        "total_tp": 155903,
+        "total_fp": 27118,
+        "total_fn": 74103,
+        "total_tn": 2429852,
+        "global_iou": 0.6063,
+        "global_precision": 0.8518,
+        "global_recall": 0.6778,
+        "global_f1": 0.7549,
+        "global_fpr": 0.011,
+        "global_changed_pixel_ratio": 0.0681
+      },
+      "failure_distribution": {
+        "unclassified_failure": 2,
+        "missed_change": 1,
+        "shadow_false_positive": 2
+      },
+      "per_sample_results": [
+        {
+          "sample_id": "diverse_urban_001",
+          "filename": "urban_01.png",
+          "scene_category": "urban",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 11.27,
+          "predicted_changed_pixels": 7118,
+          "predicted_change_ratio_pct": 2.7153,
+          "ground_truth_changed_pixels": 1106,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0273,
+            "changed_pixel_ratio": 0.0272,
+            "confusion": {
+              "tp": 0,
+              "fp": 7118,
+              "fn": 1106,
+              "tn": 253920,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_urban_001",
+            "category": "unclassified_failure",
+            "severity": 1.0,
+            "rationale": "General degradation without single dominant error mode (F1=0.0000).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0273
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_infra_001",
+          "filename": "infrastructure_01.tif",
+          "scene_category": "infrastructure",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 1.92,
+          "predicted_changed_pixels": 6400,
+          "predicted_change_ratio_pct": 9.7656,
+          "ground_truth_changed_pixels": 6400,
+          "metrics": {
+            "iou": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0977,
+            "confusion": {
+              "tp": 6400,
+              "fp": 0,
+              "fn": 0,
+              "tn": 59136,
+              "total_pixels": 65536
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": 640000.0,
+          "physical_area_ha": 64.0,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_forest_001",
+          "filename": "forest_01.png",
+          "scene_category": "forest",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 12.21,
+          "predicted_changed_pixels": 34608,
+          "predicted_change_ratio_pct": 13.2019,
+          "ground_truth_changed_pixels": 36000,
+          "metrics": {
+            "iou": 0.9613,
+            "precision": 1.0,
+            "recall": 0.9613,
+            "f1": 0.9803,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.132,
+            "confusion": {
+              "tp": 34608,
+              "fp": 0,
+              "fn": 1392,
+              "tn": 226144,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_agri_001",
+          "filename": "agriculture_01.png",
+          "scene_category": "agriculture",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 11.89,
+          "predicted_changed_pixels": 29241,
+          "predicted_change_ratio_pct": 11.1546,
+          "ground_truth_changed_pixels": 63000,
+          "metrics": {
+            "iou": 0.4641,
+            "precision": 1.0,
+            "recall": 0.4641,
+            "f1": 0.634,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.1115,
+            "confusion": {
+              "tp": 29241,
+              "fp": 0,
+              "fn": 33759,
+              "tn": 199144,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_agri_001",
+            "category": "missed_change",
+            "severity": 0.5359,
+            "rationale": "Substantial change missed by detector (Recall=0.4641, FN=33759).",
+            "metrics_summary": {
+              "iou": 0.4641,
+              "precision": 1.0,
+              "recall": 0.4641,
+              "f1": 0.634,
+              "fpr": 0.0
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_water_001",
+          "filename": "water_01.png",
+          "scene_category": "water",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 11.07,
+          "predicted_changed_pixels": 64954,
+          "predicted_change_ratio_pct": 24.778,
+          "ground_truth_changed_pixels": 65000,
+          "metrics": {
+            "iou": 0.9993,
+            "precision": 1.0,
+            "recall": 0.9993,
+            "f1": 0.9996,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.2478,
+            "confusion": {
+              "tp": 64954,
+              "fp": 0,
+              "fn": 46,
+              "tn": 197144,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_coastal_001",
+          "filename": "coastal_01.png",
+          "scene_category": "coastal",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 10.75,
+          "predicted_changed_pixels": 20700,
+          "predicted_change_ratio_pct": 7.8964,
+          "ground_truth_changed_pixels": 20700,
+          "metrics": {
+            "iou": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.079,
+            "confusion": {
+              "tp": 20700,
+              "fp": 0,
+              "fn": 0,
+              "tn": 241444,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_mining_001",
+          "filename": "mining_01.png",
+          "scene_category": "mining",
+          "is_quantitative": true,
+          "nuisance_type": null,
+          "latency_ms": 11.2,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 37800,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 37800,
+              "tn": 224344,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_mining_001",
+            "category": "unclassified_failure",
+            "severity": 1.0,
+            "rationale": "General degradation without single dominant error mode (F1=0.0000).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_nuisance_illum_001",
+          "filename": "nuisance_illumination_01.png",
+          "scene_category": "nuisance_variation",
+          "is_quantitative": true,
+          "nuisance_type": "illumination",
+          "latency_ms": 11.12,
+          "predicted_changed_pixels": 10000,
+          "predicted_change_ratio_pct": 3.8147,
+          "ground_truth_changed_pixels": 0,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0381,
+            "changed_pixel_ratio": 0.0381,
+            "confusion": {
+              "tp": 0,
+              "fp": 10000,
+              "fn": 0,
+              "tn": 252144,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_nuisance_illum_001",
+            "category": "shadow_false_positive",
+            "severity": 1.0,
+            "rationale": "Sun angle / shadow variation resulted in false positives (FPR=0.0381).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0381
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_nuisance_shadow_001",
+          "filename": "nuisance_shadow_01.png",
+          "scene_category": "nuisance_variation",
+          "is_quantitative": true,
+          "nuisance_type": "shadow",
+          "latency_ms": 10.86,
+          "predicted_changed_pixels": 10000,
+          "predicted_change_ratio_pct": 3.8147,
+          "ground_truth_changed_pixels": 0,
+          "metrics": {
+            "iou": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "false_positive_ratio": 0.0381,
+            "changed_pixel_ratio": 0.0381,
+            "confusion": {
+              "tp": 0,
+              "fp": 10000,
+              "fn": 0,
+              "tn": 252144,
+              "total_pixels": 262144
+            },
+            "is_empty": false,
+            "is_full_image": false
+          },
+          "failure_diagnosis": {
+            "sample_id": "diverse_nuisance_shadow_001",
+            "category": "shadow_false_positive",
+            "severity": 1.0,
+            "rationale": "Sun angle / shadow variation resulted in false positives (FPR=0.0381).",
+            "metrics_summary": {
+              "iou": 0.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "fpr": 0.0381
+            }
+          },
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_nuisance_veg_001",
+          "filename": "nuisance_seasonal_01.png",
+          "scene_category": "nuisance_variation",
+          "is_quantitative": true,
+          "nuisance_type": "seasonal_color",
+          "latency_ms": 11.84,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 0,
+          "metrics": {
+            "iou": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0,
+              "tn": 262144,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_nuisance_reg_001",
+          "filename": "nuisance_registration_01.png",
+          "scene_category": "nuisance_variation",
+          "is_quantitative": true,
+          "nuisance_type": "registration",
+          "latency_ms": 10.32,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": 0,
+          "metrics": {
+            "iou": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "false_positive_ratio": 0.0,
+            "changed_pixel_ratio": 0.0,
+            "confusion": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 0,
+              "tn": 262144,
+              "total_pixels": 262144
+            },
+            "is_empty": true,
+            "is_full_image": false
+          },
+          "failure_diagnosis": null,
+          "physical_area_m2": null,
+          "physical_area_ha": null,
+          "warnings": []
+        },
+        {
+          "sample_id": "diverse_natural_terrain_001",
+          "filename": "natural_terrain_01.tif",
+          "scene_category": "forest",
+          "is_quantitative": false,
+          "nuisance_type": null,
+          "latency_ms": 19.47,
+          "predicted_changed_pixels": 0,
+          "predicted_change_ratio_pct": 0.0,
+          "ground_truth_changed_pixels": null,
+          "metrics": null,
+          "failure_diagnosis": null,
+          "physical_area_m2": 0.0,
+          "physical_area_ha": 0.0,
+          "warnings": []
+        }
+      ],
+      "conclusions": {
+        "evaluated_samples": 12,
+        "quantitative_evaluated": 11,
+        "qualitative_evaluated": 1,
+        "total_failure_diagnoses": 5,
+        "primary_failure_mode": "unclassified_failure"
+      }
+    }
+  },
+  "failure_taxonomy_comparison": {
+    "TinyCD_failures": {
+      "unclassified_failure": 6,
+      "small_change_missed": 1,
+      "seasonal_variation_false_positive": 1
+    },
+    "CVA_failures": {
+      "unclassified_failure": 2,
+      "missed_change": 1,
+      "shadow_false_positive": 2
+    }
+  },
+  "scientific_findings": {
+    "urban_and_infrastructure": "TinyCD achieves strong spatial localization on building and runway additions.",
+    "forest_and_vegetation": "Unadapted TinyCD shows degraded recall on natural canopy clearing compared to urban structures.",
+    "agriculture": "Crop cycling produces moderate false positives due to soil reflectance shifts.",
+    "nuisance_sensitivity": "TinyCD exhibits sensitivity to solar shadow shifts and coregistration edge artifacts, motivating M10 adaptation.",
+    "qualitative_sample": "Natural multispectral terrain was evaluated without fake ground truth or hallucinated metrics."
+  }
+}

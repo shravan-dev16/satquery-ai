@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "satquery-ai"
+version = "0.1.0"
+description = "Interactive Vision-Language Assistant for Multimodal Remote Sensing (SIH26167 / ISRO)"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+authors = [
+    { name = "SatQuery AI Team" }
+]
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "pydantic>=2.8.0",
+    "rasterio>=1.4.0",
+    "shapely>=2.0.0",
+    "numpy>=1.26.0,<3.0.0",
+    "pillow>=10.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "httpx>=0.27.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
+markers = [
+    "smoke: marks live remote-sensing model smoke tests",
+]

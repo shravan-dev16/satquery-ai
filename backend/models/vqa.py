@@ -88,10 +88,22 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
         if self.device != "cuda" and hasattr(self.model, "to"):
             self.model.to(self.device)
 
+        # Check for adapted model toggle (SATQUERY_USE_ADAPTED_VLM=1)
+        import os
+        use_adapted = os.environ.get("SATQUERY_USE_ADAPTED_VLM", "0") == "1"
+        adapter_path = Path("models/adapters/qwen2_vl_rs_lora")
+        if use_adapted and adapter_path.exists():
+            from peft import PeftModel
+            logger.info("Loading RS-adapted LoRA adapter from %s...", adapter_path)
+            self.model = PeftModel.from_pretrained(self.model, str(adapter_path))
+            self._is_adapted = True
+        else:
+            self._is_adapted = False
+
         self.model.eval()
         self._is_loaded = True
         self._load_duration_ms = int((time.perf_counter() - start_time) * 1000)
-        logger.info("VQA model loaded successfully in %d ms", self._load_duration_ms)
+        logger.info("VQA model loaded successfully (adapted=%s) in %d ms", self._is_adapted, self._load_duration_ms)
 
     def predict(self, inputs: SpecialistInput) -> SpecialistOutput:
         """Executes VQA inference on input raster image and query."""
@@ -208,6 +220,8 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
                 "model_id": self.model_id,
                 "max_new_tokens": max_new_tokens,
                 "temperature": temperature,
+                "is_adapted": getattr(self, "_is_adapted", False),
+                "adapter_path": "models/adapters/qwen2_vl_rs_lora" if getattr(self, "_is_adapted", False) else None,
             },
             warnings=[],
             execution_time_ms=elapsed_ms,

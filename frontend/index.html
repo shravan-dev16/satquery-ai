@@ -235,6 +235,86 @@
           <p class="answer-text" id="summary-answer">...</p>
         </div>
 
+        <!-- Defensible System Confidence Card (Milestone M9) -->
+        <div class="confidence-card" id="confidence-card">
+          <div class="confidence-card-header">
+            <div class="confidence-card-left">
+              <span class="confidence-engine-tag">M9 Defensible System Confidence</span>
+              <span class="confidence-level-badge level-high" id="conf-level-badge">HIGH</span>
+              <span class="confidence-overall-score" id="conf-overall-score">0.0%</span>
+            </div>
+            <div class="confidence-card-right">
+              <span class="confidence-calibration-badge" id="conf-calibration-badge">Heuristic — Multi-Factor Grounded</span>
+            </div>
+          </div>
+
+          <!-- Multi-factor Sub-Scores Grid -->
+          <div class="confidence-factors-grid">
+            <div class="confidence-subfactor">
+              <span class="subfactor-label">Specialist Signal</span>
+              <span class="subfactor-value" id="subfactor-specialist">--</span>
+            </div>
+            <div class="confidence-subfactor">
+              <span class="subfactor-label">Evidence Quality</span>
+              <span class="subfactor-value" id="subfactor-evidence">--</span>
+            </div>
+            <div class="confidence-subfactor">
+              <span class="subfactor-label">Spatial Alignment</span>
+              <span class="subfactor-value" id="subfactor-alignment">--</span>
+            </div>
+            <div class="confidence-subfactor">
+              <span class="subfactor-label">Input / CRS Quality</span>
+              <span class="subfactor-value" id="subfactor-input">--</span>
+            </div>
+            <div class="confidence-subfactor">
+              <span class="subfactor-label">Consistency Impact</span>
+              <span class="subfactor-value" id="subfactor-consistency">0.00</span>
+            </div>
+          </div>
+
+          <!-- Explainable Factors & Warnings -->
+          <div class="confidence-explainability-row">
+            <span class="supporting-label">Defensible Supporting Factors:</span>
+            <div class="confidence-factors-list" id="conf-factors-list">
+              <!-- Dynamically populated -->
+            </div>
+            <div class="confidence-factors-list hidden" id="conf-warnings-list" style="margin-top: 4px;">
+              <!-- Dynamically populated warnings -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Evidence Consistency & Reliability Status Card (Milestone M8) -->
+        <div class="evidence-status-card" id="evidence-status-card">
+          <div class="evidence-status-header">
+            <div class="status-header-left">
+              <span class="evidence-status-tag">M8 Evidence Reliability</span>
+              <span class="consistency-status-badge status-consistent" id="consistency-status-badge">CONSISTENT</span>
+            </div>
+            <div class="status-header-right">
+              <span class="evidence-quality-badge" id="evidence-quality-badge">Quality: 100%</span>
+              <span class="provenance-count-badge" id="provenance-count-badge">0 Evidence Units</span>
+            </div>
+          </div>
+          <div class="evidence-status-body">
+            <p class="consistency-narrative" id="consistency-narrative">Evidence is consistent and corroborates findings across invoked specialists.</p>
+            
+            <div class="conflicts-container hidden" id="conflicts-container">
+              <h5 class="conflicts-title">⚠️ Identified Discrepancies & Contradictions</h5>
+              <ul class="conflicts-list" id="conflicts-list">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+
+            <div class="supporting-evidence-box">
+              <span class="supporting-label">Grounded Evidence Sources:</span>
+              <div class="evidence-pills-row" id="evidence-pills-row">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Semantic Change Interpretation Card (Milestone M5) -->
         <div class="semantic-card hidden" id="semantic-card">
           <div class="semantic-header">

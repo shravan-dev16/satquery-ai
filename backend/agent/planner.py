@@ -88,10 +88,43 @@ class AgentPlanner:
             steps.append(
                 PlanStep(
                     step_number=step_idx,
+                    step_name="EvidenceNormalization",
+                    action_type="normalize_evidence",
+                    description="Normalize VQA output into standardized EvidenceItem with preserved source provenance.",
+                    inputs_required=["vqa_answer", "model_confidence"],
+                    outputs_produced=["normalized_evidence_items"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
+                    step_name="ConsistencyCheck",
+                    action_type="consistency_check",
+                    description="Evaluate evidence sufficiency and metadata provenance.",
+                    inputs_required=["normalized_evidence_items"],
+                    outputs_produced=["consistency_report"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
+                    step_name="EvidenceFusion",
+                    action_type="fuse_evidence",
+                    description="Synthesize normalized evidence units into consolidated EvidenceBundle.",
+                    inputs_required=["normalized_evidence_items", "consistency_report"],
+                    outputs_produced=["fused_evidence_bundle"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
                     step_name="EvidenceAssembly",
                     action_type="assemble_evidence",
-                    description="Assemble StandardResultContract with answer telemetry and confidence breakdown.",
-                    inputs_required=["vqa_answer", "model_confidence"],
+                    description="Gate evidence claims and assemble StandardResultContract.",
+                    inputs_required=["fused_evidence_bundle", "consistency_report"],
                     outputs_produced=["standard_result_contract"],
                 )
             )
@@ -149,10 +182,43 @@ class AgentPlanner:
             steps.append(
                 PlanStep(
                     step_number=step_idx,
+                    step_name="EvidenceNormalization",
+                    action_type="normalize_evidence",
+                    description="Normalize bounding boxes into standardized EvidenceItem records with spatial bounds.",
+                    inputs_required=["detected_boxes"],
+                    outputs_produced=["normalized_evidence_items"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
+                    step_name="ConsistencyCheck",
+                    action_type="consistency_check",
+                    description="Evaluate detection degeneracy, empty candidates, and CRS sufficiency (Rule C8).",
+                    inputs_required=["normalized_evidence_items"],
+                    outputs_produced=["consistency_report"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
+                    step_name="EvidenceFusion",
+                    action_type="fuse_evidence",
+                    description="Synthesize normalized spatial evidence units into consolidated EvidenceBundle.",
+                    inputs_required=["normalized_evidence_items", "consistency_report"],
+                    outputs_produced=["fused_evidence_bundle"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
                     step_name="EvidenceAssembly",
                     action_type="assemble_evidence",
                     description="Project pixel bounding boxes to GeoJSON and assemble StandardResultContract.",
-                    inputs_required=["detected_boxes", "validated_metadata"],
+                    inputs_required=["fused_evidence_bundle", "validated_metadata"],
                     outputs_produced=["standard_result_contract"],
                 )
             )
@@ -334,10 +400,43 @@ class AgentPlanner:
             steps.append(
                 PlanStep(
                     step_number=step_idx,
+                    step_name="EvidenceNormalization",
+                    action_type="normalize_evidence",
+                    description="Normalize change detection and semantic VQA into standardized EvidenceItem records.",
+                    inputs_required=["change_mask", "zonal_statistics"],
+                    outputs_produced=["normalized_evidence_items"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
+                    step_name="ConsistencyCheck",
+                    action_type="consistency_check",
+                    description="Evaluate Rules C1-C5, C7, C8: zero-change, region support, area match, and direction.",
+                    inputs_required=["normalized_evidence_items"],
+                    outputs_produced=["consistency_report"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
+                    step_name="EvidenceFusion",
+                    action_type="fuse_evidence",
+                    description="Synthesize normalized multi-modal items into consolidated EvidenceBundle.",
+                    inputs_required=["normalized_evidence_items", "consistency_report"],
+                    outputs_produced=["fused_evidence_bundle"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
                     step_name="EvidenceAssembly",
                     action_type="assemble_evidence",
-                    description="Synthesize visual overlays, telemetry, and evidence-weighted confidence breakdown.",
-                    inputs_required=["change_mask", "zonal_statistics"],
+                    description="Synthesize visual overlays, gate answer claims, and assemble StandardResultContract.",
+                    inputs_required=["fused_evidence_bundle", "consistency_report"],
                     outputs_produced=["standard_result_contract"],
                 )
             )
@@ -450,10 +549,43 @@ class AgentPlanner:
             steps.append(
                 PlanStep(
                     step_number=step_idx,
+                    step_name="EvidenceNormalization",
+                    action_type="normalize_evidence",
+                    description="Normalize cross-modal cues into EvidenceItem records with optical/SAR provenance.",
+                    inputs_required=["fused_class_map", "detected_regions"],
+                    outputs_produced=["normalized_evidence_items"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
+                    step_name="ConsistencyCheck",
+                    action_type="consistency_check",
+                    description="Evaluate Rule C6 (Optical/SAR agreement) and Rule C8 (cross-modal sufficiency).",
+                    inputs_required=["normalized_evidence_items"],
+                    outputs_produced=["consistency_report"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
+                    step_name="EvidenceFusion",
+                    action_type="fuse_evidence",
+                    description="Synthesize cross-modal evidence units into consolidated EvidenceBundle.",
+                    inputs_required=["normalized_evidence_items", "consistency_report"],
+                    outputs_produced=["fused_evidence_bundle"],
+                )
+            )
+            step_idx += 1
+            steps.append(
+                PlanStep(
+                    step_number=step_idx,
                     step_name="EvidenceAssembly",
                     action_type="assemble_evidence",
-                    description="Assemble StandardResultContract with 3-panel composite, categorical mask, and ComplementarityReport.",
-                    inputs_required=["fused_class_map", "detected_regions"],
+                    description="Assemble StandardResultContract with gated answer, composite, and ComplementarityReport.",
+                    inputs_required=["fused_evidence_bundle", "consistency_report"],
                     outputs_produced=["standard_result_contract"],
                 )
             )

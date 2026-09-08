@@ -184,6 +184,8 @@ class SemanticTransition(BaseModel):
         default="visual_crop_comparison",
         description="Basis for claim: 'visual_crop_comparison', 'quantitative_mask_extent', 'spectral_difference', 'unverified'",
     )
+    details: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary metadata and claimed metrics")
+
 
 
 class SemanticChangeInterpretation(BaseModel):
@@ -207,6 +209,65 @@ class SemanticChangeInterpretation(BaseModel):
     )
 
 
+# ---------------------------------------------------------------------------
+# Evidence Fusion & Consistency Schemas (Milestone M8)
+# ---------------------------------------------------------------------------
+
+class ConsistencyStatus(str, Enum):
+    """Observable consistency assessment across independent specialist evidence."""
+    CONSISTENT = "CONSISTENT"
+    PARTIALLY_CONSISTENT = "PARTIALLY_CONSISTENT"
+    UNCERTAIN = "UNCERTAIN"
+    CONTRADICTORY = "CONTRADICTORY"
+    INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
+
+
+class EvidenceItem(BaseModel):
+    """A standardized unit of evidence with preserved provenance (Milestone M8).
+    
+    Every meaningful claim in SatQuery must trace back to an EvidenceItem.
+    """
+    item_id: str = Field(description="Unique evidence item identifier (e.g. 'ev_item_001')")
+    source_specialist: str = Field(description="Specialist identifier (e.g. 'CHANGE_DETECT', 'CHANGE_VQA', 'RS_GROUND')")
+    evidence_type: str = Field(description="Type: 'spatial_mask', 'zonal_statistics', 'semantic_transition', 'bounding_box', 'cross_modal_joint_class', 'visual_narrative'")
+    modality: ModalityType = Field(description="Underlying sensor modality")
+    claim: str = Field(description="Human-readable factual statement of this evidence unit")
+    region_id: Optional[str] = Field(default=None, description="Linked spatial cluster or region ID")
+    geometry: Optional[Dict[str, Any]] = Field(default=None, description="Pixel bounds, geojson, or coordinate geometry")
+    metrics: Dict[str, Any] = Field(default_factory=dict, description="Numerical measurements: changed_pixels, area_ha, etc.")
+    specialist_confidence: float = Field(default=1.0, ge=0.0, le=1.0, description="Raw specialist confidence score (NOT final system confidence)")
+    is_uncertain: bool = Field(default=False, description="Flag indicating evidence has high ambiguity or low signal")
+    uncertainty_rationale: Optional[str] = Field(default=None, description="Explanation if marked uncertain")
+    provenance: Dict[str, Any] = Field(default_factory=dict, description="Audit trace: filenames, timestamps, sensor, resolution, CRS")
+
+
+class EvidenceConflict(BaseModel):
+    """An explicit contradiction or disagreement detected between evidence sources (Rule 10)."""
+    conflict_id: str = Field(description="Unique conflict ID (e.g. 'conf_001')")
+    rule_violated: str = Field(description="Violated consistency rule (e.g. 'C1_ZERO_CHANGE_CONTRADICTION', 'C2_UNSUPPORTED_REGION')")
+    severity: str = Field(default="critical", description="Severity: 'critical', 'warning', 'advisory'")
+    description: str = Field(description="Empirically grounded explanation of discrepancy")
+    conflicting_sources: List[str] = Field(default_factory=list, description="IDs of conflicting specialists")
+    details: Dict[str, Any] = Field(default_factory=dict, description="Supporting telemetry")
+
+
+class ConsistencyReport(BaseModel):
+    """Auditable consistency report produced by M8 Consistency Checker.
+    
+    Exposes qualitative and structured factors only. Does NOT compute final numerical
+    system confidence (which belongs exclusively to M9).
+    """
+    status: ConsistencyStatus = Field(default=ConsistencyStatus.CONSISTENT)
+    is_gated: bool = Field(default=False, description="True if answer narrative was gated or modified")
+    gating_action: str = Field(default="allow", description="Action taken: 'allow', 'qualify', 'flag_contradiction', 'state_insufficient'")
+    conflicts: List[EvidenceConflict] = Field(default_factory=list)
+    supporting_evidence_ids: List[str] = Field(default_factory=list, description="IDs of consistent evidence items")
+    warnings: List[str] = Field(default_factory=list)
+    specialist_confidences: Dict[str, float] = Field(default_factory=dict, description="Raw confidences from invoked specialists")
+    evidence_quality_score: float = Field(default=1.0, ge=0.0, le=1.0, description="Qualitative indicator of evidence completeness")
+    summary_narrative: str = Field(default="Evidence is consistent across invoked specialists.")
+
+
 class EvidenceBundle(BaseModel):
     """Consolidated evidence payload adhering to Rule 8 & 9."""
     images: List[EvidenceImage] = Field(default_factory=list)
@@ -216,20 +277,38 @@ class EvidenceBundle(BaseModel):
     regions: List[DetectedRegion] = Field(default_factory=list)
     complementarity_report: Optional[ComplementarityReport] = None
     semantic_interpretation: Optional[SemanticChangeInterpretation] = None
+    fused_items: List[EvidenceItem] = Field(default_factory=list, description="Standardized normalized evidence units with provenance (M8)")
+    consistency_report: Optional[ConsistencyReport] = Field(default=None, description="Multi-source consistency assessment report (M8)")
+
 
 
 # ---------------------------------------------------------------------------
-# Confidence & Trace Schemas
+# Confidence & Trace Schemas (Milestone M9)
 # ---------------------------------------------------------------------------
+
+class ConfidenceLevel(str, Enum):
+    """Human-readable classification of system-level confidence (M9)."""
+    HIGH = "HIGH"
+    MEDIUM = "MEDIUM"
+    LOW = "LOW"
+    UNSUPPORTED = "UNSUPPORTED"
+
 
 class ConfidenceBreakdown(BaseModel):
-    """Decomposition of the evidence-weighted confidence heuristic."""
+    """Decomposition of the multi-factor defensible confidence heuristic (M9)."""
     heuristic_name: str = "evidence-weighted confidence heuristic"
+    overall_confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="System-level confidence score (M9)")
+    specialist_confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Raw specialist confidence score (M9)")
     input_quality_score: float = Field(ge=0.0, le=1.0)
     spatial_alignment_score: float = Field(ge=0.0, le=1.0)
     model_confidence_score: float = Field(ge=0.0, le=1.0)
-    consistency_penalty: float = Field(ge=0.0, le=0.5)
+    consistency_penalty: float = Field(default=0.0, ge=0.0, le=0.5)
     is_calibrated_probability: bool = False
+    evidence_quality_score: float = Field(default=1.0, ge=0.0, le=1.0, description="Completeness & integrity of spatial evidence (M9)")
+    confidence_level: Optional[ConfidenceLevel] = Field(default=None, description="Categorical confidence tier (M9)")
+    confidence_factors: List[str] = Field(default_factory=list, description="Human-interpretable supporting/dampening factors (M9)")
+    confidence_warnings: List[str] = Field(default_factory=list, description="Specific penalty and constraint warnings (M9)")
+    calculation_details: Dict[str, Any] = Field(default_factory=dict, description="Operational audit details of weights and caps applied (M9)")
 
 
 class TraceStep(BaseModel):
@@ -307,8 +386,10 @@ class StandardResultContract(BaseModel):
     status: str = "success"
     answer: str
     confidence: float = Field(ge=0.0, le=1.0)
+    confidence_level: Optional[str] = Field(default=None, description="Categorical confidence tier (HIGH, MEDIUM, LOW, UNSUPPORTED) (M9)")
     confidence_breakdown: ConfidenceBreakdown
     evidence: EvidenceBundle
+    evidence_status: Optional[str] = Field(default=None, description="Observable consistency status of evidence (M8)")
     models: List[ModelExecutionRecord] = Field(default_factory=list)
     parameters: Dict[str, Any] = Field(default_factory=dict)
     warnings: List[str] = Field(default_factory=list)

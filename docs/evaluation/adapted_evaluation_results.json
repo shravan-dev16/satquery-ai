@@ -1,0 +1,401 @@
+{
+  "model_mode": "Adapted RS-LoRA Candidate",
+  "use_adapted_flag": true,
+  "peak_vram_mb": 8843,
+  "rs_vqa_metrics": {
+    "total_samples": 33,
+    "correct_count": 20,
+    "accuracy_pct": 60.61,
+    "mean_latency_ms": 515.71
+  },
+  "change_vqa_metrics": {
+    "total_samples": 3,
+    "valid_json_count": 3,
+    "valid_json_rate_pct": 100.0,
+    "mean_latency_ms": 4709.61
+  },
+  "m5_diagnostics": [
+    {
+      "scenario_id": "semantic_urban_01",
+      "category": "URBAN",
+      "expected_transition": "bare_ground_or_soil -> built_structure",
+      "predicted_transition": "forest_or_trees -> bare_ground_or_soil",
+      "expected_direction": "increased",
+      "predicted_direction": "modified",
+      "semantic_uncertainty": 0.15,
+      "latency_ms": 7341.14
+    },
+    {
+      "scenario_id": "semantic_forest_01",
+      "category": "FOREST_VEGETATION",
+      "expected_transition": "forest_or_trees -> bare_ground_or_soil",
+      "predicted_transition": "forest_or_trees -> bare_ground_or_soil",
+      "expected_direction": "decreased",
+      "predicted_direction": "modified",
+      "semantic_uncertainty": 0.15,
+      "latency_ms": 6508.34
+    },
+    {
+      "scenario_id": "semantic_water_01",
+      "category": "WATER_AQUATIC",
+      "expected_transition": "bare_ground_or_soil -> water_body",
+      "predicted_transition": "unknown -> unknown",
+      "expected_direction": "increased",
+      "predicted_direction": "no_change",
+      "semantic_uncertainty": 0.4,
+      "latency_ms": 5337.1
+    },
+    {
+      "scenario_id": "semantic_agri_01",
+      "category": "AGRICULTURE",
+      "expected_transition": "vegetation_or_cropland -> bare_ground_or_soil",
+      "predicted_transition": "none -> none",
+      "expected_direction": "modified",
+      "predicted_direction": "no_change",
+      "semantic_uncertainty": 0.0,
+      "latency_ms": 0.1
+    },
+    {
+      "scenario_id": "semantic_zero_01",
+      "category": "ZERO_CHANGE",
+      "expected_transition": "none -> none",
+      "predicted_transition": "none -> none",
+      "expected_direction": "no_change",
+      "predicted_direction": "no_change",
+      "semantic_uncertainty": 0.0,
+      "latency_ms": 0.08
+    }
+  ],
+  "vqa_sample_details": [
+    {
+      "sample_id": "P1225_0002_q1",
+      "parent_scene": "P1225",
+      "question": "How many bridges are visible in the image?",
+      "ground_truth": "2",
+      "prediction": "2",
+      "is_match": true,
+      "latency_ms": 10811.01,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0002_q2",
+      "parent_scene": "P1225",
+      "question": "What color is the image predominantly?",
+      "ground_truth": "grayscale",
+      "prediction": "black and white",
+      "is_match": false,
+      "latency_ms": 307.47,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0002_q3",
+      "parent_scene": "P1225",
+      "question": "Which object is located on the left side of the image?",
+      "ground_truth": "bridge",
+      "prediction": "bridge",
+      "is_match": true,
+      "latency_ms": 190.28,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0002_q4",
+      "parent_scene": "P1225",
+      "question": "Is the image showing any vehicles?",
+      "ground_truth": "unable to identify",
+      "prediction": "Yes",
+      "is_match": false,
+      "latency_ms": 179.82,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0002_q5",
+      "parent_scene": "P1225",
+      "question": "Are there any clouds visible in the image?",
+      "ground_truth": "yes",
+      "prediction": "Yes",
+      "is_match": true,
+      "latency_ms": 178.84,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0007_q1",
+      "parent_scene": "P1225",
+      "question": "What type of structure is found at the far right edge of the image?",
+      "ground_truth": "bridge",
+      "prediction": "building",
+      "is_match": false,
+      "latency_ms": 171.33,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0007_q2",
+      "parent_scene": "P1225",
+      "question": "Which direction does the river run in relation to the urban area?",
+      "ground_truth": "through it",
+      "prediction": "North",
+      "is_match": false,
+      "latency_ms": 174.19,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0007_q3",
+      "parent_scene": "P1225",
+      "question": "Is the image in color or grayscale?",
+      "ground_truth": "grayscale",
+      "prediction": "grayscale",
+      "is_match": true,
+      "latency_ms": 215.89,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0007_q4",
+      "parent_scene": "P1225",
+      "question": "Are there visible agricultural fields in the image?",
+      "ground_truth": "yes",
+      "prediction": "Yes",
+      "is_match": true,
+      "latency_ms": 176.77,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0014_q1",
+      "parent_scene": "P1225",
+      "question": "Is the bridge located over a road or a railway?",
+      "ground_truth": "unclear",
+      "prediction": "road",
+      "is_match": false,
+      "latency_ms": 175.6,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0014_q2",
+      "parent_scene": "P1225",
+      "question": "What is the predominant color of the image?",
+      "ground_truth": "grayscale",
+      "prediction": "Gray",
+      "is_match": true,
+      "latency_ms": 175.32,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0014_q3",
+      "parent_scene": "P1225",
+      "question": "Are there clouds in the sky?",
+      "ground_truth": "yes",
+      "prediction": "Yes",
+      "is_match": true,
+      "latency_ms": 175.24,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0014_q4",
+      "parent_scene": "P1225",
+      "question": "How many bridges are visible in the image?",
+      "ground_truth": "1",
+      "prediction": "2",
+      "is_match": false,
+      "latency_ms": 175.46,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2912_0002_q1",
+      "parent_scene": "P2912",
+      "question": "What is the main object in the bottom part of the image?",
+      "ground_truth": "airport",
+      "prediction": "road",
+      "is_match": false,
+      "latency_ms": 173.92,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2912_0002_q2",
+      "parent_scene": "P2912",
+      "question": "Is the dense forest region developed or undeveloped?",
+      "ground_truth": "undeveloped",
+      "prediction": "undeveloped",
+      "is_match": true,
+      "latency_ms": 265.2,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2912_0002_q3",
+      "parent_scene": "P2912",
+      "question": "Are there any roads visible in the urbanized area?",
+      "ground_truth": "yes",
+      "prediction": "Yes",
+      "is_match": true,
+      "latency_ms": 183.67,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q1",
+      "parent_scene": "P2982",
+      "question": "What is the dominant type of landscape in the image?",
+      "ground_truth": "agricultural fields",
+      "prediction": "Forest",
+      "is_match": false,
+      "latency_ms": 182.45,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q2",
+      "parent_scene": "P2982",
+      "question": "Is there an airport in the image?",
+      "ground_truth": "yes",
+      "prediction": "No",
+      "is_match": false,
+      "latency_ms": 180.22,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q3",
+      "parent_scene": "P2982",
+      "question": "What color are most of the fields?",
+      "ground_truth": "green",
+      "prediction": "green",
+      "is_match": true,
+      "latency_ms": 175.12,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q4",
+      "parent_scene": "P2982",
+      "question": "Where is the airport located in the image?",
+      "ground_truth": "left side",
+      "prediction": "not in image",
+      "is_match": false,
+      "latency_ms": 266.67,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q5",
+      "parent_scene": "P2982",
+      "question": "How many runways can be seen at the airport?",
+      "ground_truth": "one",
+      "prediction": "0",
+      "is_match": false,
+      "latency_ms": 184.09,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4055_0002_q1",
+      "parent_scene": "P4055",
+      "question": "What is the main man-made structure in the image?",
+      "ground_truth": "airport",
+      "prediction": "airport",
+      "is_match": true,
+      "latency_ms": 178.87,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4055_0002_q2",
+      "parent_scene": "P4055",
+      "question": "Is the land surrounding the airport developed?",
+      "ground_truth": "no",
+      "prediction": "No",
+      "is_match": true,
+      "latency_ms": 178.56,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4055_0002_q3",
+      "parent_scene": "P4055",
+      "question": "What type of environment surrounds the airport?",
+      "ground_truth": "desert",
+      "prediction": "desert",
+      "is_match": true,
+      "latency_ms": 225.16,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q2",
+      "parent_scene": "P4265",
+      "question": "Is there an airport visible in the image?",
+      "ground_truth": "yes",
+      "prediction": "Yes",
+      "is_match": true,
+      "latency_ms": 182.42,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q3",
+      "parent_scene": "P4265",
+      "question": "What type of sport-related facility can be seen in the top-right area?",
+      "ground_truth": "ground-track-field",
+      "prediction": "stadium",
+      "is_match": false,
+      "latency_ms": 221.39,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q4",
+      "parent_scene": "P4265",
+      "question": "How many ground track fields are visible in the image?",
+      "ground_truth": "1",
+      "prediction": "1",
+      "is_match": true,
+      "latency_ms": 179.45,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q5",
+      "parent_scene": "P4265",
+      "question": "What is the object classification of the main structure in the image?",
+      "ground_truth": "airport",
+      "prediction": "airport",
+      "is_match": true,
+      "latency_ms": 175.04,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q6",
+      "parent_scene": "P4265",
+      "question": "Is the ground track field positioned towards the top-left or top-right of the image?",
+      "ground_truth": "top-right",
+      "prediction": "top-right",
+      "is_match": true,
+      "latency_ms": 221.12,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4627_0000_q1",
+      "parent_scene": "P4627",
+      "question": "What is the main visible infrastructure in the image?",
+      "ground_truth": "airport",
+      "prediction": "road",
+      "is_match": false,
+      "latency_ms": 182.29,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4627_0000_q2",
+      "parent_scene": "P4627",
+      "question": "Is there any body of water clearly visible in the image?",
+      "ground_truth": "no",
+      "prediction": "No",
+      "is_match": true,
+      "latency_ms": 178.1,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4627_0000_q3",
+      "parent_scene": "P4627",
+      "question": "Is there a dense collection of buildings in the image?",
+      "ground_truth": "no",
+      "prediction": "No",
+      "is_match": true,
+      "latency_ms": 204.41,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4627_0000_q5",
+      "parent_scene": "P4627",
+      "question": "Are there multiple airports visible in the image?",
+      "ground_truth": "no",
+      "prediction": "No",
+      "is_match": true,
+      "latency_ms": 172.98,
+      "confidence": 1.0
+    }
+  ]
+}

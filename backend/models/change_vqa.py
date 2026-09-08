@@ -102,10 +102,22 @@ class ChangeVQASpecialist(BaseSpecialist):
         if self.device != "cuda" and hasattr(self.model, "to"):
             self.model.to(self.device)
 
+        # Check for adapted model toggle (SATQUERY_USE_ADAPTED_VLM=1)
+        import os
+        use_adapted = os.environ.get("SATQUERY_USE_ADAPTED_VLM", "0") == "1"
+        adapter_path = Path("models/adapters/qwen2_vl_rs_lora")
+        if use_adapted and adapter_path.exists():
+            from peft import PeftModel
+            logger.info("Loading RS-adapted LoRA adapter for Change VQA from %s...", adapter_path)
+            self.model = PeftModel.from_pretrained(self.model, str(adapter_path))
+            self._is_adapted = True
+        else:
+            self._is_adapted = False
+
         self.model.eval()
         self._is_loaded = True
         self._load_duration_ms = int((time.perf_counter() - start_time) * 1000)
-        logger.info("Change VQA model loaded successfully in %d ms", self._load_duration_ms)
+        logger.info("Change VQA model loaded successfully (adapted=%s) in %d ms", self._is_adapted, self._load_duration_ms)
 
     def predict(self, inputs: SpecialistInput) -> SpecialistOutput:
         """Executes semantic change interpretation conditioned on verified change evidence."""
@@ -366,6 +378,8 @@ class ChangeVQASpecialist(BaseSpecialist):
             "composite_preview": f"/api/v1/static/previews/{comp_filename}",
             "semantic_uncertainty": semantic_interp.semantic_uncertainty,
             "vlm_output_raw": vlm_output_raw,
+            "is_adapted": getattr(self, "_is_adapted", False),
+            "adapter_path": "models/adapters/qwen2_vl_rs_lora" if getattr(self, "_is_adapted", False) else None,
         }
 
         return SpecialistOutput(

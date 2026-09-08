@@ -18,6 +18,8 @@ from typing import Any, Dict, List, Optional, Union
 from backend.agent.registry import registry
 from backend.agent.schema import (
     ConfidenceBreakdown,
+    ConfidenceLevel,
+    ConsistencyStatus,
     ExecutionPlan,
     ModelExecutionRecord,
     RoutingDecision,
@@ -28,6 +30,13 @@ from backend.agent.schema import (
     TraceStep,
 )
 from backend.config import settings
+from backend.evidence import (
+    ConfidenceEngine,
+    ConsistencyChecker,
+    EvidenceFuser,
+    EvidenceGater,
+    EvidenceNormalizer,
+)
 from backend.preprocessing.alignment import (
     BiTemporalAligner,
     BiTemporalValidator,
@@ -274,23 +283,33 @@ class AgentExecutor:
             )
             step_num += 1
 
-            # Step 10: Evidence Assembly
-            input_qual = 1.0 if val_res.optical_meta and val_res.optical_meta.get("crs") else 0.75
+            # Step 10: Evidence Assembly (incorporates M8 Normalization, Consistency, and Fusion)
+            norm_start = time.perf_counter()
+            norm_items = EvidenceNormalizer.normalize_optical_sar(
+                spec_output,
+                metadata={
+                    "filename_optical": val_res.optical_path.name,
+                    "filename_sar": val_res.sar_path.name,
+                },
+            )
+            cons_report = ConsistencyChecker.check_optical_sar(spec_output.evidence, query=query)
+            EvidenceFuser.fuse(spec_output.evidence, norm_items)
+            spec_output.evidence.consistency_report = cons_report
+            raw_answer = spec_output.answer_text or "Optical-SAR analysis completed."
+            gated_answer = EvidenceGater.gate_answer(raw_answer, cons_report)
+
+            input_qual = 1.0 if val_res.optical_meta and val_res.optical_meta.get("crs") else 0.70
             align_score = min(1.0, overlap_pct / 100.0)
-            model_score = spec_output.confidence
 
-            w_conf = settings.confidence
-            final_conf = min(0.99, max(0.05, round(
-                w_conf.w_input * input_qual + w_conf.w_registration * align_score + w_conf.w_model * model_score, 4
-            )))
-
-            confidence_breakdown = ConfidenceBreakdown(
-                heuristic_name="evidence-weighted confidence heuristic",
-                input_quality_score=round(input_qual, 4),
-                spatial_alignment_score=round(align_score, 4),
-                model_confidence_score=round(model_score, 4),
-                consistency_penalty=0.0,
-                is_calibrated_probability=False,
+            final_conf, confidence_breakdown, conf_level, conf_factors, conf_warnings = ConfidenceEngine.evaluate(
+                task=TaskType.OPTICAL_SAR_ANALYSIS,
+                specialist_outputs=[spec_output],
+                consistency_report=cons_report,
+                input_quality=input_qual,
+                spatial_alignment=align_score,
+                evidence_bundle=spec_output.evidence,
+                query=query,
+                metadata={"filename_optical": val_res.optical_path.name, "filename_sar": val_res.sar_path.name},
             )
 
             total_elapsed = int((time.perf_counter() - total_start) * 1000)
@@ -298,9 +317,22 @@ class AgentExecutor:
                 TraceStep(
                     step_number=step_num,
                     step_name="EvidenceAssembly",
-                    status=StepStatus.COMPLETED,
-                    details=f"Assembled StandardResultContract with ComplementarityReport. Evidence confidence: {final_conf}.",
+                    status=StepStatus.COMPLETED if cons_report.status == ConsistencyStatus.CONSISTENT else StepStatus.WARNING,
+                    details=f"Assembled StandardResultContract with ComplementarityReport and ConsistencyReport. Status={cons_report.status.value}.",
                     duration_ms=2,
+                    metadata={
+                        "consistency_status": cons_report.status.value,
+                        "conflict_count": len(cons_report.conflicts),
+                        "evidence_quality_score": cons_report.evidence_quality_score,
+                        "fused_items_count": len(spec_output.evidence.fused_items),
+                        "confidence_calculation": {
+                            "system_confidence": final_conf,
+                            "confidence_level": conf_level.value,
+                            "factors": conf_factors,
+                            "is_capped": confidence_breakdown.calculation_details.get("consistency", {}).get("is_capped", False),
+                            "is_calibrated": False,
+                        },
+                    },
                 )
             )
 
@@ -316,16 +348,19 @@ class AgentExecutor:
             return StandardResultContract(
                 task="optical_sar_analysis",
                 status="success",
-                answer=spec_output.answer_text or "Optical-SAR analysis completed.",
+                answer=gated_answer,
                 confidence=final_conf,
+                confidence_level=conf_level.value,
                 confidence_breakdown=confidence_breakdown,
                 evidence=spec_output.evidence,
+                evidence_status=cons_report.status.value,
                 models=models_record,
                 parameters=spec_output.parameters_used,
-                warnings=spec_output.warnings + val_res.warnings,
+                warnings=spec_output.warnings + val_res.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,
             )
+
 
         # -------------------------------------------------------------------
         # BRANCH 2: BI-TEMPORAL MULTI-STAGE CHANGE DETECTION & VQA
@@ -581,23 +616,44 @@ class AgentExecutor:
                 )
                 step_num += 1
 
-            # Step 10: Evidence Assembly
-            input_qual = 1.0 if val_res.images[0].crs else 0.75
+            # Step N: Evidence Assembly (incorporates M8 Normalization, Consistency, and Fusion)
+            cd_items = EvidenceNormalizer.normalize_change_detection(
+                spec_output,
+                metadata={"filename_t1": fname1, "filename_t2": fname2, "crs": val_res.images[0].crs},
+            )
+            vqa_items = []
+            if decision.is_multi_stage and vqa_specialist and "vqa_output" in locals():
+                vqa_items = EvidenceNormalizer.normalize_change_vqa(
+                    vqa_output,
+                    metadata={"filename_t1": fname1, "filename_t2": fname2},
+                )
+            all_change_items = cd_items + vqa_items
+            cons_report = ConsistencyChecker.check_bitemporal(
+                spec_output.evidence,
+                change_params=spec_output.parameters_used,
+                temporal_ordering=temp_status,
+                query=query,
+            )
+            EvidenceFuser.fuse(spec_output.evidence, all_change_items)
+            spec_output.evidence.consistency_report = cons_report
+            gated_answer = EvidenceGater.gate_answer(final_answer, cons_report)
+
+            input_qual = 1.0 if val_res.images[0].crs else 0.70
             align_score = min(1.0, overlap_pct / 100.0)
-            model_score = spec_output.confidence
 
-            w = settings.confidence
-            final_conf = min(0.99, max(0.05, round(
-                w.w_input * input_qual + w.w_registration * align_score + w.w_model * model_score, 4
-            )))
+            spec_outputs_list = [spec_output]
+            if decision.is_multi_stage and "vqa_output" in locals():
+                spec_outputs_list.append(vqa_output)
 
-            confidence_breakdown = ConfidenceBreakdown(
-                heuristic_name="evidence-weighted confidence heuristic",
-                input_quality_score=round(input_qual, 4),
-                spatial_alignment_score=round(align_score, 4),
-                model_confidence_score=round(model_score, 4),
-                consistency_penalty=0.0,
-                is_calibrated_probability=False,
+            final_conf, confidence_breakdown, conf_level, conf_factors, conf_warnings = ConfidenceEngine.evaluate(
+                task=TaskType.CHANGE_VQA if decision.is_multi_stage else TaskType.CHANGE_DETECTION,
+                specialist_outputs=spec_outputs_list,
+                consistency_report=cons_report,
+                input_quality=input_qual,
+                spatial_alignment=align_score,
+                evidence_bundle=spec_output.evidence,
+                query=query,
+                metadata={"filename_t1": fname1, "filename_t2": fname2},
             )
 
             total_elapsed = int((time.perf_counter() - total_start) * 1000)
@@ -605,25 +661,41 @@ class AgentExecutor:
                 TraceStep(
                     step_number=step_num,
                     step_name="EvidenceAssembly",
-                    status=StepStatus.COMPLETED,
-                    details=f"Assembled StandardResultContract. Evidence confidence: {final_conf}.",
+                    status=StepStatus.COMPLETED if cons_report.status == ConsistencyStatus.CONSISTENT else StepStatus.WARNING,
+                    details=f"Assembled StandardResultContract with ConsistencyReport. Status={cons_report.status.value}.",
                     duration_ms=2,
+                    metadata={
+                        "consistency_status": cons_report.status.value,
+                        "conflict_count": len(cons_report.conflicts),
+                        "evidence_quality_score": cons_report.evidence_quality_score,
+                        "fused_items_count": len(spec_output.evidence.fused_items),
+                        "confidence_calculation": {
+                            "system_confidence": final_conf,
+                            "confidence_level": conf_level.value,
+                            "factors": conf_factors,
+                            "is_capped": confidence_breakdown.calculation_details.get("consistency", {}).get("is_capped", False),
+                            "is_calibrated": False,
+                        },
+                    },
                 )
             )
 
             return StandardResultContract(
                 task="bitemporal_change_vqa" if decision.is_multi_stage else "bitemporal_change_detection",
                 status="success",
-                answer=final_answer,
+                answer=gated_answer,
                 confidence=final_conf,
+                confidence_level=conf_level.value,
                 confidence_breakdown=confidence_breakdown,
                 evidence=spec_output.evidence,
+                evidence_status=cons_report.status.value,
                 models=models_record,
                 parameters=spec_output.parameters_used,
-                warnings=spec_output.warnings + val_res.warnings,
+                warnings=spec_output.warnings + val_res.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,
             )
+
 
         # -------------------------------------------------------------------
         # BRANCH 3: SINGLE-IMAGE WORKFLOW (VQA, Grounding, Captioning)
@@ -716,33 +788,126 @@ class AgentExecutor:
             )
             step_num += 1
 
-            # Step 5: Evidence Assembly
-            input_qual = 1.0 if img_meta.crs else 0.75
-            model_score = spec_output.confidence
-            w = settings.confidence
-            final_conf = min(0.99, max(0.05, round(
-                w.w_input * input_qual + w.w_registration * 1.0 + w.w_model * model_score, 4
-            )))
-
-            confidence_breakdown = ConfidenceBreakdown(
-                heuristic_name="evidence-weighted confidence heuristic",
-                input_quality_score=round(input_qual, 4),
-                spatial_alignment_score=1.0,
-                model_confidence_score=round(model_score, 4),
-                consistency_penalty=0.0,
-                is_calibrated_probability=False,
+            # Step 5: Evidence Normalization (Milestone M8)
+            norm_start = time.perf_counter()
+            if task == TaskType.GROUNDING:
+                norm_items = EvidenceNormalizer.normalize_grounding(
+                    spec_output,
+                    query=query,
+                    metadata={"filename": fname1, "crs": img_meta.crs},
+                )
+            else:
+                norm_items = EvidenceNormalizer.normalize_vqa(
+                    spec_output,
+                    query=query,
+                    metadata={"filename": fname1, "crs": img_meta.crs},
+                )
+            norm_dur = int((time.perf_counter() - norm_start) * 1000)
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="EvidenceNormalization",
+                    status=StepStatus.COMPLETED,
+                    details=f"Normalized {len(norm_items)} evidence items with preserved spatial/source provenance.",
+                    duration_ms=norm_dur,
+                    metadata={"evidence_items_count": len(norm_items)},
+                )
             )
+            step_num += 1
 
-            total_elapsed = int((time.perf_counter() - total_start) * 1000)
+            # Step 6: Consistency & Sufficiency Check (Rule C8, Milestone M8 - User Correction 3)
+            cons_start = time.perf_counter()
+            cons_report = ConsistencyChecker.check_single_image(
+                spec_output.evidence,
+                task_name=task.value,
+                query=query,
+                image_metadata=img_meta.model_dump(),
+            )
+            cons_dur = int((time.perf_counter() - cons_start) * 1000)
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="ConsistencyCheck",
+                    status=StepStatus.COMPLETED if cons_report.status == ConsistencyStatus.CONSISTENT else StepStatus.WARNING,
+                    details=f"Evaluated single-image evidence sufficiency & degeneracy: Status={cons_report.status.value}. {cons_report.summary_narrative}",
+                    duration_ms=cons_dur,
+                    metadata={
+                        "consistency_status": cons_report.status.value,
+                        "conflict_count": len(cons_report.conflicts),
+                        "evidence_quality_score": cons_report.evidence_quality_score,
+                    },
+                )
+            )
+            step_num += 1
+
+            # Step 7: Evidence Fusion (Milestone M8)
+            EvidenceFuser.fuse(spec_output.evidence, norm_items)
+            spec_output.evidence.consistency_report = cons_report
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="EvidenceFusion",
+                    status=StepStatus.COMPLETED,
+                    details=f"Fused {len(spec_output.evidence.fused_items)} standard evidence units into consolidated bundle.",
+                    duration_ms=1,
+                )
+            )
+            step_num += 1
+
+            # Step 8: Evidence Gating & Assembly
+            raw_answer = spec_output.answer_text or "Analysis completed."
+            gated_answer = EvidenceGater.gate_answer(raw_answer, cons_report)
+
             trace_steps.append(
                 TraceStep(
                     step_number=step_num,
                     step_name="EvidenceAssembly",
-                    status=StepStatus.COMPLETED,
-                    details=f"Assembled StandardResultContract. Evidence confidence: {final_conf}.",
+                    status=StepStatus.COMPLETED if cons_report.status == ConsistencyStatus.CONSISTENT else StepStatus.WARNING,
+                    details=f"Assembled StandardResultContract with ConsistencyReport. Status={cons_report.status.value}.",
                     duration_ms=2,
+                    metadata={
+                        "consistency_status": cons_report.status.value,
+                        "conflict_count": len(cons_report.conflicts),
+                        "evidence_quality_score": cons_report.evidence_quality_score,
+                    },
                 )
             )
+            step_num += 1
+
+            # Step 9: Confidence Calculation (Milestone M9 - Rule 11 & Phase 15)
+            conf_start = time.perf_counter()
+            input_qual = 1.0 if img_meta.crs else 0.70
+            final_conf, confidence_breakdown, conf_level, conf_factors, conf_warnings = ConfidenceEngine.evaluate(
+                task=task,
+                specialist_outputs=[spec_output],
+                consistency_report=cons_report,
+                input_quality=input_qual,
+                spatial_alignment=1.0,
+                evidence_bundle=spec_output.evidence,
+                query=query,
+                metadata={"filename": fname1},
+            )
+            conf_dur = int((time.perf_counter() - conf_start) * 1000)
+
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="ConfidenceCalculation",
+                    status=StepStatus.COMPLETED,
+                    details=f"Calculated defensible system confidence: {final_conf} ({conf_level.value}). Capped: {confidence_breakdown.calculation_details.get('consistency', {}).get('is_capped', False)}.",
+                    duration_ms=conf_dur,
+                    metadata={
+                        "system_confidence": final_conf,
+                        "confidence_level": conf_level.value,
+                        "inputs_considered": ["input_geospatial_quality", "specialist_confidence", "evidence_sufficiency", "consistency_status"],
+                        "confidence_factors": conf_factors,
+                        "is_capped": confidence_breakdown.calculation_details.get("consistency", {}).get("is_capped", False),
+                        "is_calibrated": False,
+                    },
+                )
+            )
+
+            total_elapsed = int((time.perf_counter() - total_start) * 1000)
 
             models_record = [
                 ModelExecutionRecord(
@@ -756,13 +921,15 @@ class AgentExecutor:
             return StandardResultContract(
                 task=f"single_image_{task.value}",
                 status="success" if spec_output.success else "partial",
-                answer=spec_output.answer_text or "Analysis completed.",
+                answer=gated_answer,
                 confidence=final_conf,
+                confidence_level=conf_level.value,
                 confidence_breakdown=confidence_breakdown,
                 evidence=spec_output.evidence,
+                evidence_status=cons_report.status.value,
                 models=models_record,
                 parameters=spec_output.parameters_used,
-                warnings=spec_output.warnings + validation.warnings,
+                warnings=spec_output.warnings + validation.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,
             )

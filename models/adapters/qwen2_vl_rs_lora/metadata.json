@@ -1,0 +1,28 @@
+{
+  "model_name": "SatQuery-Qwen2-VL-2B-RS-LoRA",
+  "base_model": "Qwen/Qwen2-VL-2B-Instruct",
+  "adapter_type": "LoRA",
+  "rank": 16,
+  "alpha": 32,
+  "dropout": 0.05,
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj"
+  ],
+  "trainable_parameters": 4358144,
+  "total_parameters": 2213343744,
+  "trainable_pct": 0.1969,
+  "total_steps_completed": 83,
+  "steps_completed": 83,
+  "total_epochs": 2,
+  "best_val_loss": 1.3354,
+  "peak_vram_mb": 7994,
+  "elapsed_training_sec": 732.32,
+  "adapter_size_mb": 16.66,
+  "train_samples": 166,
+  "val_samples": 27,
+  "hardware": "NVIDIA GeForce RTX 4070 SUPER",
+  "timestamp": "2026-09-08T17:36:19Z"
+}

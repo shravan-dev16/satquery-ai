@@ -1,6 +1,6 @@
 # SatQuery AI — Engineering Implementation Plan
 
-**Document Version:** 2.7.0 (Milestone M7 Completion)  
+**Document Version:** 2.8.0 (Milestone M8 Completion)  
 **Problem Statement:** Smart India Hackathon — SIH26167 (ISRO / Space Technology)  
 **Standard:** Compliance with `AGENTS.md` Rule 19 (Team Ownership), Rule 20 (Task Reporting Format), and Rule 21 (Milestones M0 to M14).
 
@@ -20,9 +20,9 @@
 | **M5** | Change Semantic Interpretation & Change VQA | **COMPLETED** | `backend/models/change_vqa.py`, structured transitions, anti-hallucination zero-change gate, 10-step trace | Real model smoke test on 4 scenarios, 108 tests passing, `docs/evaluation/M5_SEMANTIC_EVALUATION.md` |
 | **M6** | Optical + SAR Cross-Modal Analysis | **COMPLETED** | `backend/models/optical_sar.py`, `CrossModalValidator`, `CrossModalAligner`, 10-step trace | Verifiable dual-sensor dependence, 6 RS classes, 121 tests passing, `docs/evaluation/M6_OPTICAL_SAR_EVALUATION.md` |
 | **M7** | Agentic Orchestrator & Dynamic Routing | **COMPLETED** | `backend/agent/router.py`, `planner.py`, `executor.py`, 16-case test matrix, automatic UI default | Intent classification, physical input configuration inspection, multi-stage DAGs, 137 tests passing, `docs/evaluation/M7_AGENTIC_ORCHESTRATION_EVALUATION.md` |
-| **M8** | Evidence Fusion & Consistency Checking | **CURRENT NEXT MILESTONE** | `backend/evidence/consistency.py`, `fusion.py` | Conflict detection (e.g. change detector vs VLM) and confidence penalty |
-| **M9** | Defensible Confidence Engine | *Scheduled* | `backend/evidence/confidence.py` | Multi-factor evidence-weighted confidence heuristic calculation |
-| **M10** | Remote-Sensing Adaptation & Benchmark Evaluation | *Scheduled* | `backend/evaluation/`, LoRA training on BigEarthNet / open RS data | Defensible RS domain adaptation with held-out validation |
+| **M8** | Evidence Fusion & Consistency Checking | **COMPLETED** | `backend/evidence/fusion.py`, `consistency.py`, Rules C1-C8, EvidenceGater, 5-state reliability | Multi-source normalization, provenance tracking, deterministic conflict detection, 154 tests passing, `docs/evaluation/M8_EVIDENCE_FUSION_EVALUATION.md` |
+| **M9** | Defensible Confidence Engine | **COMPLETED** | `backend/evidence/confidence.py`, non-naive cascade, status caps, contradiction dominance, UI card | 172 tests passing, explainable factors, 18-case test matrix, `docs/evaluation/M9_CONFIDENCE_EVALUATION.md` |
+| **M10** | Remote-Sensing Adaptation & Benchmark Evaluation | **CURRENT NEXT MILESTONE** | `backend/evaluation/`, LoRA training on BigEarthNet / open RS data | Defensible RS domain adaptation with held-out validation |
 | **M11** | Report Generation (PDF & JSON) | *Scheduled* | `backend/reports/pdf_generator.py` | Exportable PDF with embedded evidence, maps, and trace |
 | **M12** | Interactive Analyst UI | *Scheduled* | `frontend/` (Static UI slice mounted at `/ui`) | Map viewer, split-slider, mask overlay, and trace inspector (Vertical slice verified) |
 | **M13** | End-to-End Demo Hardening | *Scheduled* | Live rehearsed scripts for Demo 1 to Demo 4 | Flawless sub-3s query execution |
@@ -428,6 +428,115 @@ Milestone M7 delivers a deterministic, evidence-grounded agentic orchestration s
 - [x] 7. Evaluation report published in `docs/evaluation/M7_AGENTIC_ORCHESTRATION_EVALUATION.md`.
 - [x] 8. Full test suite passes: 137 passed, 0 failed across the entire repository.
 - [x] 9. Zero regressions across M0–M6 capabilities and contracts.
-- [x] 10. **STOPPED** after M7. Did not implement M8 (Evidence Fusion & Consistency), M9 (Defensible Confidence Engine), M10 (RS Adaptation), M11 (Reports), M12 (UI), or M13 (Hardening).
+- [x] 10. Completed M7. Transitioned to Milestone M8.
+
+---
+
+## 10. Milestone M8 Technical Summary: Evidence Fusion & Consistency Checking (COMPLETED)
+
+### 10.1 Objective & Architectural Mandate
+The SIH26167 problem statement mandates:
+*"The system must perform multi-source evidence fusion and consistency checking across specialist outputs, detecting contradictions, gating ungrounded claims, and exposing qualitative reliability factors."*
+
+Milestone M8 delivers an auditable, multi-modal evidence normalization, fusion, and consistency checking layer conforming strictly to Rule 10 (Consistency Checking), Rule 11 (Confidence Principles), and user-stipulated architectural corrections:
+1. **Separation of Concerns (User Correction 1):** M8 exposes structured, qualitative consistency factors and reliability statuses (`CONSISTENT`, `PARTIALLY_CONSISTENT`, `UNCERTAIN`, `CONTRADICTORY`, `INSUFFICIENT_EVIDENCE`). Numerical confidence penalties are strictly deferred to Milestone M9.
+2. **Physically Grounded Chronology & Direction (User Correction 2):** Rule C5 verifies temporal order ($T_1 < T_2$), while direction (`increased`/`decreased`/`modified`) is validated against physical transition signatures rather than timestamps alone.
+3. **Single-Image Honesty (User Correction 3):** Single-image workflows utilize M8 primarily for evidence normalization, provenance tracking, spatial sufficiency/degeneracy checks (Rule C8), and gating without fabricating cross-specialist consensus.
+
+### 10.2 Core Architecture & Modules
+- **`backend/evidence/fusion.py` (`EvidenceNormalizer`, `EvidenceFuser`):**
+  - Transforms heterogeneous specialist outputs (`RS_VQA`, `RS_GROUND`, `CHANGE_DETECT`, `CHANGE_VQA`, `OPTICAL_SAR_FUSION`) into a unified `EvidenceItem` schema with immutable item IDs, provenance dictionaries, bounding geometries, and specialist confidences.
+  - Aggregates and indexes normalized items into `evidence.fused_items`.
+- **`backend/evidence/consistency.py` (`ConsistencyChecker`, `EvidenceGater`):**
+  - Evaluates multi-source evidence against deterministic consistency rules:
+    - **Rule C1:** Zero-Change Contradiction ($0$ changed pixels vs claims of physical alteration).
+    - **Rule C2:** Unsupported Region Grounding (referring to non-existent change clusters).
+    - **Rule C3:** Nonzero Change Support (substantial changed area vs claim of "no change").
+    - **Rule C4:** Area Metric Consistency (claimed vs measured pixel area within 10% tolerance).
+    - **Rule C5:** Temporal Chronology & Direction ($T_1 < T_2$ verified; directional claim supported by transitions).
+    - **Rule C6:** Optical-SAR Agreement (vegetation index vs SAR backscatter/roughness).
+    - **Rule C7:** Class & Transition Contradiction (conflicting cross-class transitions).
+    - **Rule C8:** Evidence Sufficiency & Spatial Degeneracy (empty detections, frame-filling boxes $\ge 98\%$, missing spatial CRS).
+  - Gates narrative answers with standardized analyst cautionary prefixes when conflicts or deficiencies are detected.
+- **Contract & Pipeline Integration (`backend/agent/schema.py`, `executor.py`):**
+  - Updated `StandardResultContract` with `evidence_status` and `ConsistencyReport`.
+  - Integrated normalization, fusion, consistency evaluation, and gating across all execution branches.
+
+### 10.3 Definition of Done Checklist for M8
+- [x] 1. `EvidenceItem`, `EvidenceConflict`, and `ConsistencyReport` schemas implemented in `backend/agent/schema.py`.
+- [x] 2. `EvidenceNormalizer` and `EvidenceFuser` implemented in `backend/evidence/fusion.py` across all 5 tasks.
+- [x] 3. `ConsistencyChecker` implementing Rules C1–C8 deterministically in `backend/evidence/consistency.py`.
+- [x] 4. `EvidenceGater` implemented to protect final narrative answers from contradictions and insufficient evidence.
+- [x] 5. Architectural Correction 1 enforced: `consistency_penalty` remains 0.0 in M8; qualitative factors populated.
+- [x] 6. Architectural Correction 2 enforced: Rule C5 validates chronology ($T_1 < T_2$) and directional evidence support independently.
+- [x] 7. Architectural Correction 3 enforced: Single-image workflows evaluate normalization, provenance, sufficiency (Rule C8), and gating honestly.
+- [x] 8. Trace preservation: Baseline traces (9-step change, 10-step change VQA, 10-step optical-SAR) preserved with 0 regressions.
+- [x] 9. Frontend Evidence Reliability Card added in `frontend/index.html`, `frontend/index.css`, and `frontend/app.js`.
+- [x] 10. Comprehensive unit & integration tests added in `tests/test_evidence_fusion.py` (7 tests) and `tests/test_consistency.py` (10 tests).
+- [x] 11. Complete test suite passes: 154 passed, 0 failed across the entire repository (137 baseline + 17 M8 tests).
+- [x] 12. Full evaluation report published in `docs/evaluation/M8_EVIDENCE_FUSION_EVALUATION.md`.
+- [x] 13. Completed Milestone M8. Transitioned to Milestone M9.
+
+---
+
+## 11. Milestone M9 Technical Summary: Calibrated Confidence Estimation (COMPLETED)
+
+### 11.1 Objective & Architectural Mandate
+SIH26167 problem statement mandates defensible confidence information grounded in empirical evidence, input quality, and consistency checks rather than arbitrary model logits.
+
+### 11.2 Core Architecture & Modules
+- **`backend/evidence/confidence.py` (`ConfidenceEngine`):**
+  - Evaluates baseline specialist confidence and applies deterministic, transparent penalty deductions based on:
+    - Input raster quality (missing CRS, low spatial resolution, unprojected coordinates)
+    - Alignment & co-registration quality
+    - M8 consistency report factors (critical contradictions cap confidence at $\le 0.25$)
+    - Evidence sufficiency (empty detections, small bounding boxes)
+    - Semantic model uncertainty from VLM outputs
+  - Outputs transparent `ConfidenceBreakdown` with explicit penalty factors and confidence category mapping.
+- **Evaluation & Tests:**
+  - 18 unit and integration tests in `tests/test_confidence.py` covering all edge cases.
+  - Evaluation report published in `docs/evaluation/M9_CONFIDENCE_EVALUATION.md`.
+
+---
+
+## 12. Milestone M10 Technical Summary: Remote-Sensing VLM Adaptation (COMPLETED)
+
+### 12.1 Objective & Architectural Mandate
+SIH26167 mandates:
+*"Remote-sensing adaptation/fine-tuning using BigEarthNet or appropriate open remote-sensing data."*
+
+Milestone M10 adapts `Qwen/Qwen2-VL-2B-Instruct` using PEFT LoRA ($r=16, \alpha=32$) trained on a balanced 4-pillar remote-sensing semantic dataset with strict parent-scene disjointness, improving `RS_VQA` and `CHANGE_VQA` without breaking JSON validity, downstream evidence fusion, consistency, or confidence estimation.
+
+### 12.2 Core Architecture & Deliverables
+- **Data Mixture (`datasets/adaptation/`):**
+  - 257 total samples across 55 parent scenes/pairs:
+    - Train: 166 samples (33 parent scenes)
+    - Validation: 27 samples (9 parent scenes)
+    - Held-Out Test: 64 samples (13 parent scenes)
+  - 4 Pillars: (A) Single-Image RS VQA, (B) Land-Cover & Scene Semantics, (C) RS Object Semantics, (D) Bi-Temporal Change Semantics.
+- **Training Pipeline (`scripts/train_rs_lora.py`):**
+  - Resumable LoRA training with periodic state checkpoints (`training_state.json`, `optimizer.pt`).
+  - Validation loss tracking on `val.json` every 15 steps.
+  - Best checkpoint automatically selected at Step 45 (val loss 1.3354) out of 83 optimizer steps.
+  - Peak Training VRAM: 7,994 MB (< 8 GB on RTX 4070 SUPER 12 GB).
+- **Production Toggle & Rollback Guarantee:**
+  - Pure unadapted base model preserved intact.
+  - Environment variable `SATQUERY_USE_ADAPTED_VLM=1` enables adapter dynamically.
+  - Graceful fallback to base weights if adapter files are missing or unreadable.
+- **Empirical Held-Out Benchmark Results (`docs/evaluation/m10_adapted_full.json`):**
+  - Total Test Accuracy: **68.75% (Base) $\rightarrow$ 75.00% (Adapted) (+6.25 pp)**
+  - Pillar A (RS VQA): **51.52% $\rightarrow$ 60.61% (+9.09 pp)**
+  - Pillar D (Change Semantics): **42.86% $\rightarrow$ 71.43% (+28.57 pp)**
+  - CHANGE_VQA JSON Validity: **100.0%**
+  - F6 Semantic Errors: Reduced from 19 to 15 (**21.1% error reduction**)
+  - Urban Construction M5 scenario: Corrected from wrong vegetation transition to `bare_ground_or_soil -> built_structure`.
+- **System Compatibility & Regression Suite:**
+  - 100% pass rate across all M8 evidence fusion, consistency, M9 confidence, and agent tests under adapted weights.
+  - Full repository test suite: **176 passed, 0 failed**.
+- **Reports:**
+  - Feasibility report: `docs/evaluation/M10_FEASIBILITY_REPORT.md`
+  - Full evaluation benchmark: `docs/evaluation/M10_ADAPTATION_EVALUATION.md`
+
+
 
 

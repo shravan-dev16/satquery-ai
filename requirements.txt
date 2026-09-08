@@ -17,6 +17,9 @@ pillow>=10.4.0
 pytest>=8.3.0
 httpx>=0.27.0
 
+# Parameter-Efficient Fine-Tuning (PEFT)
+peft>=0.20.0
+
 # PyTorch & Torchvision (install via CUDA 12.4 index: --index-url https://download.pytorch.org/whl/cu124)
 # torch>=2.5.0
 # torchvision>=0.20.0

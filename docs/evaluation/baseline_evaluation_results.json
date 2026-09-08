@@ -1,0 +1,401 @@
+{
+  "model_mode": "Unadapted Zero-Shot Baseline",
+  "use_adapted_flag": false,
+  "peak_vram_mb": 8810,
+  "rs_vqa_metrics": {
+    "total_samples": 33,
+    "correct_count": 16,
+    "accuracy_pct": 48.48,
+    "mean_latency_ms": 1196.1
+  },
+  "change_vqa_metrics": {
+    "total_samples": 3,
+    "valid_json_count": 3,
+    "valid_json_rate_pct": 100.0,
+    "mean_latency_ms": 4628.67
+  },
+  "m5_diagnostics": [
+    {
+      "scenario_id": "semantic_urban_01",
+      "category": "URBAN",
+      "expected_transition": "bare_ground_or_soil -> built_structure",
+      "predicted_transition": "forest_or_trees -> bare_ground_or_soil",
+      "expected_direction": "increased",
+      "predicted_direction": "modified",
+      "semantic_uncertainty": 0.15,
+      "latency_ms": 6632.2
+    },
+    {
+      "scenario_id": "semantic_forest_01",
+      "category": "FOREST_VEGETATION",
+      "expected_transition": "forest_or_trees -> bare_ground_or_soil",
+      "predicted_transition": "forest_or_trees -> bare_ground_or_soil",
+      "expected_direction": "decreased",
+      "predicted_direction": "modified",
+      "semantic_uncertainty": 0.15,
+      "latency_ms": 4674.57
+    },
+    {
+      "scenario_id": "semantic_water_01",
+      "category": "WATER_AQUATIC",
+      "expected_transition": "bare_ground_or_soil -> water_body",
+      "predicted_transition": "water_body -> water_body",
+      "expected_direction": "increased",
+      "predicted_direction": "increased",
+      "semantic_uncertainty": 0.4,
+      "latency_ms": 5269.79
+    },
+    {
+      "scenario_id": "semantic_agri_01",
+      "category": "AGRICULTURE",
+      "expected_transition": "vegetation_or_cropland -> bare_ground_or_soil",
+      "predicted_transition": "none -> none",
+      "expected_direction": "modified",
+      "predicted_direction": "no_change",
+      "semantic_uncertainty": 0.0,
+      "latency_ms": 0.13
+    },
+    {
+      "scenario_id": "semantic_zero_01",
+      "category": "ZERO_CHANGE",
+      "expected_transition": "none -> none",
+      "predicted_transition": "none -> none",
+      "expected_direction": "no_change",
+      "predicted_direction": "no_change",
+      "semantic_uncertainty": 0.0,
+      "latency_ms": 0.08
+    }
+  ],
+  "vqa_sample_details": [
+    {
+      "sample_id": "P1225_0002_q1",
+      "parent_scene": "P1225",
+      "question": "How many bridges are visible in the image?",
+      "ground_truth": "2",
+      "prediction": "The image shows two bridges.",
+      "is_match": false,
+      "latency_ms": 10586.71,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0002_q2",
+      "parent_scene": "P1225",
+      "question": "What color is the image predominantly?",
+      "ground_truth": "grayscale",
+      "prediction": "The image is predominantly black and white.",
+      "is_match": false,
+      "latency_ms": 360.35,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0002_q3",
+      "parent_scene": "P1225",
+      "question": "Which object is located on the left side of the image?",
+      "ground_truth": "bridge",
+      "prediction": "The object located on the left side of the image is a bridge.",
+      "is_match": true,
+      "latency_ms": 530.03,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0002_q4",
+      "parent_scene": "P1225",
+      "question": "Is the image showing any vehicles?",
+      "ground_truth": "unable to identify",
+      "prediction": "The image you provided appears to be a satellite or aerial photograph of a bridge over a body of water. There are no visible vehicles in the image.",
+      "is_match": false,
+      "latency_ms": 1011.29,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0002_q5",
+      "parent_scene": "P1225",
+      "question": "Are there any clouds visible in the image?",
+      "ground_truth": "yes",
+      "prediction": "Yes, there are clouds visible in the image. The presence of clouds is evident as they appear as white patches against the dark background of the sky and the dark areas of the land.",
+      "is_match": true,
+      "latency_ms": 1233.47,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0007_q1",
+      "parent_scene": "P1225",
+      "question": "What type of structure is found at the far right edge of the image?",
+      "ground_truth": "bridge",
+      "prediction": "The far right edge of the image shows a large, rectangular structure that appears to be a building or a large industrial complex. This structure is located near the edge of the image and is surrounded by other buildings and infrastructure.",
+      "is_match": false,
+      "latency_ms": 1623.55,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0007_q2",
+      "parent_scene": "P1225",
+      "question": "Which direction does the river run in relation to the urban area?",
+      "ground_truth": "through it",
+      "prediction": "The river in the image runs parallel to the urban area.",
+      "is_match": false,
+      "latency_ms": 469.8,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0007_q3",
+      "parent_scene": "P1225",
+      "question": "Is the image in color or grayscale?",
+      "ground_truth": "grayscale",
+      "prediction": "The image is in grayscale.",
+      "is_match": true,
+      "latency_ms": 295.79,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0007_q4",
+      "parent_scene": "P1225",
+      "question": "Are there visible agricultural fields in the image?",
+      "ground_truth": "yes",
+      "prediction": "Yes, there are visible agricultural fields in the image. The fields are characterized by their rectangular shape and are interspersed with urban areas.",
+      "is_match": true,
+      "latency_ms": 970.01,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0014_q1",
+      "parent_scene": "P1225",
+      "question": "Is the bridge located over a road or a railway?",
+      "ground_truth": "unclear",
+      "prediction": "The bridge in the image appears to be located over a road. The presence of vehicles on the road and the structure's design, which includes a bridge deck and a roadway, are indicative of a road bridge.",
+      "is_match": false,
+      "latency_ms": 1404.13,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0014_q2",
+      "parent_scene": "P1225",
+      "question": "What is the predominant color of the image?",
+      "ground_truth": "grayscale",
+      "prediction": "The predominant color of the image is black and white.",
+      "is_match": false,
+      "latency_ms": 443.1,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0014_q3",
+      "parent_scene": "P1225",
+      "question": "Are there clouds in the sky?",
+      "ground_truth": "yes",
+      "prediction": "Yes, there are clouds in the sky in the image. The presence of clouds is evident by the grayish, misty appearance of the sky, which is typical of clouds.",
+      "is_match": true,
+      "latency_ms": 1204.74,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P1225_0014_q4",
+      "parent_scene": "P1225",
+      "question": "How many bridges are visible in the image?",
+      "ground_truth": "1",
+      "prediction": "The image shows a few bridges visible in the scene.",
+      "is_match": false,
+      "latency_ms": 434.92,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2912_0002_q1",
+      "parent_scene": "P2912",
+      "question": "What is the main object in the bottom part of the image?",
+      "ground_truth": "airport",
+      "prediction": "The main object in the bottom part of the image is a road.",
+      "is_match": false,
+      "latency_ms": 531.74,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2912_0002_q2",
+      "parent_scene": "P2912",
+      "question": "Is the dense forest region developed or undeveloped?",
+      "ground_truth": "undeveloped",
+      "prediction": "The dense forest region appears to be undeveloped. The absence of visible infrastructure, such as roads, buildings, or urban features, suggests that the area is not currently developed.",
+      "is_match": true,
+      "latency_ms": 1183.29,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2912_0002_q3",
+      "parent_scene": "P2912",
+      "question": "Are there any roads visible in the urbanized area?",
+      "ground_truth": "yes",
+      "prediction": "Yes, there are roads visible in the urbanized area. The roads are visible as straight, narrow pathways that connect various parts of the city.",
+      "is_match": true,
+      "latency_ms": 984.39,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q1",
+      "parent_scene": "P2982",
+      "question": "What is the dominant type of landscape in the image?",
+      "ground_truth": "agricultural fields",
+      "prediction": "The dominant type of landscape in the image is agricultural land, characterized by rectangular fields and patches of vegetation.",
+      "is_match": false,
+      "latency_ms": 734.82,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q2",
+      "parent_scene": "P2982",
+      "question": "Is there an airport in the image?",
+      "ground_truth": "yes",
+      "prediction": "No, there is no airport visible in the image.",
+      "is_match": false,
+      "latency_ms": 440.21,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q3",
+      "parent_scene": "P2982",
+      "question": "What color are most of the fields?",
+      "ground_truth": "green",
+      "prediction": "The majority of the fields in the image are green.",
+      "is_match": true,
+      "latency_ms": 443.51,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q4",
+      "parent_scene": "P2982",
+      "question": "Where is the airport located in the image?",
+      "ground_truth": "left side",
+      "prediction": "The airport in the image is located in the central region, surrounded by the green fields and forested areas. The airport appears to be situated on a raised area, possibly a plateau or a hill, and is surrounded by a network of roads and infrastructure.",
+      "is_match": false,
+      "latency_ms": 1634.95,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P2982_0002_q5",
+      "parent_scene": "P2982",
+      "question": "How many runways can be seen at the airport?",
+      "ground_truth": "one",
+      "prediction": "There are no visible runways in the image provided. The image shows a landscape with various agricultural fields and patches of greenery, but no visible runways.",
+      "is_match": false,
+      "latency_ms": 1063.38,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4055_0002_q1",
+      "parent_scene": "P4055",
+      "question": "What is the main man-made structure in the image?",
+      "ground_truth": "airport",
+      "prediction": "The main man-made structure in the image is an airport runway.",
+      "is_match": true,
+      "latency_ms": 501.15,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4055_0002_q2",
+      "parent_scene": "P4055",
+      "question": "Is the land surrounding the airport developed?",
+      "ground_truth": "no",
+      "prediction": "The image you provided shows an aerial view of a desert landscape with a runway and some developed areas. The land surrounding the airport appears to be developed, as indicated by the presence of buildings and infrastructure. The developed areas are characterized by the presence of roads, buildings, and possibly agricultural fields or other urban structures.",
+      "is_match": false,
+      "latency_ms": 1955.44,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4055_0002_q3",
+      "parent_scene": "P4055",
+      "question": "What type of environment surrounds the airport?",
+      "ground_truth": "desert",
+      "prediction": "The environment surrounding the airport appears to be a desert or arid region. The image shows a large expanse of flat, sandy terrain with sparse vegetation. There are no visible signs of water bodies, lush greenery, or significant human settlement. The airport itself is located within this arid landscape, which is typical for regions with a high population density of crops or livestock.",
+      "is_match": true,
+      "latency_ms": 2322.97,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q2",
+      "parent_scene": "P4265",
+      "question": "Is there an airport visible in the image?",
+      "ground_truth": "yes",
+      "prediction": "Yes, there is an airport visible in the image. The airport is located in the center of the image, surrounded by various infrastructure and buildings.",
+      "is_match": true,
+      "latency_ms": 973.34,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q3",
+      "parent_scene": "P4265",
+      "question": "What type of sport-related facility can be seen in the top-right area?",
+      "ground_truth": "ground-track-field",
+      "prediction": "The top-right area of the image shows a sports facility, specifically a stadium.",
+      "is_match": false,
+      "latency_ms": 585.74,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q4",
+      "parent_scene": "P4265",
+      "question": "How many ground track fields are visible in the image?",
+      "ground_truth": "1",
+      "prediction": "There are three visible ground track fields in the image.",
+      "is_match": false,
+      "latency_ms": 439.97,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q5",
+      "parent_scene": "P4265",
+      "question": "What is the object classification of the main structure in the image?",
+      "ground_truth": "airport",
+      "prediction": "The main structure in the image is an airport.",
+      "is_match": true,
+      "latency_ms": 408.56,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4265_0003_q6",
+      "parent_scene": "P4265",
+      "question": "Is the ground track field positioned towards the top-left or top-right of the image?",
+      "ground_truth": "top-right",
+      "prediction": "The ground track field is positioned towards the top-right of the image.",
+      "is_match": true,
+      "latency_ms": 534.3,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4627_0000_q1",
+      "parent_scene": "P4627",
+      "question": "What is the main visible infrastructure in the image?",
+      "ground_truth": "airport",
+      "prediction": "The main visible infrastructure in the image is a road.",
+      "is_match": false,
+      "latency_ms": 443.38,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4627_0000_q2",
+      "parent_scene": "P4627",
+      "question": "Is there any body of water clearly visible in the image?",
+      "ground_truth": "no",
+      "prediction": "No, there is no body of water clearly visible in the image. The image primarily shows a desert landscape with scattered patches of vegetation and a few small bodies of water.",
+      "is_match": true,
+      "latency_ms": 1120.51,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4627_0000_q3",
+      "parent_scene": "P4627",
+      "question": "Is there a dense collection of buildings in the image?",
+      "ground_truth": "no",
+      "prediction": "No, there is no dense collection of buildings in the image. The area appears to be a mix of open land and sparse vegetation, with some patches of what could be buildings or structures.",
+      "is_match": true,
+      "latency_ms": 1264.24,
+      "confidence": 1.0
+    },
+    {
+      "sample_id": "P4627_0000_q5",
+      "parent_scene": "P4627",
+      "question": "Are there multiple airports visible in the image?",
+      "ground_truth": "no",
+      "prediction": "No, there are no visible airports in the image. The image appears to be a satellite view of a desert landscape with scattered patches of vegetation and a few small structures, but there are no identifiable airports.",
+      "is_match": true,
+      "latency_ms": 1337.57,
+      "confidence": 1.0
+    }
+  ]
+}

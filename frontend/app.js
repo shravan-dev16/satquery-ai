@@ -113,6 +113,28 @@ class SatQueryClient {
     this.opticalSarPreviewCard = document.getElementById('optical-sar-preview-card');
     this.opticalSarCompositeImg = document.getElementById('optical-sar-composite-img');
     this.visualHubCard = document.querySelector('.visual-hub-card');
+    // Evidence Reliability Card (M8)
+    this.evidenceStatusCard = document.getElementById('evidence-status-card');
+    this.consistencyStatusBadge = document.getElementById('consistency-status-badge');
+    this.evidenceQualityBadge = document.getElementById('evidence-quality-badge');
+    this.provenanceCountBadge = document.getElementById('provenance-count-badge');
+    this.consistencyNarrative = document.getElementById('consistency-narrative');
+    this.conflictsContainer = document.getElementById('conflicts-container');
+    this.conflictsList = document.getElementById('conflicts-list');
+    this.evidencePillsRow = document.getElementById('evidence-pills-row');
+
+    // Defensible System Confidence Card (Milestone M9)
+    this.confidenceCard = document.getElementById('confidence-card');
+    this.confLevelBadge = document.getElementById('conf-level-badge');
+    this.confOverallScore = document.getElementById('conf-overall-score');
+    this.confCalibrationBadge = document.getElementById('conf-calibration-badge');
+    this.subfactorSpecialist = document.getElementById('subfactor-specialist');
+    this.subfactorEvidence = document.getElementById('subfactor-evidence');
+    this.subfactorAlignment = document.getElementById('subfactor-alignment');
+    this.subfactorInput = document.getElementById('subfactor-input');
+    this.subfactorConsistency = document.getElementById('subfactor-consistency');
+    this.confFactorsList = document.getElementById('conf-factors-list');
+    this.confWarningsList = document.getElementById('conf-warnings-list');
 
     // Telemetry & Trace
     this.telemetryRegionsList = document.getElementById('telemetry-regions-list');
@@ -400,10 +422,17 @@ class SatQueryClient {
     const confVal = contract.confidence !== null && contract.confidence !== undefined 
       ? (contract.confidence * 100).toFixed(1) + '%' 
       : 'N/A';
-    this.summaryConfidence.textContent = `Evidence Confidence: ${confVal}`;
+    const confLevel = contract.confidence_level || 'EVALUATED';
+    this.summaryConfidence.textContent = `System Confidence: ${confLevel} (${confVal})`;
 
-    // 1b. Semantic Change Interpretation (Milestone M5)
+    // 1b. Defensible System Confidence Breakdown (Milestone M9)
+    this.renderConfidenceDetails(contract);
+
+    // 1c. Semantic Change Interpretation (Milestone M5)
     this.renderSemanticInterpretation(contract.evidence?.semantic_interpretation);
+
+    // 1c. Evidence Reliability & Consistency Status (Milestone M8)
+    this.renderEvidenceStatus(contract);
 
     // 1c. Cross-Modal Complementarity & 3-Panel Preview (Milestone M6)
     const isOpticalSar = contract.task === 'optical_sar_analysis';
@@ -620,6 +649,146 @@ class SatQueryClient {
       `;
       this.traceTimeline.appendChild(item);
     });
+  }
+
+  renderEvidenceStatus(contract) {
+    if (!this.evidenceStatusCard) return;
+
+    const report = contract.evidence?.consistency_report;
+    const status = contract.evidence_status || report?.status || 'CONSISTENT';
+
+    // Badge status
+    this.consistencyStatusBadge.textContent = status;
+    this.consistencyStatusBadge.className = 'consistency-status-badge';
+    if (status === 'CONSISTENT') {
+      this.consistencyStatusBadge.classList.add('status-consistent');
+    } else if (status === 'PARTIALLY_CONSISTENT') {
+      this.consistencyStatusBadge.classList.add('status-partially-consistent');
+    } else if (status === 'UNCERTAIN') {
+      this.consistencyStatusBadge.classList.add('status-uncertain');
+    } else if (status === 'CONTRADICTORY') {
+      this.consistencyStatusBadge.classList.add('status-contradictory');
+    } else if (status === 'INSUFFICIENT_EVIDENCE') {
+      this.consistencyStatusBadge.classList.add('status-insufficient-evidence');
+    }
+
+    // Quality score & Count
+    const quality = report?.evidence_quality_score !== undefined
+      ? Math.round(report.evidence_quality_score * 100) + '%'
+      : '100%';
+    this.evidenceQualityBadge.textContent = `Quality: ${quality}`;
+
+    const itemCount = contract.evidence?.fused_items?.length || 0;
+    this.provenanceCountBadge.textContent = `${itemCount} Evidence Units`;
+
+    // Narrative
+    this.consistencyNarrative.textContent = report?.summary_narrative || 'Evidence is consistent across specialists.';
+
+    // Conflicts
+    const conflicts = report?.conflicts || [];
+    if (conflicts.length > 0) {
+      this.conflictsContainer.classList.remove('hidden');
+      this.conflictsList.innerHTML = conflicts.map(c => `
+        <li><strong>[${c.rule_violated}]</strong> ${c.description} (Sources: ${c.conflicting_sources.join(', ')})</li>
+      `).join('');
+    } else {
+      this.conflictsContainer.classList.add('hidden');
+      this.conflictsList.innerHTML = '';
+    }
+
+    // Evidence Pills
+    const fusedItems = contract.evidence?.fused_items || [];
+    if (fusedItems.length > 0) {
+      this.evidencePillsRow.innerHTML = fusedItems.map(item => `
+        <div class="evidence-pill" title="${item.claim}">
+          <span class="evidence-pill-spec">${item.source_specialist}</span>: ${item.evidence_type}
+        </div>
+      `).join('');
+    } else {
+      this.evidencePillsRow.innerHTML = '<span style="font-size: 11px; color: var(--text-muted);">No individual evidence items indexed.</span>';
+    }
+  }
+
+  renderConfidenceDetails(contract) {
+    if (!this.confidenceCard) return;
+
+    const breakdown = contract.confidence_breakdown || {};
+    const overallConf = contract.confidence !== null && contract.confidence !== undefined
+      ? contract.confidence
+      : (breakdown.overall_confidence || 0.0);
+    const level = contract.confidence_level || breakdown.confidence_level || 'MEDIUM';
+
+    // Level badge
+    this.confLevelBadge.textContent = level;
+    this.confLevelBadge.className = 'confidence-level-badge';
+    if (level === 'HIGH') {
+      this.confLevelBadge.classList.add('level-high');
+    } else if (level === 'MEDIUM') {
+      this.confLevelBadge.classList.add('level-medium');
+    } else if (level === 'LOW') {
+      this.confLevelBadge.classList.add('level-low');
+    } else if (level === 'UNSUPPORTED') {
+      this.confLevelBadge.classList.add('level-unsupported');
+    }
+
+    // Overall Score
+    this.confOverallScore.textContent = `${(overallConf * 100).toFixed(1)}%`;
+
+    // Calibration badge
+    const isCalibrated = breakdown.calculation_details?.is_calibrated_probability === true;
+    this.confCalibrationBadge.textContent = isCalibrated 
+      ? 'Calibrated Statistical Probability' 
+      : 'Heuristic — Multi-Factor Grounded';
+
+    // Subfactors
+    const specScore = breakdown.specialist_confidence !== undefined 
+      ? (breakdown.specialist_confidence * 100).toFixed(1) + '%' 
+      : '--';
+    const evidScore = breakdown.evidence_quality_score !== undefined 
+      ? (breakdown.evidence_quality_score * 100).toFixed(1) + '%' 
+      : '--';
+    const alignScore = breakdown.spatial_alignment_score !== undefined 
+      ? (breakdown.spatial_alignment_score * 100).toFixed(1) + '%' 
+      : '--';
+    const inputScore = breakdown.input_quality_score !== undefined 
+      ? (breakdown.input_quality_score * 100).toFixed(1) + '%' 
+      : '--';
+    const consPenalty = breakdown.consistency_penalty !== undefined 
+      ? (breakdown.consistency_penalty > 0 ? `-${breakdown.consistency_penalty.toFixed(2)}` : '0.00') 
+      : '0.00';
+
+    this.subfactorSpecialist.textContent = specScore;
+    this.subfactorEvidence.textContent = evidScore;
+    this.subfactorAlignment.textContent = alignScore;
+    this.subfactorInput.textContent = inputScore;
+    this.subfactorConsistency.textContent = consPenalty;
+    if (breakdown.consistency_penalty > 0) {
+      this.subfactorConsistency.style.color = 'var(--crimson-danger)';
+    } else {
+      this.subfactorConsistency.style.color = 'var(--emerald-success)';
+    }
+
+    // Explainable Factors
+    const factors = breakdown.confidence_factors || [];
+    if (factors.length > 0) {
+      this.confFactorsList.innerHTML = factors.map(f => `
+        <span class="factor-pill">✓ ${f.replace(/_/g, ' ')}</span>
+      `).join('');
+    } else {
+      this.confFactorsList.innerHTML = '<span style="font-size: 11px; color: var(--text-muted);">Standard telemetry signals evaluated.</span>';
+    }
+
+    // Warnings
+    const warnings = breakdown.confidence_warnings || [];
+    if (warnings.length > 0) {
+      this.confWarningsList.classList.remove('hidden');
+      this.confWarningsList.innerHTML = warnings.map(w => `
+        <span class="warning-pill">⚠️ ${w}</span>
+      `).join('');
+    } else {
+      this.confWarningsList.classList.add('hidden');
+      this.confWarningsList.innerHTML = '';
+    }
   }
 
   renderWarnings(warnings) {

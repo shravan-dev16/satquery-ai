@@ -1,6 +1,6 @@
 # SatQuery AI — Engineering Implementation Plan
 
-**Document Version:** 2.6.0 (Milestone M6 Completion)  
+**Document Version:** 2.7.0 (Milestone M7 Completion)  
 **Problem Statement:** Smart India Hackathon — SIH26167 (ISRO / Space Technology)  
 **Standard:** Compliance with `AGENTS.md` Rule 19 (Team Ownership), Rule 20 (Task Reporting Format), and Rule 21 (Milestones M0 to M14).
 
@@ -19,8 +19,8 @@
 | **M4** | Dedicated Change Detection & Benchmark Evaluation | **COMPLETED** | Reproducible benchmark harness, LEVIR-CD verification, diverse-scene generalization, failure taxonomy | Machine-readable benchmark reports, macro/micro metrics, failure diagnostics, 95 tests passing |
 | **M5** | Change Semantic Interpretation & Change VQA | **COMPLETED** | `backend/models/change_vqa.py`, structured transitions, anti-hallucination zero-change gate, 10-step trace | Real model smoke test on 4 scenarios, 108 tests passing, `docs/evaluation/M5_SEMANTIC_EVALUATION.md` |
 | **M6** | Optical + SAR Cross-Modal Analysis | **COMPLETED** | `backend/models/optical_sar.py`, `CrossModalValidator`, `CrossModalAligner`, 10-step trace | Verifiable dual-sensor dependence, 6 RS classes, 121 tests passing, `docs/evaluation/M6_OPTICAL_SAR_EVALUATION.md` |
-| **M7** | Agentic Orchestrator & Dynamic Routing | **CURRENT NEXT MILESTONE** | `backend/agent/parser.py`, `router.py`, `executor.py` | Intent parsing and dynamic execution DAGs without hardcoding |
-| **M8** | Evidence Fusion & Consistency Checking | *Scheduled* | `backend/evidence/consistency.py`, `fusion.py` | Conflict detection (e.g. change detector vs VLM) and confidence penalty |
+| **M7** | Agentic Orchestrator & Dynamic Routing | **COMPLETED** | `backend/agent/router.py`, `planner.py`, `executor.py`, 16-case test matrix, automatic UI default | Intent classification, physical input configuration inspection, multi-stage DAGs, 137 tests passing, `docs/evaluation/M7_AGENTIC_ORCHESTRATION_EVALUATION.md` |
+| **M8** | Evidence Fusion & Consistency Checking | **CURRENT NEXT MILESTONE** | `backend/evidence/consistency.py`, `fusion.py` | Conflict detection (e.g. change detector vs VLM) and confidence penalty |
 | **M9** | Defensible Confidence Engine | *Scheduled* | `backend/evidence/confidence.py` | Multi-factor evidence-weighted confidence heuristic calculation |
 | **M10** | Remote-Sensing Adaptation & Benchmark Evaluation | *Scheduled* | `backend/evaluation/`, LoRA training on BigEarthNet / open RS data | Defensible RS domain adaptation with held-out validation |
 | **M11** | Report Generation (PDF & JSON) | *Scheduled* | `backend/reports/pdf_generator.py` | Exportable PDF with embedded evidence, maps, and trace |
@@ -376,4 +376,58 @@ Fuses complementary spectral and physical features into a shared representation:
 - [x] 16. Baseline evaluation report created in `docs/evaluation/M6_OPTICAL_SAR_EVALUATION.md`.
 - [x] 17. Full regression test suite passes (all 108 existing tests + 13 new M6 tests = 121 tests passing).
 - [x] 18. **STOPPED** after M6. Did not begin M7 (Agentic Orchestration & DAGs), M8 (General Evidence Fusion), M9 (Confidence Engine), or M10 (LoRA/Fine-tuning).
+
+---
+
+## 9. Milestone M7 Technical Summary: Agentic Orchestration & Dynamic Routing (COMPLETED)
+
+### 9.1 Objective & Architectural Mandate
+The SIH26167 problem statement mandates:
+*"The system must automatically select, sequence, and execute the appropriate specialist models or tools according to the query and input configuration."*
+
+Milestone M7 delivers a deterministic, evidence-grounded agentic orchestration subsystem that:
+1. Replaces manual pipeline selection with query intent understanding and physical raster inspection.
+2. Constructs executable multi-stage Directed Acyclic Graphs (DAGs) rather than relying on brittle keyword matching or ungrounded LLM tool-calling.
+3. Automatically chains specialists with evidence passing (e.g. `CHANGE_DETECT` spatial masks forwarded into `CHANGE_VQA` semantic prompts).
+4. Generates an observable, auditable execution trace exposing every intermediate step, execution time, and confidence.
+
+### 9.2 Core Architecture & Modules
+- **`backend/agent/router.py` (`DynamicRouter`):**
+  - Synthesizes raster input characteristics (count, CRS, spatial overlap, modalities) and referring query text.
+  - Classifies user intent into `TaskIntent`:
+    - `SINGLE_IMAGE_VQA`
+    - `SINGLE_IMAGE_GROUNDING`
+    - `BITEMPORAL_CHANGE_DETECTION`
+    - `BITEMPORAL_CHANGE_VQA`
+    - `OPTICAL_SAR_ANALYSIS`
+    - `UNSUPPORTED`
+  - Extracts targeted semantic concepts (`target_classes`, referring objects) for downstream specialist conditioning.
+- **`backend/agent/planner.py` (`ExecutionPlanner`):**
+  - Translates `TaskIntent` into an executable `ExecutionPlan` consisting of sequenced `PlanStep` nodes.
+  - Implements 5 canonical plan templates:
+    1. `single_vqa_plan`: `InputValidation` $\rightarrow$ `RS_VQA` $\rightarrow$ `EvidenceAssembly`
+    2. `single_grounding_plan`: `InputValidation` $\rightarrow$ `RS_GROUND` $\rightarrow$ `SpatialProjection` $\rightarrow$ `EvidenceAssembly`
+    3. `bitemporal_change_detect_plan`: `InputValidation` $\rightarrow$ `BiTemporalAlignment` $\rightarrow$ `CHANGE_DETECT` $\rightarrow$ `EvidenceAssembly`
+    4. `bitemporal_change_vqa_plan`: `InputValidation` $\rightarrow$ `BiTemporalAlignment` $\rightarrow$ `CHANGE_DETECT` $\rightarrow$ `CHANGE_VQA` $\rightarrow$ `EvidenceAssembly`
+    5. `optical_sar_plan`: `InputValidation` $\rightarrow$ `CrossModalAlignment` $\rightarrow$ `OPTICAL_SAR_FUSION` $\rightarrow$ `EvidenceAssembly`
+- **`backend/agent/executor.py` (`PlanExecutor`):**
+  - Executes DAG steps deterministically.
+  - Manages context state, passing spatial masks, changed bounding boxes, and pixel statistics from detection stages to semantic VLM stages.
+  - Records step-by-step latency, status (`success`, `warning`, `skipped`, `failed`), and parameters into the auditable `ExecutionTrace`.
+- **API Integration (`backend/main.py`):**
+  - Updated `POST /api/v1/analyze` to set `pipeline="auto"` as default.
+  - Preserved backward compatibility for explicit legacy pipeline requests (`vqa`, `grounding`, `change`, `optical_sar`).
+
+### 9.3 Definition of Done Checklist for M7
+- [x] 1. `DynamicRouter` implemented in `backend/agent/router.py` with raster configuration and query intent classification.
+- [x] 2. `ExecutionPlanner` implemented in `backend/agent/planner.py` supporting 5 multi-stage DAG plan templates.
+- [x] 3. `PlanExecutor` implemented in `backend/agent/executor.py` with state passing and auditable trace logging.
+- [x] 4. Multi-stage execution validated: `CHANGE_DETECT` $\rightarrow$ `CHANGE_VQA` evidence forwarding verified.
+- [x] 5. Default pipeline changed to `"auto"` in `POST /api/v1/analyze` without breaking manual pipeline overrides.
+- [x] 6. 16-case test matrix implemented in `tests/test_orchestrator.py` verifying 100% routing accuracy.
+- [x] 7. Evaluation report published in `docs/evaluation/M7_AGENTIC_ORCHESTRATION_EVALUATION.md`.
+- [x] 8. Full test suite passes: 137 passed, 0 failed across the entire repository.
+- [x] 9. Zero regressions across M0–M6 capabilities and contracts.
+- [x] 10. **STOPPED** after M7. Did not implement M8 (Evidence Fusion & Consistency), M9 (Defensible Confidence Engine), M10 (RS Adaptation), M11 (Reports), M12 (UI), or M13 (Hardening).
+
 

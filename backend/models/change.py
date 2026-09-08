@@ -614,7 +614,7 @@ class ChangeDetectionSpecialist(BaseSpecialist):
             )
 
         parameters_used = {
-            "candidate_model": self.candidate,
+            "candidate_model": "cva" if candidate_req == "cva" else self.candidate,
             "image1": p1.name,
             "image2": p2.name,
             "mask_path": f"/api/v1/static/previews/{mask_filename}",

@@ -314,3 +314,44 @@ class StandardResultContract(BaseModel):
     warnings: List[str] = Field(default_factory=list)
     execution_trace: List[TraceStep] = Field(default_factory=list)
     execution_time_ms: int = 0
+
+
+# ---------------------------------------------------------------------------
+# Routing & Planning Schemas (Milestone M7)
+# ---------------------------------------------------------------------------
+
+class RoutingDecision(BaseModel):
+    """Result of agentic query and input configuration routing (M7)."""
+    task: TaskType
+    target_specialist_ids: List[str]
+    intent_category: str
+    input_configuration: str
+    is_multi_stage: bool = False
+    routing_confidence: float = Field(default=1.0, ge=0.0, le=1.0)
+    reasoning: str = Field(description="Observable rationale for routing decision")
+    warnings: List[str] = Field(default_factory=list)
+    is_valid: bool = True
+    rejection_reason: Optional[str] = None
+
+
+class PlanStep(BaseModel):
+    """An operational step in an observable execution plan (M7)."""
+    step_number: int
+    step_name: str
+    action_type: str = Field(description="Action: 'validate', 'align', 'specialist_predict', 'assemble_evidence'")
+    specialist_id: Optional[str] = None
+    description: str
+    inputs_required: List[str] = Field(default_factory=list)
+    outputs_produced: List[str] = Field(default_factory=list)
+
+
+class ExecutionPlan(BaseModel):
+    """Complete operational execution plan constructed by AgentPlanner (M7)."""
+    plan_id: str
+    task: TaskType
+    target_specialists: List[str]
+    is_multi_stage: bool = False
+    steps: List[PlanStep] = Field(default_factory=list)
+    estimated_duration_ms: Optional[int] = None
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+

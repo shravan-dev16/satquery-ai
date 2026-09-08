@@ -35,7 +35,16 @@ class ModalityDetector:
 
         Never presents heuristic modality detection as certain sensor identification.
         """
-        raw = GeoTIFFReader.inspect(file_path)
+        try:
+            raw = GeoTIFFReader.inspect(file_path)
+        except Exception as e:
+            return ModalityClassification(
+                modality=ModalityType.OPTICAL,
+                confidence=0.0,
+                method="unreadable-raster-fallback",
+                verified=False,
+                details={"error": str(e)},
+            )
         tags = raw.get("tags", {})
         descriptions = [d.lower() for d in raw.get("descriptions", []) if d]
         band_count = raw["band_count"]
@@ -87,8 +96,10 @@ class ModalityDetector:
                 )
 
         # Check filename indicators (High-confidence heuristic)
+        import re
         fname_lower = raw["filename"].lower()
-        if "s1" in fname_lower or "sar" in fname_lower or "grd" in fname_lower:
+        sar_patterns = [r"\bsar\b", r"\bgrd\b", r"\bs1\b", r"[_.-]s1[_.-]", r"^s1[_.-]", r"[_.-]s1$", r"sentinel[_-]?1"]
+        if any(re.search(pat, fname_lower) for pat in sar_patterns):
             return ModalityClassification(
                 modality=ModalityType.SAR,
                 confidence=0.85,
@@ -97,7 +108,8 @@ class ModalityDetector:
                 details={"filename": raw["filename"]},
             )
 
-        if "s2" in fname_lower or "optical" in fname_lower or "msi" in fname_lower:
+        opt_patterns = [r"\boptical\b", r"\bmsi\b", r"\bs2\b", r"[_.-]s2[_.-]", r"^s2[_.-]", r"[_.-]s2$", r"sentinel[_-]?2"]
+        if any(re.search(pat, fname_lower) for pat in opt_patterns):
             return ModalityClassification(
                 modality=ModalityType.OPTICAL,
                 confidence=0.85,

@@ -69,6 +69,7 @@ class SatQueryClient {
     this.resultsSection = document.getElementById('results-section');
     this.summaryAnswer = document.getElementById('summary-answer');
     this.summaryConfidence = document.getElementById('summary-confidence');
+    this.summaryTask = document.getElementById('summary-task');
 
     // Metrics
     this.valChangedPixels = document.getElementById('val-changed-pixels');
@@ -271,7 +272,8 @@ class SatQueryClient {
   }
 
   updateAnalyzeButtonState() {
-    this.analyzeBtn.disabled = !(this.t1File && this.t2File) || this.isAnalyzing;
+    const hasInput = Boolean(this.t1File || this.t2File);
+    this.analyzeBtn.disabled = !hasInput || this.isAnalyzing;
   }
 
   setViewMode(mode) {
@@ -331,8 +333,8 @@ class SatQueryClient {
   }
 
   async executeAnalysis() {
-    if (!this.t1File || !this.t2File) {
-      this.showError('Missing Image Pair', 'Both Time 1 (earlier) and Time 2 (later) images are required.');
+    if (!this.t1File && !this.t2File) {
+      this.showError('Missing Image', 'Please upload at least one remote-sensing observation.');
       return;
     }
 
@@ -344,14 +346,21 @@ class SatQueryClient {
 
     // Reset Stepper
     this.stepperItems.forEach(item => item.classList.remove('completed'));
-    this.progressHeadline.textContent = 'Executing Bi-Temporal Change Detection...';
-    this.progressSubtext.textContent = 'Transmitting image pair to FastAPI ModelRegistry...';
+    this.progressHeadline.textContent = 'Executing Agentic Remote Sensing Analysis...';
+    this.progressSubtext.textContent = 'Orchestrating specialist models via AgentRouter & ModelRegistry...';
 
     const formData = new FormData();
     formData.append('query', this.queryInput.value || 'What changed between these two dates?');
-    formData.append('image_primary', this.t1File);
-    formData.append('image_secondary', this.t2File);
-    formData.append('task_hint', this.candidateSelect.value || 'change_vqa');
+    if (this.t1File) {
+      formData.append('image_primary', this.t1File);
+    }
+    if (this.t2File) {
+      formData.append('image_secondary', this.t2File);
+    }
+    const candidate = this.candidateSelect ? this.candidateSelect.value : 'auto';
+    if (candidate && candidate !== 'auto') {
+      formData.append('task_hint', candidate);
+    }
 
     try {
       const response = await fetch('/api/v1/analyze', {
@@ -379,6 +388,12 @@ class SatQueryClient {
 
   renderResults(contract) {
     this.resultsSection.classList.remove('hidden');
+
+    // 0. Task Routing Tag
+    if (this.summaryTask) {
+      const taskFormatted = (contract.task || 'remote_sensing_analysis').toUpperCase().replace(/_/g, ' ');
+      this.summaryTask.textContent = `Task: ${taskFormatted}`;
+    }
 
     // 1. Answer Narrative & Confidence
     this.summaryAnswer.textContent = contract.answer || 'Analysis completed.';
@@ -437,8 +452,12 @@ class SatQueryClient {
     this.valTotalClusters.textContent = clusters;
 
     // Specialist & Latency
-    const modelRecord = contract.models && contract.models.length > 0 ? contract.models[0] : null;
-    const specialistName = modelRecord ? modelRecord.model_name : (params.candidate_model || 'TinyCD');
+    let specialistName = 'Auto Orchestrator';
+    if (contract.models && contract.models.length > 0) {
+      specialistName = contract.models.map(m => m.model_name || m).join(' → ');
+    } else if (params.candidate_model) {
+      specialistName = params.candidate_model;
+    }
     this.valSpecialist.textContent = specialistName;
 
     const latency = contract.execution_time_ms !== undefined ? `${contract.execution_time_ms} ms` : '--';

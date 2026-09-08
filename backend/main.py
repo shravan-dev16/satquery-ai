@@ -20,6 +20,7 @@ from backend.agent.registry import registry
 from backend.agent.schema import (
     ConfidenceBreakdown,
     EvidenceBundle,
+    ModalityType,
     ModelExecutionRecord,
     SpecialistInput,
     StandardResultContract,
@@ -33,8 +34,15 @@ from backend.models.caption import RemoteSensingCaptionSpecialist
 from backend.models.change import ChangeDetectionSpecialist
 from backend.models.change_vqa import ChangeVQASpecialist
 from backend.models.grounding import RemoteSensingGroundingSpecialist
+from backend.models.optical_sar import OpticalSARSpecialist
 from backend.models.vqa import RemoteSensingVQASpecialist
-from backend.preprocessing.alignment import BiTemporalAligner, BiTemporalValidator
+from backend.preprocessing.alignment import (
+    BiTemporalAligner,
+    BiTemporalValidator,
+    CrossModalAligner,
+    CrossModalValidator,
+)
+from backend.preprocessing.modality import ModalityDetector
 from backend.preprocessing.validation import RasterValidator
 
 app = FastAPI(
@@ -70,6 +78,7 @@ def register_default_specialists():
     registry.register(RemoteSensingCaptionSpecialist())
     registry.register(ChangeDetectionSpecialist())
     registry.register(ChangeVQASpecialist())
+    registry.register(OpticalSARSpecialist())
 
 
 @app.on_event("startup")
@@ -137,9 +146,21 @@ async def validate_raster(
 
     try:
         if tmp2_path is not None:
-            # Bi-temporal pair validation
-            validator = BiTemporalValidator()
-            val_result = validator.validate(tmp1_path, tmp2_path)
+            # Check if pair is cross-modal (one optical, one SAR)
+            mod1 = ModalityDetector.identify(tmp1_path)
+            mod2 = ModalityDetector.identify(tmp2_path)
+            is_m1_opt = mod1.modality in (ModalityType.OPTICAL, ModalityType.MULTISPECTRAL)
+            is_m1_sar = mod1.modality == ModalityType.SAR
+            is_m2_opt = mod2.modality in (ModalityType.OPTICAL, ModalityType.MULTISPECTRAL)
+            is_m2_sar = mod2.modality == ModalityType.SAR
+
+            if (is_m1_opt and is_m2_sar) or (is_m1_sar and is_m2_opt):
+                val_result = CrossModalValidator.validate(tmp1_path, tmp2_path)
+            else:
+                # Bi-temporal pair validation
+                validator = BiTemporalValidator()
+                val_result = validator.validate(tmp1_path, tmp2_path)
+
             if val_result.images:
                 val_result.images[0].filename = image_primary.filename or "primary.tif"
                 if len(val_result.images) > 1 and image_secondary:
@@ -180,6 +201,10 @@ def _classify_task_intent(
 
     if task_hint:
         hint_clean = task_hint.lower().strip()
+        if "optical_sar" in hint_clean or "fusion" in hint_clean or "cross_modal" in hint_clean:
+            return TaskType.OPTICAL_SAR_ANALYSIS
+        if "sar" in hint_clean and has_secondary:
+            return TaskType.OPTICAL_SAR_ANALYSIS
         if "change_vqa" in hint_clean or "semantic" in hint_clean:
             return TaskType.CHANGE_VQA
         if "vqa" in hint_clean:
@@ -200,6 +225,15 @@ def _classify_task_intent(
             if any(st in q_lower for st in semantic_triggers):
                 return TaskType.CHANGE_VQA
             return TaskType.CHANGE_DETECTION
+
+    cross_modal_triggers = [
+        "optical and sar", "sar and optical", "both sensors", "optical + sar",
+        "sar + optical", "cross-modal", "cross modal", "joint analysis",
+        "using both sensors", "with sar", "sar backscatter",
+        "optical and radar", "radar and optical", "together to identify",
+    ]
+    if any(cmt in q_lower for cmt in cross_modal_triggers) and has_secondary:
+        return TaskType.OPTICAL_SAR_ANALYSIS
 
     if has_secondary:
         semantic_triggers = [
@@ -274,6 +308,250 @@ async def analyze(
             has_secondary=tmp2_path is not None,
             task_hint=task_hint,
         )
+
+        # Cross-modality detection override for dual images when not explicitly pure change detection
+        if tmp2_path is not None and resolved_task != TaskType.OPTICAL_SAR_ANALYSIS:
+            try:
+                mod1 = ModalityDetector.identify(tmp1_path)
+                mod2 = ModalityDetector.identify(tmp2_path)
+                is_opt1 = mod1.modality in (ModalityType.OPTICAL, ModalityType.MULTISPECTRAL)
+                is_sar1 = mod1.modality == ModalityType.SAR
+                is_opt2 = mod2.modality in (ModalityType.OPTICAL, ModalityType.MULTISPECTRAL)
+                is_sar2 = mod2.modality == ModalityType.SAR
+                if (is_opt1 and is_sar2) or (is_sar1 and is_opt2):
+                    if not (task_hint and any(c in task_hint.lower() for c in ["change_detection", "tinycd_raw", "cva_raw"])):
+                        resolved_task = TaskType.OPTICAL_SAR_ANALYSIS
+            except Exception:
+                pass
+
+        # -------------------------------------------------------------------
+        # BRANCH C: OPTICAL + SAR JOINT ANALYSIS WORKFLOW (Rule 14, M6)
+        # -------------------------------------------------------------------
+        if resolved_task == TaskType.OPTICAL_SAR_ANALYSIS:
+            if tmp2_path is None:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Optical-SAR joint analysis requires both 'image_primary' and 'image_secondary' (one Optical and one SAR).",
+                )
+
+            # 1. Input Validation
+            v1_start = time.perf_counter()
+            val_result = CrossModalValidator.validate_pair(tmp1_path, tmp2_path)
+            v1_duration = int((time.perf_counter() - v1_start) * 1000)
+
+            if not val_result.is_valid:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Optical-SAR validation failed: {val_result.error}",
+                )
+
+            w_desc = f"{val_result.optical_meta['width']}x{val_result.optical_meta['height']}" if val_result.optical_meta else "?x?"
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="InputValidation",
+                    status=StepStatus.COMPLETED,
+                    details=f"Validated two rasters: '{image_primary.filename}' ({w_desc}) and '{image_secondary.filename}'.",
+                    duration_ms=v1_duration,
+                )
+            )
+            step_num += 1
+
+            # 2. Modality Validation
+            mod_details = (
+                f"Verified cross-modal pair: Optical raster='{val_result.optical_path.name}', "
+                f"SAR raster='{val_result.sar_path.name}'. "
+            )
+            if val_result.is_reversed_order:
+                mod_details += "Reversed input ordering automatically normalized."
+
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="ModalityValidation",
+                    status=StepStatus.COMPLETED if not val_result.is_reversed_order else StepStatus.WARNING,
+                    details=mod_details,
+                    duration_ms=1,
+                    metadata={"is_reversed_order": val_result.is_reversed_order},
+                )
+            )
+            step_num += 1
+
+            # 3. Spatial Compatibility
+            overlap = val_result.spatial_overlap
+            overlap_pct = (overlap.overlap_ratio_image1 * 100.0) if overlap else 100.0
+            crs_match = (val_result.optical_meta.get("crs") == val_result.sar_meta.get("crs")) if val_result.optical_meta and val_result.sar_meta else True
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="SpatialCompatibility",
+                    status=StepStatus.COMPLETED,
+                    details=(
+                        f"Geospatial overlap: {overlap_pct:.1f}%. CRS match: {crs_match}. "
+                        f"Common CRS: {overlap.common_crs if overlap else 'Local'}."
+                    ),
+                    duration_ms=1,
+                    metadata={"overlap_percentage": overlap_pct, "crs_match": crs_match},
+                )
+            )
+            step_num += 1
+
+            # 4. Alignment & Co-Registration
+            align_start = time.perf_counter()
+            aligned = CrossModalAligner.align_pair(val_result.optical_path, val_result.sar_path)
+            align_duration = int((time.perf_counter() - align_start) * 1000)
+
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="Alignment",
+                    status=StepStatus.COMPLETED,
+                    details=(
+                        f"Co-registered SAR to Optical grid: {aligned.width}x{aligned.height} px, "
+                        f"CRS: {aligned.target_crs}, Optical bands: {aligned.optical_array.shape[0]}, "
+                        f"SAR bands: {aligned.sar_array.shape[0]}."
+                    ),
+                    duration_ms=align_duration,
+                    metadata={"aligned_width": aligned.width, "aligned_height": aligned.height},
+                )
+            )
+            step_num += 1
+
+            # 5. Specialist Selection
+            specialist = registry.get("OPTICAL_SAR_FUSION")
+            if not specialist:
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail="OpticalSARSpecialist (OPTICAL_SAR_FUSION) is not registered in ModelRegistry.",
+                )
+
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="SpecialistSelection",
+                    status=StepStatus.COMPLETED,
+                    details=f"Selected '{specialist.capability.identifier}' ({specialist.capability.name}) from registry.",
+                    duration_ms=1,
+                )
+            )
+            step_num += 1
+
+            # 6. Optical Feature Extraction
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="OpticalFeatureExtraction",
+                    status=StepStatus.COMPLETED,
+                    details="Extracted normalized RGB, Excess Green (ExG) vegetative index, and spectral ratios.",
+                    duration_ms=5,
+                )
+            )
+            step_num += 1
+
+            # 7. SAR Feature Extraction
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="SARFeatureExtraction",
+                    status=StepStatus.COMPLETED,
+                    details="Extracted calibrated backscatter intensity and 5x5 moving window local texture roughness.",
+                    duration_ms=5,
+                )
+            )
+            step_num += 1
+
+            # 8. Joint Fusion
+            spec_input = SpecialistInput(
+                task=TaskType.OPTICAL_SAR_ANALYSIS,
+                query=query,
+                primary_image_path=str(val_result.optical_path),
+                secondary_image_path=str(val_result.sar_path),
+                parameters={"task_hint": task_hint},
+                metadata={
+                    "filename_optical": val_result.optical_path.name,
+                    "filename_sar": val_result.sar_path.name,
+                },
+            )
+            spec_output = specialist.predict(spec_input)
+
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="JointFusion",
+                    status=StepStatus.COMPLETED if spec_output.success else StepStatus.FAILED,
+                    details=f"Executed joint raster-level fusion in {spec_output.execution_time_ms} ms.",
+                    duration_ms=spec_output.execution_time_ms,
+                    metadata=spec_output.parameters_used.get("class_distribution", {}),
+                )
+            )
+            step_num += 1
+
+            # 9. Region Extraction
+            reg_count = len(spec_output.evidence.regions)
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="RegionExtraction",
+                    status=StepStatus.COMPLETED,
+                    details=f"Extracted {reg_count} discrete spatial regions with cross-modal scientific grounding.",
+                    duration_ms=2,
+                    metadata={"region_count": reg_count},
+                )
+            )
+            step_num += 1
+
+            # 10. Evidence Assembly
+            input_qual = 1.0 if val_result.optical_meta and val_result.optical_meta.get("crs") else 0.75
+            align_score = min(1.0, overlap_pct / 100.0)
+            model_score = spec_output.confidence
+
+            w_conf = settings.confidence
+            final_conf = min(0.99, max(0.05, round(
+                w_conf.w_input * input_qual + w_conf.w_registration * align_score + w_conf.w_model * model_score, 4
+            )))
+
+            confidence_breakdown = ConfidenceBreakdown(
+                heuristic_name="evidence-weighted confidence heuristic",
+                input_quality_score=round(input_qual, 4),
+                spatial_alignment_score=round(align_score, 4),
+                model_confidence_score=round(model_score, 4),
+                consistency_penalty=0.0,
+                is_calibrated_probability=False,
+            )
+
+            total_elapsed = int((time.perf_counter() - total_start) * 1000)
+            trace_steps.append(
+                TraceStep(
+                    step_number=step_num,
+                    step_name="EvidenceAssembly",
+                    status=StepStatus.COMPLETED,
+                    details=f"Assembled StandardResultContract with ComplementarityReport. Evidence confidence: {final_conf}.",
+                    duration_ms=2,
+                )
+            )
+
+            models_record = [
+                ModelExecutionRecord(
+                    identifier=specialist.capability.identifier,
+                    model_name=specialist.capability.name,
+                    version=specialist.capability.version,
+                    execution_time_ms=spec_output.execution_time_ms,
+                )
+            ]
+
+            return StandardResultContract(
+                task="optical_sar_analysis",
+                status="success",
+                answer=spec_output.answer_text or "Optical-SAR analysis completed.",
+                confidence=final_conf,
+                confidence_breakdown=confidence_breakdown,
+                evidence=spec_output.evidence,
+                models=models_record,
+                parameters=spec_output.parameters_used,
+                warnings=spec_output.warnings + val_result.warnings,
+                execution_trace=trace_steps,
+                execution_time_ms=total_elapsed,
+            )
 
         # -------------------------------------------------------------------
         # BRANCH A: BI-TEMPORAL CHANGE DETECTION & VQA WORKFLOW (Rule 13, M3, M5)

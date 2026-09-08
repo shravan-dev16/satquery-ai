@@ -104,6 +104,15 @@ class SatQueryClient {
     this.semanticUncertaintyBadge = document.getElementById('semantic-uncertainty-badge');
     this.semanticTransitionsContainer = document.getElementById('semantic-transitions-container');
 
+    // Cross-Modal Card & Preview (M6)
+    this.complementarityCard = document.getElementById('complementarity-card');
+    this.compOpticalText = document.getElementById('comp-optical-text');
+    this.compSarText = document.getElementById('comp-sar-text');
+    this.compJointText = document.getElementById('comp-joint-text');
+    this.opticalSarPreviewCard = document.getElementById('optical-sar-preview-card');
+    this.opticalSarCompositeImg = document.getElementById('optical-sar-composite-img');
+    this.visualHubCard = document.querySelector('.visual-hub-card');
+
     // Telemetry & Trace
     this.telemetryRegionsList = document.getElementById('telemetry-regions-list');
     this.traceToggleBtn = document.getElementById('trace-toggle-btn');
@@ -380,6 +389,31 @@ class SatQueryClient {
 
     // 1b. Semantic Change Interpretation (Milestone M5)
     this.renderSemanticInterpretation(contract.evidence?.semantic_interpretation);
+
+    // 1c. Cross-Modal Complementarity & 3-Panel Preview (Milestone M6)
+    const isOpticalSar = contract.task === 'optical_sar_analysis';
+    if (isOpticalSar) {
+      if (this.semanticCard) this.semanticCard.classList.add('hidden');
+      if (this.visualHubCard) this.visualHubCard.classList.add('hidden');
+      if (this.opticalSarPreviewCard) {
+        this.opticalSarPreviewCard.classList.remove('hidden');
+        const compImg = contract.evidence.images?.find(img => img.role === 'semantic_composite');
+        if (compImg && this.opticalSarCompositeImg) {
+          this.opticalSarCompositeImg.src = compImg.url;
+        }
+      }
+      if (contract.evidence.complementarity_report && this.complementarityCard) {
+        this.complementarityCard.classList.remove('hidden');
+        const cr = contract.evidence.complementarity_report;
+        if (this.compOpticalText) this.compOpticalText.textContent = cr.optical_limitations || '';
+        if (this.compSarText) this.compSarText.textContent = cr.sar_penetration || '';
+        if (this.compJointText) this.compJointText.textContent = cr.structural_contrast || '';
+      }
+    } else {
+      if (this.opticalSarPreviewCard) this.opticalSarPreviewCard.classList.add('hidden');
+      if (this.complementarityCard) this.complementarityCard.classList.add('hidden');
+      if (this.visualHubCard) this.visualHubCard.classList.remove('hidden');
+    }
 
     // 2. Telemetry Cards
     const params = contract.parameters || {};

@@ -154,6 +154,7 @@
               <label for="candidate-select" class="candidate-label">Specialist Engine:</label>
               <select id="candidate-select" class="candidate-select">
                 <option value="change_vqa" selected>TinyCD + Semantic VQA (Milestone M5 Grounded)</option>
+                <option value="optical_sar">Optical + SAR Cross-Modal Fusion (Milestone M6 Joint Analysis)</option>
                 <option value="tinycd_raw">TinyCD Only (Binary Detection • M3/M4)</option>
                 <option value="cva_raw">CVA Baseline (Deterministic Spectral Difference)</option>
               </select>
@@ -171,9 +172,9 @@
           <div class="query-suggestions">
             <span class="suggestions-label">Example Queries:</span>
             <button type="button" class="query-pill" data-query="What changed between these two dates?">What changed between these two dates?</button>
-            <button type="button" class="query-pill" data-query="Has the built-up area increased, decreased, or remained unchanged?">Has built-up area increased or decreased?</button>
-            <button type="button" class="query-pill" data-query="Describe what type of land-cover change occurred.">Describe type of land-cover change</button>
-            <button type="button" class="query-pill" data-query="Where did the major changes occur?">Where did major changes occur?</button>
+            <button type="button" class="query-pill" data-query="Use the optical and SAR images together to identify built-up and water-covered regions.">Optical + SAR: Identify built-up & water</button>
+            <button type="button" class="query-pill" data-query="Identify the built-up areas using both optical and SAR information.">Optical + SAR: Built structures</button>
+            <button type="button" class="query-pill" data-query="Has the built-up area increased, decreased, or remained unchanged?">Has built-up area changed?</button>
           </div>
         </div>
       </section>
@@ -246,6 +247,33 @@
           </div>
           <div class="semantic-body" id="semantic-transitions-container">
             <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Cross-Modal Complementarity Card (Milestone M6) -->
+        <div class="complementarity-card hidden" id="complementarity-card">
+          <div class="complementarity-header">
+            <div class="complementarity-header-left">
+              <span class="complementarity-badge">M6 Cross-Modal Complementarity</span>
+              <span class="sensor-badge">Optical RGB + SAR Microwave Backscatter</span>
+            </div>
+            <div class="complementarity-header-right">
+              <span class="joint-badge" id="comp-joint-badge">Cross-Sensor Confirmed</span>
+            </div>
+          </div>
+          <div class="complementarity-body">
+            <div class="comp-col">
+              <h5>Optical Visible Reflectance</h5>
+              <p id="comp-optical-text">...</p>
+            </div>
+            <div class="comp-col">
+              <h5>SAR Physical Backscatter & Roughness</h5>
+              <p id="comp-sar-text">...</p>
+            </div>
+            <div class="comp-col comp-col-joint">
+              <h5>Joint Cross-Sensor Finding</h5>
+              <p id="comp-joint-text">...</p>
+            </div>
           </div>
         </div>
 
@@ -342,6 +370,19 @@
               <div class="gallery-header">Semi-Transparent Overlay</div>
               <div class="gallery-img-box"><img id="gallery-overlay" class="gallery-img" alt="Change Overlay"></div>
             </div>
+          </div>
+        </div>
+
+        <!-- 3-Panel Cross-Modal Composite Evidence (Milestone M6) -->
+        <div class="optical-sar-preview-card hidden" id="optical-sar-preview-card">
+          <div class="hub-header">
+            <div class="hub-title-group">
+              <h3 class="hub-title">3-Panel Cross-Modal Composite Evidence</h3>
+              <span class="hub-subtitle">Panel 1: Optical RGB Context &bull; Panel 2: SAR Microwave Backscatter &bull; Panel 3: Joint Fused Land-Cover Map</span>
+            </div>
+          </div>
+          <div class="optical-sar-img-wrapper">
+            <img id="optical-sar-composite-img" class="optical-sar-img" alt="Optical-SAR 3-Panel Composite">
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 # SatQuery AI — Engineering Implementation Plan
 
-**Document Version:** 2.5.0 (Milestone M5 Completion)  
+**Document Version:** 2.6.0 (Milestone M6 Completion)  
 **Problem Statement:** Smart India Hackathon — SIH26167 (ISRO / Space Technology)  
 **Standard:** Compliance with `AGENTS.md` Rule 19 (Team Ownership), Rule 20 (Task Reporting Format), and Rule 21 (Milestones M0 to M14).
 
@@ -17,9 +17,9 @@
 | **M2.1** | Grounding Recovery & Empirical Selection | **COMPLETED** | Grounding DINO Base integration, query normalizer, NMS, degeneracy filter | Evaluated on 35-sample VRSBench subset, IoU improved 0.0728 -> 0.2469, 59 tests passing |
 | **M3** | Bi-Temporal Change Analysis Foundation | **COMPLETED** | 11-point validator, deterministic aligner, TinyCD + CVA baseline, physical area, 9-step trace | 77 unit/integration tests passing in 3.60s, baseline LEVIR-CD evaluated |
 | **M4** | Dedicated Change Detection & Benchmark Evaluation | **COMPLETED** | Reproducible benchmark harness, LEVIR-CD verification, diverse-scene generalization, failure taxonomy | Machine-readable benchmark reports, macro/micro metrics, failure diagnostics, 95 tests passing |
-| **M5** | Change Semantic Interpretation & Change VQA | **COMPLETED** | `backend/models/change_vqa.py`, structured transitions, anti-hallucination zero-change gate, 10-step trace | Real model smoke test on 4 scenarios, 105 tests passing, `docs/evaluation/M5_SEMANTIC_EVALUATION.md` |
-| **M6** | Optical + SAR Cross-Modal Analysis | **CURRENT NEXT MILESTONE** | `backend/models/optical_sar.py` | Verifiable C-band microwave cloud penetration and roughness contrast |
-| **M7** | Agentic Orchestrator & Dynamic Routing | *Scheduled* | `backend/agent/parser.py`, `router.py`, `executor.py` | Intent parsing and dynamic execution DAGs without hardcoding |
+| **M5** | Change Semantic Interpretation & Change VQA | **COMPLETED** | `backend/models/change_vqa.py`, structured transitions, anti-hallucination zero-change gate, 10-step trace | Real model smoke test on 4 scenarios, 108 tests passing, `docs/evaluation/M5_SEMANTIC_EVALUATION.md` |
+| **M6** | Optical + SAR Cross-Modal Analysis | **COMPLETED** | `backend/models/optical_sar.py`, `CrossModalValidator`, `CrossModalAligner`, 10-step trace | Verifiable dual-sensor dependence, 6 RS classes, 121 tests passing, `docs/evaluation/M6_OPTICAL_SAR_EVALUATION.md` |
+| **M7** | Agentic Orchestrator & Dynamic Routing | **CURRENT NEXT MILESTONE** | `backend/agent/parser.py`, `router.py`, `executor.py` | Intent parsing and dynamic execution DAGs without hardcoding |
 | **M8** | Evidence Fusion & Consistency Checking | *Scheduled* | `backend/evidence/consistency.py`, `fusion.py` | Conflict detection (e.g. change detector vs VLM) and confidence penalty |
 | **M9** | Defensible Confidence Engine | *Scheduled* | `backend/evidence/confidence.py` | Multi-factor evidence-weighted confidence heuristic calculation |
 | **M10** | Remote-Sensing Adaptation & Benchmark Evaluation | *Scheduled* | `backend/evaluation/`, LoRA training on BigEarthNet / open RS data | Defensible RS domain adaptation with held-out validation |
@@ -311,6 +311,69 @@ Milestone M5 delivers the grounded vision-language semantic interpretation layer
 - [x] 9. Defensible confidence separation maintained (semantic uncertainty separated from system evidence score).
 - [x] 10. Frontend UI updated with semantic stepper, direction badges, and transition cards.
 - [x] 11. Real-model smoke test executed across 4 scenarios (`docs/evaluation/M5_SEMANTIC_EVALUATION.md`).
-- [x] 12. Full test suite passes: 105 passed, 0 failed across entire repository.
+- [x] 12. Full test suite passes: 108 passed, 0 failed across entire repository.
 - [x] 13. M4 benchmark artifacts and metrics preserved byte-for-byte.
 - [x] 14. **STOPPED** after M5. Did not begin M6 (Optical+SAR), M7 (Agentic DAG), M8 (Fusion), M9 (Confidence Engine), or M10 (LoRA/Fine-tuning).
+
+---
+
+## 8. Milestone M6 Technical Summary: Optical + SAR Cross-Modal Joint Analysis
+
+### 8.1 Objective & Specialist Architecture (`OPTICAL_SAR_FUSION`)
+Milestone M6 delivers the mandatory cross-modal analysis capability combining co-registered optical/multispectral and synthetic aperture radar (SAR) Earth observation imagery:
+- **Module:** `backend/models/optical_sar.py` (`OpticalSARSpecialist`).
+- **Capability:** `OPTICAL_SAR_FUSION`, registered in central `ModelRegistry`.
+- **Supported Tasks:** `TaskType.OPTICAL_SAR_ANALYSIS`.
+- **Supported Modalities:** `[ModalityType.OPTICAL, ModalityType.SAR, ModalityType.CROSS_MODAL]`.
+- **Supported Input Count:** Exactly 2 rasters.
+
+### 8.2 Input Contract, Validation & Alignment
+1. **`CrossModalValidator` (`backend/preprocessing/alignment.py`):**
+   - Enforces exactly one optical and one SAR raster.
+   - Rejects identical-modality pairs (dual optical or dual SAR).
+   - Enforces valid CRS and affine transforms on both rasters.
+   - Rejects disjoint spatial coverage or insufficient spatial overlap (< 20%).
+   - Detects and transparently normalizes reversed input ordering (SAR primary, optical secondary) with audit advisory warnings.
+2. **`CrossModalAligner` (`backend/preprocessing/alignment.py`):**
+   - Deterministically co-registers SAR raster to optical cropped spatial grid.
+   - Preserves independent optical (RGB) and SAR (polarimetric backscatter) band counts and dtypes.
+
+### 8.3 Raster-Level Joint Feature Fusion Layer
+Fuses complementary spectral and physical features into a shared representation:
+- **Optical Spectral Cues:** Normalized RGB reflectance, Excess Green Index ($\text{ExG}$), lightness, and blue/red color ratios.
+- **SAR Physical Cues:** Calibrated backscatter intensity, $5\times 5$ local standard deviation texture roughness ($\sigma_{\text{local}}$), corner reflection (double bounce), and specular reflectance.
+- **Supported Classes (6 Remote-Sensing Classes):**
+  1. `water_body`: Low optical brightness / blue tint + near-zero SAR backscatter ($\le 0.20$) + low texture roughness ($\le 0.08$).
+  2. `built_structure`: Geometric optical contrast + high SAR backscatter / double bounce ($\ge 0.50$ or $\ge 0.30$ with roughness $\ge 0.12$).
+  3. `vegetation_or_cropland`: High optical greenness ($\text{ExG} \ge 0.06$) + moderate diffuse SAR volume scattering ($0.15 - 0.75$).
+  4. `bare_ground_or_soil`: Warm tan/brown reflectance ($R > G > B$) + low-to-moderate backscatter ($0.15 - 0.50$) without high roughness.
+  5. `road_or_infrastructure`: Neutral grey reflectance + low smooth pavement backscatter ($\le 0.25$, $\sigma \le 0.08$).
+  6. `unknown`: Ambiguous or conflicting cross-modal signatures.
+
+### 8.4 Query-Influenced Filtering & Evidence Assembly
+- **Query Targeting:** Automatically identifies target classes (e.g., *"identify built-up and water-covered regions"* $\rightarrow$ `built_structure`, `water_body`) and tailors analytical summary narrative.
+- **Visual Evidence:** Standardized 3-panel composite preview (`Panel 1: Optical RGB | Panel 2: SAR Grayscale | Panel 3: Joint Fused Land-Cover Map`) and color-coded categorical mask.
+- **Structured Evidence:** Populates `EvidenceBundle` with bounding boxes, spatial detected regions with detailed `optical_evidence`, `sar_evidence`, and `joint_evidence`, class-wise zonal statistics, and a dedicated `ComplementarityReport`.
+- **Observable 10-Step Trace:**
+  `InputValidation` $\rightarrow$ `ModalityValidation` $\rightarrow$ `SpatialCompatibility` $\rightarrow$ `Alignment` $\rightarrow$ `SpecialistSelection` $\rightarrow$ `OpticalFeatureExtraction` $\rightarrow$ `SARFeatureExtraction` $\rightarrow$ `JointFusion` $\rightarrow$ `RegionExtraction` $\rightarrow$ `EvidenceAssembly`.
+
+### 8.5 Definition of Done Checklist for M6
+- [x] 1. Optical + SAR pair accepted and validated via `CrossModalValidator`.
+- [x] 2. Reversed modality ordering handled transparently with audit trace warning.
+- [x] 3. Dual optical and dual SAR pairs rejected with clean structured errors.
+- [x] 4. Missing CRS and disjoint image pairs rejected deterministically.
+- [x] 5. Independent channels and dtypes preserved via `CrossModalAligner`.
+- [x] 6. Real raster-level joint feature fusion implemented in `OpticalSARSpecialist`.
+- [x] 7. Dual-modality dependence verified: output changes when SAR changes AND when optical changes.
+- [x] 8. 6 remote-sensing semantic classes supported without forced classification.
+- [x] 9. Natural-language query influences targeting and narrative answer.
+- [x] 10. `ComplementarityReport` populated with optical limitations, SAR penetration, and structural contrast.
+- [x] 11. Visual 3-panel composite and segmentation mask generated and linked to evidence.
+- [x] 12. `OpticalSARSpecialist` registered as `OPTICAL_SAR_FUSION` in `ModelRegistry`.
+- [x] 13. API integrated via Branch C in `/api/v1/analyze` exposing 10-step auditable execution trace.
+- [x] 14. Deterministic M6 fixtures created in `backend/evaluation/optical_sar_fixtures.py`.
+- [x] 15. Comprehensive test suite added in `tests/test_optical_sar.py` (13 tests passing).
+- [x] 16. Baseline evaluation report created in `docs/evaluation/M6_OPTICAL_SAR_EVALUATION.md`.
+- [x] 17. Full regression test suite passes (all 108 existing tests + 13 new M6 tests = 121 tests passing).
+- [x] 18. **STOPPED** after M6. Did not begin M7 (Agentic Orchestration & DAGs), M8 (General Evidence Fusion), M9 (Confidence Engine), or M10 (LoRA/Fine-tuning).
+

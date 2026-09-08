@@ -24,6 +24,8 @@ def test_ui_index_html():
     assert "split-slider-frame" in res.text
     assert "semantic-card" in res.text
     assert "SemanticInterpretation" in res.text
+    assert "complementarity-card" in res.text
+    assert "optical-sar-preview-card" in res.text
 
 
 def test_ui_static_assets():
@@ -31,12 +33,14 @@ def test_ui_static_assets():
     res_css = client.get("/ui/index.css")
     assert res_css.status_code == 200
     assert "text/css" in res_css.headers["content-type"] or "css" in res_css.headers["content-type"]
+    assert "complementarity-card" in res_css.text
 
     res_js = client.get("/ui/app.js")
     assert res_js.status_code == 200
     assert "javascript" in res_js.headers["content-type"] or "application/" in res_js.headers["content-type"]
     assert "SatQueryClient" in res_js.text
     assert "renderSemanticInterpretation" in res_js.text
+    assert "complementarityCard" in res_js.text
 
 
 def test_root_endpoint_preserved():
@@ -57,3 +61,5 @@ def test_api_health_endpoint():
     assert data["status"] == "healthy"
     assert "CHANGE_DETECT" in data["specialists_status"]
     assert "CHANGE_VQA" in data["specialists_status"]
+    assert "OPTICAL_SAR_FUSION" in data["specialists_status"]
+

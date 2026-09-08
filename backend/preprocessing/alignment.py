@@ -488,3 +488,319 @@ class BiTemporalAligner:
         )
 
     align = align_pair
+
+
+@dataclass
+class CrossModalValidationResult:
+    """Structured validation outcome for an Optical-SAR image pair (Milestone M6)."""
+    is_valid: bool
+    error: Optional[str] = None
+    warnings: List[str] = field(default_factory=list)
+    optical_path: Optional[Path] = None
+    sar_path: Optional[Path] = None
+    optical_meta: Optional[Dict[str, Any]] = None
+    sar_meta: Optional[Dict[str, Any]] = None
+    spatial_overlap: Optional[SpatialOverlapInfo] = None
+    is_reversed_order: bool = False
+
+
+@dataclass
+class CrossModalAlignmentResult:
+    """Result of deterministic cross-modal Optical + SAR raster alignment."""
+    optical_array: np.ndarray  # (C_opt, H, W)
+    sar_array: np.ndarray      # (C_sar, H, W) aligned to optical grid
+    crs: str
+    transform: Affine
+    bounds: Tuple[float, float, float, float]
+    width: int
+    height: int
+    resampling_method: str
+    metadata: Dict[str, Any]
+
+    @property
+    def target_crs(self) -> str:
+        return self.crs
+
+    @property
+    def target_resolution(self) -> Tuple[float, float]:
+        return (float(self.transform[0]), float(abs(self.transform[4])))
+
+
+class CrossModalValidator:
+    """Performs rigorous cross-modal validation on Optical + SAR image pairs."""
+
+    MIN_OVERLAP_RATIO = 0.20  # Require at least 20% spatial overlap
+
+    @classmethod
+    def validate_pair(
+        cls,
+        image1_path: Union[str, Path],
+        image2_path: Union[str, Path],
+        min_overlap_ratio: float = 0.20,
+    ) -> CrossModalValidationResult:
+        """Validates an Optical + SAR image pair.
+
+        Enforces:
+        1. Exactly two distinct readable images
+        2. Valid Coordinate Reference System (CRS) on both
+        3. Valid affine geotransforms and non-zero dimensions
+        4. One image must be Optical/Multispectral, one image must be SAR
+        5. Rejects two optical or two SAR images
+        6. Automatically normalizes reversed input ordering (SAR primary, Optical secondary)
+        7. Real spatial intersection with >= min_overlap_ratio overlap
+        """
+        p1 = Path(image1_path)
+        p2 = Path(image2_path)
+        warnings: List[str] = []
+
+        if not p1.exists():
+            return CrossModalValidationResult(is_valid=False, error=f"Primary image not found: {p1}")
+        if not p2.exists():
+            return CrossModalValidationResult(is_valid=False, error=f"Secondary image not found: {p2}")
+
+        # Read raster metadata
+        try:
+            meta1 = GeoTIFFReader.inspect(p1)
+        except Exception as e:
+            return CrossModalValidationResult(is_valid=False, error=f"Failed to read image 1: {e}")
+
+        try:
+            meta2 = GeoTIFFReader.inspect(p2)
+        except Exception as e:
+            return CrossModalValidationResult(is_valid=False, error=f"Failed to read image 2: {e}")
+
+        # Check CRS on both
+        crs1 = meta1.get("crs")
+        crs2 = meta2.get("crs")
+        if not crs1 or str(crs1).lower() in ["none", "null", ""]:
+            return CrossModalValidationResult(
+                is_valid=False,
+                error=f"Image ({p1.name}) lacks a valid Coordinate Reference System (CRS).",
+                optical_meta=meta1, sar_meta=meta2,
+            )
+        if not crs2 or str(crs2).lower() in ["none", "null", ""]:
+            return CrossModalValidationResult(
+                is_valid=False,
+                error=f"Image ({p2.name}) lacks a valid Coordinate Reference System (CRS).",
+                optical_meta=meta1, sar_meta=meta2,
+            )
+
+        # Check dimensions & transforms
+        if meta1["width"] <= 0 or meta1["height"] <= 0 or meta2["width"] <= 0 or meta2["height"] <= 0:
+            return CrossModalValidationResult(is_valid=False, error="Non-positive image dimensions detected.")
+        if not meta1.get("transform") or not meta2.get("transform"):
+            return CrossModalValidationResult(is_valid=False, error="Missing affine geotransform matrix.")
+
+        # Modality Identification & Cross-Modal Verification
+        from backend.agent.schema import ModalityType
+        mod1 = ModalityDetector.identify(p1)
+        mod2 = ModalityDetector.identify(p2)
+
+        is_m1_optical = mod1.modality in (ModalityType.OPTICAL, ModalityType.MULTISPECTRAL)
+        is_m1_sar = mod1.modality == ModalityType.SAR
+        is_m2_optical = mod2.modality in (ModalityType.OPTICAL, ModalityType.MULTISPECTRAL)
+        is_m2_sar = mod2.modality == ModalityType.SAR
+
+        if is_m1_optical and is_m2_optical:
+            return CrossModalValidationResult(
+                is_valid=False,
+                error="Both images are Optical/Multispectral. Optical-SAR joint analysis requires exactly one Optical image and one SAR image.",
+            )
+
+        if is_m1_sar and is_m2_sar:
+            return CrossModalValidationResult(
+                is_valid=False,
+                error="Both images are SAR. Optical-SAR joint analysis requires exactly one Optical image and one SAR image.",
+            )
+
+        is_reversed = False
+        if is_m1_optical and is_m2_sar:
+            optical_path = p1
+            sar_path = p2
+            optical_meta = meta1
+            sar_meta = meta2
+        elif is_m1_sar and is_m2_optical:
+            optical_path = p2
+            sar_path = p1
+            optical_meta = meta2
+            sar_meta = meta1
+            is_reversed = True
+            warnings.append(
+                "Reversed input ordering detected: Primary image is SAR and Secondary image is Optical. "
+                "Inputs automatically normalized for joint analysis."
+            )
+        else:
+            return CrossModalValidationResult(
+                is_valid=False,
+                error=(
+                    f"Unsupported modality combination: '{mod1.modality.value}' and '{mod2.modality.value}'. "
+                    "Cross-modal analysis requires one Optical image and one SAR image."
+                ),
+            )
+
+        # Spatial Overlap
+        overlap_info = BiTemporalValidator._calculate_spatial_overlap(optical_meta, sar_meta)
+        if not overlap_info.has_overlap:
+            return CrossModalValidationResult(
+                is_valid=False,
+                error="Optical and SAR images have zero spatial intersection (disjoint geographic areas).",
+                optical_path=optical_path,
+                sar_path=sar_path,
+                optical_meta=optical_meta,
+                sar_meta=sar_meta,
+                spatial_overlap=overlap_info,
+            )
+
+        min_overlap = min(overlap_info.overlap_ratio_image1, overlap_info.overlap_ratio_image2)
+        if min_overlap < min_overlap_ratio:
+            return CrossModalValidationResult(
+                is_valid=False,
+                error=f"Insufficient spatial overlap ({min_overlap * 100:.1f}% < minimum required {min_overlap_ratio * 100:.0f}%).",
+                optical_path=optical_path,
+                sar_path=sar_path,
+                optical_meta=optical_meta,
+                sar_meta=sar_meta,
+                spatial_overlap=overlap_info,
+            )
+        elif min_overlap < 0.95:
+            warnings.append(
+                f"Partial spatial overlap ({min_overlap * 100:.1f}%). Imagery will be cropped to the common intersection."
+            )
+
+        warnings.extend(overlap_info.warnings)
+
+        return CrossModalValidationResult(
+            is_valid=True,
+            warnings=warnings,
+            optical_path=optical_path,
+            sar_path=sar_path,
+            optical_meta=optical_meta,
+            sar_meta=sar_meta,
+            spatial_overlap=overlap_info,
+            is_reversed_order=is_reversed,
+        )
+
+    @classmethod
+    def validate(
+        cls,
+        image1_path: Union[str, Path],
+        image2_path: Union[str, Path],
+        min_overlap_ratio: float = 0.20,
+    ) -> ValidationResult:
+        """Validates pair and returns standard ValidationResult Pydantic schema."""
+        raw_res = cls.validate_pair(image1_path, image2_path, min_overlap_ratio=min_overlap_ratio)
+        errors = [raw_res.error] if raw_res.error else []
+        warnings = list(raw_res.warnings)
+
+        images: List[ImageMetadata] = []
+        if raw_res.optical_path:
+            images.append(MetadataExtractor.extract_image_metadata(raw_res.optical_path))
+        if raw_res.sar_path:
+            images.append(MetadataExtractor.extract_image_metadata(raw_res.sar_path))
+
+        compat: Optional[PairCompatibility] = None
+        if raw_res.spatial_overlap and raw_res.optical_meta and raw_res.sar_meta:
+            overlap = raw_res.spatial_overlap
+            ratio = min(1.0, max(0.0, overlap.overlap_ratio_image1))
+            pct = min(100.0, max(0.0, ratio * 100.0))
+            crs_match = raw_res.optical_meta.get("crs") == raw_res.sar_meta.get("crs")
+
+            compat = PairCompatibility(
+                pair_supported=raw_res.is_valid,
+                spatial_overlap_ratio=round(ratio, 4),
+                spatial_overlap_percentage=round(pct, 2),
+                crs_match=crs_match,
+                reprojection_required=not crs_match,
+                temporal_ordering="not_applicable",
+                warnings=warnings,
+            )
+
+        return ValidationResult(
+            valid=raw_res.is_valid,
+            images=images,
+            compatibility=compat,
+            errors=errors,
+            warnings=warnings,
+        )
+
+
+class CrossModalAligner:
+    """Deterministically aligns, reprojects, and crops Optical + SAR raster pairs."""
+
+    @classmethod
+    def align_pair(
+        cls,
+        image1_path: Union[str, Path],
+        image2_path: Union[str, Path],
+        resampling: Resampling = Resampling.bilinear,
+    ) -> CrossModalAlignmentResult:
+        """Co-registers Optical and SAR rasters to a common intersection grid.
+
+        Preserves independent optical and SAR band counts and dtypes.
+        """
+        val = CrossModalValidator.validate_pair(image1_path, image2_path)
+        if not val.is_valid:
+            raise ValueError(f"Cannot align incompatible optical-SAR pair: {val.error}")
+
+        assert val.optical_path is not None and val.sar_path is not None
+        assert val.spatial_overlap is not None and val.spatial_overlap.intersection_bounds is not None
+
+        inter_bounds = val.spatial_overlap.intersection_bounds
+        common_crs = val.spatial_overlap.common_crs or val.optical_meta["crs"]
+
+        # Read Optical raster cropped to intersection bounds
+        with rasterio.open(val.optical_path) as src_opt:
+            win_opt = rasterio.windows.from_bounds(*inter_bounds, transform=src_opt.transform)
+            win_opt = win_opt.round_offsets().round_lengths()
+            w_int = int(win_opt.width)
+            h_int = int(win_opt.height)
+            if w_int <= 0 or h_int <= 0:
+                raise ValueError(f"Cropped optical window has invalid dimensions: ({w_int}, {h_int})")
+
+            optical_data = src_opt.read(window=win_opt)
+            cropped_transform = rasterio.windows.transform(win_opt, src_opt.transform)
+
+        # Reproject and resample SAR raster into the common optical cropped grid
+        with rasterio.open(val.sar_path) as src_sar:
+            sar_band_count = src_sar.count
+            sar_dtype = np.float32 if "float" in str(src_sar.dtypes[0]).lower() else src_sar.dtypes[0]
+            aligned_sar = np.zeros((sar_band_count, h_int, w_int), dtype=sar_dtype)
+
+            for b in range(sar_band_count):
+                reproject(
+                    source=rasterio.band(src_sar, b + 1),
+                    destination=aligned_sar[b],
+                    src_transform=src_sar.transform,
+                    src_crs=src_sar.crs,
+                    dst_transform=cropped_transform,
+                    dst_crs=common_crs,
+                    resampling=resampling,
+                )
+
+        metadata = {
+            "optical_filename": val.optical_path.name,
+            "sar_filename": val.sar_path.name,
+            "crs": common_crs,
+            "cropped_dimensions": (w_int, h_int),
+            "optical_bands": optical_data.shape[0],
+            "sar_bands": aligned_sar.shape[0],
+            "intersection_bounds": list(inter_bounds),
+            "overlap_ratio_optical": val.spatial_overlap.overlap_ratio_image1,
+            "overlap_ratio_sar": val.spatial_overlap.overlap_ratio_image2,
+            "is_reversed_order": val.is_reversed_order,
+            "warnings": val.warnings,
+        }
+
+        return CrossModalAlignmentResult(
+            optical_array=optical_data,
+            sar_array=aligned_sar,
+            crs=common_crs,
+            transform=cropped_transform,
+            bounds=inter_bounds,
+            width=w_int,
+            height=h_int,
+            resampling_method=resampling.name,
+            metadata=metadata,
+        )
+
+    align = align_pair

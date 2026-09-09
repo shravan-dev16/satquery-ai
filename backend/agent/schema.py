@@ -380,6 +380,9 @@ class ModelExecutionRecord(BaseModel):
     execution_time_ms: int
 
 
+from backend.reports.schema import AnalystReport
+
+
 class StandardResultContract(BaseModel):
     """Unified result contract returned by the API (Rule 8)."""
     task: str
@@ -395,6 +398,10 @@ class StandardResultContract(BaseModel):
     warnings: List[str] = Field(default_factory=list)
     execution_trace: List[TraceStep] = Field(default_factory=list)
     execution_time_ms: int = 0
+    report: Optional[AnalystReport] = Field(
+        default=None,
+        description="Enriched M11 Analyst Report packaging all evidence, provenance, and audit telemetry",
+    )
 
 
 # ---------------------------------------------------------------------------

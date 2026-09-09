@@ -62,6 +62,28 @@ class AgentExecutor:
     """Dispatches and executes operational plans across registered specialists."""
 
     @classmethod
+    def _finalize_contract(
+        cls,
+        contract: StandardResultContract,
+        query: str = "",
+        primary_path: Optional[Path] = None,
+        secondary_path: Optional[Path] = None,
+        primary_filename: Optional[str] = None,
+        secondary_filename: Optional[str] = None,
+    ) -> StandardResultContract:
+        """Packages the completed contract into an auditable AnalystReport (Milestone M11)."""
+        from backend.reports.builder import ReportBuilder
+        contract.report = ReportBuilder.build(
+            contract=contract,
+            query=query,
+            primary_path=primary_path,
+            secondary_path=secondary_path,
+            primary_filename=primary_filename,
+            secondary_filename=secondary_filename,
+        )
+        return contract
+
+    @classmethod
     def execute(
         cls,
         plan: ExecutionPlan,
@@ -345,7 +367,7 @@ class AgentExecutor:
                 )
             ]
 
-            return StandardResultContract(
+            contract = StandardResultContract(
                 task="optical_sar_analysis",
                 status="success",
                 answer=gated_answer,
@@ -359,6 +381,14 @@ class AgentExecutor:
                 warnings=spec_output.warnings + val_res.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,
+            )
+            return cls._finalize_contract(
+                contract=contract,
+                query=query,
+                primary_path=p1,
+                secondary_path=p2,
+                primary_filename=fname1,
+                secondary_filename=fname2,
             )
 
 
@@ -680,7 +710,7 @@ class AgentExecutor:
                 )
             )
 
-            return StandardResultContract(
+            contract = StandardResultContract(
                 task="bitemporal_change_vqa" if decision.is_multi_stage else "bitemporal_change_detection",
                 status="success",
                 answer=gated_answer,
@@ -694,6 +724,14 @@ class AgentExecutor:
                 warnings=spec_output.warnings + val_res.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,
+            )
+            return cls._finalize_contract(
+                contract=contract,
+                query=query,
+                primary_path=p1,
+                secondary_path=p2,
+                primary_filename=fname1,
+                secondary_filename=fname2,
             )
 
 
@@ -918,7 +956,7 @@ class AgentExecutor:
                 )
             ]
 
-            return StandardResultContract(
+            contract = StandardResultContract(
                 task=f"single_image_{task.value}",
                 status="success" if spec_output.success else "partial",
                 answer=gated_answer,
@@ -932,4 +970,12 @@ class AgentExecutor:
                 warnings=spec_output.warnings + validation.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,
+            )
+            return cls._finalize_contract(
+                contract=contract,
+                query=query,
+                primary_path=p1,
+                secondary_path=p2,
+                primary_filename=fname1,
+                secondary_filename=fname2,
             )

@@ -84,15 +84,13 @@ SatQuery AI is an **agentic multimodal remote-sensing analysis system** designed
 - **M5 — Semantic Change Interpretation:** **COMPLETE** ✅ (ChangeVQASpecialist, 3-panel composite, zero-change gate)
 - **M6 — Optical-SAR Joint Analysis:** **COMPLETE** ✅ (CrossModalValidator, CrossModalAligner, 6-class physics fusion)
 - **M7 — Agentic Orchestration & Dynamic Routing:** **COMPLETE** ✅ (Router, Planner, Executor, 16-case matrix)
+- **M8 — Evidence Fusion & Consistency Engine:** **COMPLETE** ✅ (Rules C1–C8, EvidenceGater, 5-state reliability)
+- **M9 — Defensible System Confidence Engine:** **COMPLETE** ✅ (Multi-factor heuristic, contradiction caps)
+- **M10 — Remote-Sensing Adaptation (LoRA):** **COMPLETE** ✅ (Qwen2-VL PEFT LoRA, +6.25 pp overall, +28.57 pp change VQA)
+- **M11 — Report Generation & Evidence Packaging:** **COMPLETE** ✅ (Canonical AnalystReport, JSON/Markdown export, 195 tests)
 
 #### **NEXT MILESTONE:**
-- **M8 — Evidence Fusion & Consistency Engine:** **PENDING / NEXT** ⏳ (Conflict detection, cross-model consistency)
-
-#### **FUTURE MILESTONES:**
-- **M9 — Defensible Confidence Engine**
-- **M10 — Remote-Sensing Adaptation (BigEarthNet / LoRA)**
-- **M11 — Report Generation (PDF & JSON)**
-- **M12 — Final UI Polish**
+- **M12 — Final UI Polish (Teammate branch)**
 - **M13 — End-to-End Hardening & Demo Rehearsal**
 
 ---

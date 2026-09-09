@@ -35,9 +35,9 @@
 | **M7** | Agentic orchestration & dynamic routing | **COMPLETE** ✅ | Router, Planner, Executor DAGs, 16-case matrix |
 | **M8** | Evidence Fusion & Consistency Engine | **COMPLETE** ✅ | Rules C1–C8, immutable evidence units, gating |
 | **M9** | Defensible System Confidence Engine | **COMPLETE** ✅ | Multi-factor heuristic, contradiction dominance caps |
-| **M10** | Remote-Sensing Adaptation (VRSBench / LoRA) | **PLANNED / AUDITED** 📋 | Target: Unified VLM LoRA for `RS_VQA` & `CHANGE_VQA` (`Qwen2-VL-2B-Instruct`) |
-| **M11** | Report Generation (PDF & JSON) | *Scheduled* | Exportable audit-ready analyst reports |
-| **M12** | Interactive UI Polish | *Scheduled* | Unified web analyst workspace |
+| **M10** | Remote-Sensing Adaptation (VRSBench / LoRA) | **COMPLETE** ✅ | Qwen2-VL-2B-Instruct LoRA, +6.25 pp overall, +28.57 pp change VQA |
+| **M11** | Report Generation & Evidence Packaging | **COMPLETE** ✅ | Canonical AnalystReport, JSON/Markdown export, 195 tests passing |
+| **M12** | Interactive UI Polish | *Scheduled* | Unified web analyst workspace (Teammate branch) |
 | **M13** | End-to-End Hardening & Demo Rehearsal | *Scheduled* | Sub-3s response reliability for judging |
 
 ---

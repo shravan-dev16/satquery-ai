@@ -22,9 +22,9 @@
 | **M7** | Agentic Orchestrator & Dynamic Routing | **COMPLETED** | `backend/agent/router.py`, `planner.py`, `executor.py`, 16-case test matrix, automatic UI default | Intent classification, physical input configuration inspection, multi-stage DAGs, 137 tests passing, `docs/evaluation/M7_AGENTIC_ORCHESTRATION_EVALUATION.md` |
 | **M8** | Evidence Fusion & Consistency Checking | **COMPLETED** | `backend/evidence/fusion.py`, `consistency.py`, Rules C1-C8, EvidenceGater, 5-state reliability | Multi-source normalization, provenance tracking, deterministic conflict detection, 154 tests passing, `docs/evaluation/M8_EVIDENCE_FUSION_EVALUATION.md` |
 | **M9** | Defensible Confidence Engine | **COMPLETED** | `backend/evidence/confidence.py`, non-naive cascade, status caps, contradiction dominance, UI card | 172 tests passing, explainable factors, 18-case test matrix, `docs/evaluation/M9_CONFIDENCE_EVALUATION.md` |
-| **M10** | Remote-Sensing Adaptation & Benchmark Evaluation | **CURRENT NEXT MILESTONE** | `backend/evaluation/`, LoRA training on BigEarthNet / open RS data | Defensible RS domain adaptation with held-out validation |
-| **M11** | Report Generation (PDF & JSON) | *Scheduled* | `backend/reports/pdf_generator.py` | Exportable PDF with embedded evidence, maps, and trace |
-| **M12** | Interactive Analyst UI | *Scheduled* | `frontend/` (Static UI slice mounted at `/ui`) | Map viewer, split-slider, mask overlay, and trace inspector (Vertical slice verified) |
+| **M10** | Remote-Sensing Adaptation & Benchmark Evaluation | **COMPLETED** | `backend/evaluation/`, Qwen2-VL LoRA adaptation | +6.25 pp overall, +28.57 pp change VQA, `docs/evaluation/M10_ADAPTATION_EVALUATION.md` |
+| **M11** | Report Generation & Evidence Packaging | **COMPLETED** | `backend/reports/`, `AnalystReport`, `ReportBuilder`, `markdown.py` | Canonical structured JSON and Markdown audit reports, 195 tests passing, `docs/evaluation/M11_REPORTING.md` |
+| **M12** | Interactive Analyst UI | *In Progress* | `frontend/` (Static UI slice mounted at `/ui`) | Map viewer, split-slider, mask overlay, and trace inspector (Teammate branch) |
 | **M13** | End-to-End Demo Hardening | *Scheduled* | Live rehearsed scripts for Demo 1 to Demo 4 | Flawless sub-3s query execution |
 
 > [!IMPORTANT]

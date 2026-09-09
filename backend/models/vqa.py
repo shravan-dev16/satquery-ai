@@ -6,6 +6,7 @@ Isolates model-specific preprocessing, vision tokenization, generation, and VRAM
 
 import gc
 import logging
+import os
 import time
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -70,8 +71,28 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
         if self._is_loaded:
             return
 
+        import os
+
+        # Check for shared VLM runtime toggle (Candidate 1: enabled by default, 100% reversible)
+        use_shared = os.environ.get("SATQUERY_SHARED_VLM_RUNTIME", "1") != "0"
+        if use_shared:
+            from backend.models.shared_vlm import get_shared_vlm
+            handle = get_shared_vlm(
+                model_id=self.model_id,
+                device=self.device,
+                torch_dtype=self.torch_dtype,
+            )
+            self.processor = handle.processor
+            self.model = handle.model
+            self._is_adapted = handle.is_adapted
+            self._using_shared_runtime = True
+            self._load_duration_ms = handle.load_duration_ms
+            self._is_loaded = True
+            logger.info("VQA specialist attached to Shared VLM Runtime (adapted=%s) in %d ms", self._is_adapted, self._load_duration_ms)
+            return
+
         start_time = time.perf_counter()
-        logger.info("Loading VQA model [%s] onto device [%s]...", self.model_id, self.device)
+        logger.info("Loading dedicated VQA model [%s] onto device [%s]...", self.model_id, self.device)
 
         from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
 
@@ -154,8 +175,10 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
         max_new_tokens = int(inputs.parameters.get("max_new_tokens", 128))
         temperature = float(inputs.parameters.get("temperature", 0.2))
 
-        # 4. Generate prediction
-        with torch.no_grad():
+        # 4. Generate prediction (Candidate 2: inference_mode)
+        use_inference_mode = os.environ.get("SATQUERY_USE_INFERENCE_MODE", "1") == "1"
+        context_mgr = torch.inference_mode() if use_inference_mode else torch.no_grad()
+        with context_mgr:
             generated_ids = self.model.generate(
                 **inputs_tensor,
                 max_new_tokens=max_new_tokens,
@@ -235,6 +258,16 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
 
     def cleanup(self) -> None:
         """Releases CUDA memory buffers."""
+        if getattr(self, "_using_shared_runtime", False):
+            from backend.models.shared_vlm import release_shared_vlm
+            release_shared_vlm()
+            self.model = None
+            self.processor = None
+            self._is_loaded = False
+            self._using_shared_runtime = False
+            logger.info("VQA detached from Shared VLM Runtime.")
+            return
+
         if self.model is not None:
             del self.model
             self.model = None

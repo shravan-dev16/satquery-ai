@@ -15,6 +15,7 @@ distinguishes verified physical facts from semantic model interpretations.
 import gc
 import json
 import logging
+import os
 from pathlib import Path
 import re
 import time
@@ -83,6 +84,26 @@ class ChangeVQASpecialist(BaseSpecialist):
     def load(self) -> None:
         """Loads vision-language model and processor onto device."""
         if self._is_loaded:
+            return
+
+        import os
+
+        # Check for shared VLM runtime toggle (Candidate 1: enabled by default, 100% reversible)
+        use_shared = os.environ.get("SATQUERY_SHARED_VLM_RUNTIME", "1") != "0"
+        if use_shared:
+            from backend.models.shared_vlm import get_shared_vlm
+            handle = get_shared_vlm(
+                model_id=self.model_id,
+                device=self.device,
+                torch_dtype=self.torch_dtype,
+            )
+            self.processor = handle.processor
+            self.model = handle.model
+            self._is_adapted = handle.is_adapted
+            self._using_shared_runtime = True
+            self._load_duration_ms = handle.load_duration_ms
+            self._is_loaded = True
+            logger.info("Change VQA specialist attached to Shared VLM Runtime (adapted=%s) in %d ms", self._is_adapted, self._load_duration_ms)
             return
 
         start_time = time.perf_counter()
@@ -268,7 +289,7 @@ class ChangeVQASpecialist(BaseSpecialist):
         static_dir.mkdir(parents=True, exist_ok=True)
         run_id = f"cvqa_{int(time.time() * 1000) % 100000}"
         comp_filename = f"semantic_composite_{run_id}.png"
-        composite_image.save(static_dir / comp_filename)
+        composite_image.save(static_dir / comp_filename, format="PNG", compress_level=1)
 
         # 5. Build strict prompt conditioned on verified change statistics
         area_context = f"{area_m2:,.1f} m² ({area_ha:.2f} ha)" if area_m2 else f"{changed_pixels:,} pixels"
@@ -467,7 +488,9 @@ class ChangeVQASpecialist(BaseSpecialist):
         if self.device == "cuda":
             inputs_tensor = inputs_tensor.to("cuda")
 
-        with torch.no_grad():
+        use_inference_mode = os.environ.get("SATQUERY_USE_INFERENCE_MODE", "1") == "1"
+        context_mgr = torch.inference_mode() if use_inference_mode else torch.no_grad()
+        with context_mgr:
             generated_ids = self.model.generate(
                 **inputs_tensor,
                 max_new_tokens=max_tokens,
@@ -751,6 +774,16 @@ class ChangeVQASpecialist(BaseSpecialist):
 
     def cleanup(self) -> None:
         """Frees model weights and cleans CUDA cache."""
+        if getattr(self, "_using_shared_runtime", False):
+            from backend.models.shared_vlm import release_shared_vlm
+            release_shared_vlm()
+            self.model = None
+            self.processor = None
+            self._is_loaded = False
+            self._using_shared_runtime = False
+            logger.info("Change VQA detached from Shared VLM Runtime.")
+            return
+
         if self.model is not None:
             del self.model
             self.model = None

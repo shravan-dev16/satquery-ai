@@ -494,12 +494,12 @@ class SatQueryClient {
 
     // 3. Visual Preview Images
     const maskObj = contract.evidence.masks && contract.evidence.masks.length > 0 ? contract.evidence.masks[0] : null;
-    const overlayImg = contract.evidence.images?.find(img => img.role === 'change_overlay');
+    const overlayImg = contract.evidence.images?.find(img => img.role === 'change_overlay' || img.role === 'grounding_preview');
     const primaryImg = contract.evidence.images?.find(img => img.role === 'primary');
     const secondaryImg = contract.evidence.images?.find(img => img.role === 'secondary');
 
     const overlayUrl = overlayImg ? overlayImg.url : (params.overlay_path || '');
-    const maskUrl = maskObj ? maskObj.url : (params.mask_path || '');
+    const maskUrl = maskObj ? maskObj.url : (params.mask_path || overlayUrl);
     
     // For T1 & T2: if PNG/JPEG, browser can use local object URL; otherwise use backend rendered PNG previews
     const isT1Web = this.t1File && (this.t1File.type === 'image/png' || this.t1File.type === 'image/jpeg');

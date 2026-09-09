@@ -1,0 +1,119 @@
+[
+  {
+    "id": "demo-vqa-01",
+    "workflow": "single_image_vqa",
+    "files": ["datasets/ui_demo/vqa_sample_1.png"],
+    "suggested_query": "What is present in this image?",
+    "source_dataset": "VRSBench (Sample 10904_0000)",
+    "notes": "UI integration sample for single-image vision-language question answering"
+  },
+  {
+    "id": "demo-vqa-02",
+    "workflow": "single_image_vqa",
+    "files": ["datasets/ui_demo/vqa_sample_2.tif"],
+    "suggested_query": "Describe the land-cover and major features visible in this remote sensing image.",
+    "source_dataset": "Sentinel-2 Multispectral GeoTIFF (tests/fixtures/real_rs_sample.tif)",
+    "notes": "UI integration sample for single-image GeoTIFF multispectral VQA"
+  },
+  {
+    "id": "demo-vqa-03",
+    "workflow": "single_image_vqa",
+    "files": ["datasets/ui_demo/vqa_sample_3.png"],
+    "suggested_query": "What type of scene is shown in this image?",
+    "source_dataset": "VRSBench (Sample 07160_0000)",
+    "notes": "UI integration sample for remote-sensing scene classification and description"
+  },
+  {
+    "id": "demo-grounding-01",
+    "workflow": "text_guided_grounding",
+    "files": ["datasets/ui_demo/grounding_harbor.png"],
+    "suggested_query": "Where is the harbor?",
+    "source_dataset": "VRSBench Aerial Scene (Sample P0019_0002.png)",
+    "notes": "UI integration sample for text-guided zero-shot bounding box spatial localization"
+  },
+  {
+    "id": "demo-grounding-02",
+    "workflow": "text_guided_grounding",
+    "files": ["datasets/ui_demo/grounding_water.tif"],
+    "suggested_query": "Where is the water body?",
+    "source_dataset": "Sentinel-2 Optical (tests/fixtures/optical_s2_sample.tif)",
+    "notes": "UI integration sample for raster GeoTIFF grounding"
+  },
+  {
+    "id": "demo-change-pure-01",
+    "workflow": "bitemporal_change_pure",
+    "files": [
+      "datasets/ui_demo/change_pure_t1.tif",
+      "datasets/ui_demo/change_pure_t2.tif"
+    ],
+    "suggested_query": "What changed between these two dates?",
+    "source_dataset": "LEVIR-CD / DiverseRS bitemporal pair (tests/fixtures/bitemporal)",
+    "notes": "UI integration sample for pure physical change detection (routes CHANGE_DETECT only)"
+  },
+  {
+    "id": "demo-change-urban-01",
+    "workflow": "bitemporal_change_semantic_urban",
+    "files": [
+      "datasets/ui_demo/change_urban_t1.tif",
+      "datasets/ui_demo/change_urban_t2.tif"
+    ],
+    "suggested_query": "Did the built-up area increase?",
+    "source_dataset": "Bi-temporal Urban Semantic Pair (tests/fixtures/semantic)",
+    "notes": "UI integration sample for semantic change understanding (routes CHANGE_DETECT -> CHANGE_VQA)"
+  },
+  {
+    "id": "demo-change-buildings-01",
+    "workflow": "bitemporal_change_semantic_quantity",
+    "files": [
+      "datasets/ui_demo/change_urban_t1.tif",
+      "datasets/ui_demo/change_urban_t2.tif"
+    ],
+    "suggested_query": "How much buildings were newly created?",
+    "source_dataset": "Bi-temporal Urban Semantic Pair (tests/fixtures/semantic)",
+    "notes": "UI integration sample verifying total change area is distinguished from semantic building area"
+  },
+  {
+    "id": "demo-change-vegetation-01",
+    "workflow": "bitemporal_change_semantic_vegetation",
+    "files": [
+      "datasets/ui_demo/change_forest_t1.tif",
+      "datasets/ui_demo/change_forest_t2.tif"
+    ],
+    "suggested_query": "How much vegetation was lost?",
+    "source_dataset": "Bi-temporal Forest Semantic Pair (tests/fixtures/semantic)",
+    "notes": "UI integration sample verifying semantic vegetation change analysis without area fabrication"
+  },
+  {
+    "id": "demo-change-water-01",
+    "workflow": "bitemporal_change_semantic_water",
+    "files": [
+      "datasets/ui_demo/change_water_t1.tif",
+      "datasets/ui_demo/change_water_t2.tif"
+    ],
+    "suggested_query": "How much water area changed?",
+    "source_dataset": "Bi-temporal Water Semantic Pair (tests/fixtures/semantic)",
+    "notes": "UI integration sample verifying semantic water change interpretation and qualified measurement"
+  },
+  {
+    "id": "demo-optical-sar-01",
+    "workflow": "optical_sar_cross_modal",
+    "files": [
+      "datasets/ui_demo/optical_multimodal.tif",
+      "datasets/ui_demo/sar_multimodal.tif"
+    ],
+    "suggested_query": "Use the optical and SAR images together to identify built-up and water-covered regions.",
+    "source_dataset": "Optical-SAR Cross-Modal Pair (tests/fixtures/optical_sar)",
+    "notes": "UI integration sample for joint optical-SAR complementarity analysis and composite generation"
+  },
+  {
+    "id": "demo-killer-workflow-01",
+    "workflow": "bitemporal_change_semantic",
+    "files": [
+      "datasets/ui_demo/change_urban_t1.tif",
+      "datasets/ui_demo/change_urban_t2.tif"
+    ],
+    "suggested_query": "Has the built-up area increased, where did the change occur, and what is the confidence?",
+    "source_dataset": "Integrated Multi-Specialist Workflow",
+    "notes": "UI integration killer demonstration showing M7 routing, M3 change detection, M5 semantic VLM, M8 consistency, M9 defensible confidence, and M11 reporting"
+  }
+]

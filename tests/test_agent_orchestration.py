@@ -103,8 +103,9 @@ def test_bitemporal_pair_change_detection_routing():
         secondary_path=T2_PATH,
     )
     assert decision.is_valid is True
-    assert decision.task in (TaskType.CHANGE_DETECTION, TaskType.CHANGE_VQA)
-    assert "CHANGE_DETECT" in decision.target_specialist_ids
+    assert decision.task == TaskType.CHANGE_DETECTION
+    assert decision.is_multi_stage is False
+    assert decision.target_specialist_ids == ["CHANGE_DETECT"]
     assert decision.input_configuration == "bitemporal_optical_pair"
 
 
@@ -136,6 +137,41 @@ def test_bitemporal_semantic_interpretation_routing():
         assert len(specialist_steps) == 2
         assert specialist_steps[0].specialist_id == "CHANGE_DETECT"
         assert specialist_steps[1].specialist_id == "CHANGE_VQA"
+
+
+def test_bitemporal_routing_10_query_regression_matrix():
+    """Verify exact routing partition for all 10 SIH evaluation queries:
+    Pure total-change queries -> CHANGE_DETECTION (single-stage CHANGE_DETECT)
+    Semantic change / semantic quantity queries -> CHANGE_VQA (multi-stage CHANGE_DETECT -> CHANGE_VQA)
+    """
+    pure_change_queries = [
+        "What changed between these two dates?",
+        "How much area changed?",
+        "Is there any change?",
+        "How much total area changed?",
+    ]
+    for q in pure_change_queries:
+        dec = AgentRouter.route(query=q, primary_path=T1_PATH, secondary_path=T2_PATH)
+        assert dec.is_valid is True, f"Failed on query: {q}"
+        assert dec.task == TaskType.CHANGE_DETECTION, f"Query '{q}' routed to {dec.task}, expected CHANGE_DETECTION"
+        assert dec.is_multi_stage is False, f"Query '{q}' should be single-stage"
+        assert dec.target_specialist_ids == ["CHANGE_DETECT"], f"Query '{q}' target specialists: {dec.target_specialist_ids}"
+
+    semantic_change_queries = [
+        ("What type of land-cover change occurred?", "semantic transition inquiry"),
+        ("Did the built-up area increase?", "built-up increase inquiry"),
+        ("How much buildings were newly created?", "buildings newly created quantity inquiry"),
+        ("How much vegetation was lost?", "vegetation lost quantity inquiry"),
+        ("How much forest was cleared?", "forest cleared quantity inquiry"),
+        ("How much water area changed?", "water area change inquiry"),
+        ("Where were new buildings created?", "new buildings localization inquiry"),
+    ]
+    for q, desc in semantic_change_queries:
+        dec = AgentRouter.route(query=q, primary_path=T1_PATH, secondary_path=T2_PATH)
+        assert dec.is_valid is True, f"Failed on query ({desc}): {q}"
+        assert dec.task == TaskType.CHANGE_VQA, f"Query '{q}' ({desc}) routed to {dec.task}, expected CHANGE_VQA"
+        assert dec.is_multi_stage is True, f"Query '{q}' ({desc}) must be multi-stage"
+        assert dec.target_specialist_ids == ["CHANGE_DETECT", "CHANGE_VQA"], f"Query '{q}' target specialists: {dec.target_specialist_ids}"
 
 
 # ===========================================================================

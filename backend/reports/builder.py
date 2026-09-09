@@ -324,6 +324,12 @@ class ReportBuilder:
             "total_clusters",
             "change_threshold",
             "min_cluster_size",
+            "total_changed_pixels",
+            "total_changed_area_ha",
+            "semantic_class_detected",
+            "semantic_changed_area_ha",
+            "semantic_area_status",
+            "semantic_area_limitation",
         ]
         for k in param_keys:
             if k in contract.parameters:
@@ -357,6 +363,14 @@ class ReportBuilder:
             metrics["temporal_direction"] = interp.temporal_direction
             metrics["semantic_uncertainty"] = interp.semantic_uncertainty
             notes.append(f"Semantic transition: '{interp.predominant_transition}' (direction: {interp.temporal_direction}).")
+
+        # Semantic area attribution qualification (Rule 4 / SIH26167)
+        if metrics.get("semantic_area_status") == "unmeasured_from_spatial_evidence":
+            target = metrics.get("semantic_class_detected") or "class-specific"
+            notes.append(
+                f"Semantic area attribution: {target} area is not directly measurable from binary change evidence; "
+                "total detected change encompasses all verified physical surface transitions."
+            )
 
         # Cross-modal metrics
         if contract.evidence and contract.evidence.complementarity_report:

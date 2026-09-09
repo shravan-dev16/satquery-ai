@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 import torch
 
 from backend.agent.schema import (
@@ -443,17 +443,53 @@ class GroundingDinoSpecialist(BaseSpecialist):
 
         elapsed_ms = int((time.perf_counter() - start_time) * 1000)
 
-        evidence = EvidenceBundle(
-            images=[
+        # Generate Web Preview Artifacts
+        static_dir = Path("backend/static/previews")
+        static_dir.mkdir(parents=True, exist_ok=True)
+        run_id = f"gnd_{int(time.time() * 1000) % 100000}"
+
+        primary_filename = f"primary_preview_{run_id}.png"
+        pil_image.save(static_dir / primary_filename, format="PNG")
+
+        evidence_images = [
+            EvidenceImage(
+                role="primary",
+                url=f"/api/v1/static/previews/{primary_filename}",
+                width=img_width,
+                height=img_height,
+                crs=crs_str,
+                bounds=raw_meta.get("bounds"),
+            )
+        ]
+
+        if valid_boxes:
+            preview_img = pil_image.copy()
+            draw = ImageDraw.Draw(preview_img)
+            for box in valid_boxes:
+                draw.rectangle(
+                    [box.xmin, box.ymin, box.xmax, box.ymax],
+                    outline=(0, 255, 128),
+                    width=3,
+                )
+                lbl_text = f"{box.label} ({box.confidence:.2f})" if box.confidence else box.label
+                draw.text((box.xmin + 4, box.ymin + 4), lbl_text, fill=(0, 255, 128))
+
+            grounding_filename = f"grounding_preview_{run_id}.png"
+            preview_img.save(static_dir / grounding_filename, format="PNG")
+
+            evidence_images.append(
                 EvidenceImage(
-                    role="primary",
-                    url=f"/api/v1/static/previews/{image_path.name}",
+                    role="grounding_preview",
+                    url=f"/api/v1/static/previews/{grounding_filename}",
                     width=img_width,
                     height=img_height,
                     crs=crs_str,
                     bounds=raw_meta.get("bounds"),
                 )
-            ],
+            )
+
+        evidence = EvidenceBundle(
+            images=evidence_images,
             masks=[],
             boxes=bounding_box_evidence,
             statistics=[],
@@ -701,17 +737,53 @@ class QwenGroundingSpecialist(BaseSpecialist):
 
         elapsed_ms = int((time.perf_counter() - start_time) * 1000)
 
-        evidence = EvidenceBundle(
-            images=[
+        # Generate Web Preview Artifacts
+        static_dir = Path("backend/static/previews")
+        static_dir.mkdir(parents=True, exist_ok=True)
+        run_id = f"qgnd_{int(time.time() * 1000) % 100000}"
+
+        primary_filename = f"primary_preview_{run_id}.png"
+        pil_image.save(static_dir / primary_filename, format="PNG")
+
+        evidence_images = [
+            EvidenceImage(
+                role="primary",
+                url=f"/api/v1/static/previews/{primary_filename}",
+                width=img_width,
+                height=img_height,
+                crs=crs_str,
+                bounds=raw_meta.get("bounds"),
+            )
+        ]
+
+        if valid_boxes:
+            preview_img = pil_image.copy()
+            draw = ImageDraw.Draw(preview_img)
+            for box in valid_boxes:
+                draw.rectangle(
+                    [box.xmin, box.ymin, box.xmax, box.ymax],
+                    outline=(0, 255, 128),
+                    width=3,
+                )
+                lbl_text = f"{box.label} ({box.confidence:.2f})" if box.confidence else box.label
+                draw.text((box.xmin + 4, box.ymin + 4), lbl_text, fill=(0, 255, 128))
+
+            grounding_filename = f"grounding_preview_{run_id}.png"
+            preview_img.save(static_dir / grounding_filename, format="PNG")
+
+            evidence_images.append(
                 EvidenceImage(
-                    role="primary",
-                    url=f"/api/v1/static/previews/{image_path.name}",
+                    role="grounding_preview",
+                    url=f"/api/v1/static/previews/{grounding_filename}",
                     width=img_width,
                     height=img_height,
                     crs=crs_str,
                     bounds=raw_meta.get("bounds"),
                 )
-            ],
+            )
+
+        evidence = EvidenceBundle(
+            images=evidence_images,
             masks=[],
             boxes=bounding_box_evidence,
             statistics=[],

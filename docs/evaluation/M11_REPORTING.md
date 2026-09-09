@@ -260,9 +260,17 @@ Available via `AnalystReport.to_markdown()` (implemented in `backend/reports/mar
 
 ---
 
+### 7.3 Bi-Temporal Semantic Area Attribution & Limitation Packaging (SIH26167 Correctness)
+In accordance with SIH26167 scientific rigor requirements and Architecture Decision Record **AD-016**, the report packaging layer enforces strict separation between:
+1. **Total Spatial Change (`total_changed_pixels`, `total_changed_area_ha`):** Measured directly from the verified spatial binary change mask (`CHANGE_DETECT`).
+2. **Semantic Interpretation (`predominant_transition`, `temporal_direction`):** Derived from `CHANGE_VQA` conditioned on the 3-panel composite.
+3. **Semantic-Specific Area Availability (`semantic_changed_area_ha`, `semantic_area_status`, `semantic_area_limitation`):** Class-specific area attribution (e.g. building footprint area vs surrounding cleared dirt) requires pixel-level multi-class segmentation. Because the active change detector produces class-agnostic binary change masks, class-specific area is recorded as `None` (`semantic_area_status = "unmeasured_from_spatial_evidence"`), and a clear limitation note is attached to `statistics.summary_notes` and the analytical narrative.
+
+---
+
 ## 8. Verification Results
 
-### Unit & Integration Test Suite (`tests/test_reporting.py`)
+### Unit & Integration Test Suite (`tests/test_reporting.py` & `tests/test_semantic_area.py`)
 - `test_single_image_vqa_report`: **PASSED**
 - `test_grounding_report`: **PASSED**
 - `test_bitemporal_change_report`: **PASSED**
@@ -282,9 +290,15 @@ Available via `AnalystReport.to_markdown()` (implemented in `backend/reports/mar
 - `test_markdown_export`: **PASSED**
 - `test_api_analyze_returns_m11_report`: **PASSED**
 - `test_report_determinism`: **PASSED**
+- `test_semantic_quantity_query_building_creation_workflow`: **PASSED**
+- `test_semantic_query_vegetation_loss_workflow`: **PASSED**
+- `test_semantic_query_water_area_change_workflow`: **PASSED**
+- `test_semantic_query_builtup_increase_workflow`: **PASSED**
+- `test_pure_total_change_does_not_invoke_change_vqa`: **PASSED**
+- `test_zero_change_scene_anti_hallucination_preserved`: **PASSED**
 
 **Full Repository Test Suite:**
 ```
-================ 195 passed, 285 warnings in 191.09s (0:03:11) ================
+================ 206 passed, 334 warnings in 95.10s (0:01:35) =================
 ```
-Zero failures. Zero regressions.
+Zero failures. Zero regressions. 100% green across all 206 tests.

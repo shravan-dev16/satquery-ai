@@ -53,27 +53,69 @@ class AgentRouter:
         r"\bhas\s+the\b.*\bchanged\b",
     ]
 
+    # Pure total/binary change queries (explicitly requesting generic surface change without semantic target)
+    PURE_TOTAL_CHANGE_PATTERNS = [
+        r"^\s*what\s+changed(\s+between\s+(these\s+(two\s+)?dates|the\s+two\s+images))?\s*\??\s*$",
+        r"\bhow\s+much\s+(?:total\s+)?area\s+changed\b",
+        r"\bhow\s+much\s+(?:total\s+)?change\b",
+        r"^\s*is\s+there\s+any\s+change\s*\??\s*$",
+        r"^\s*has\s+the\s+scene\s+changed\s*\??\s*$",
+        r"\btotal\s+(?:surface\s+|physical\s+)?change\b",
+        r"\btotal\s+(?:changed\s+)?area\b",
+        r"\boverall\s+change\b",
+        r"\bbinary\s+change\b",
+        r"^\s*(?:detect|show|find|highlight)\s+(?:the\s+)?changes?\s*\??\s*$",
+    ]
+
+    # Specific semantic classes from the remote sensing taxonomy
+    SEMANTIC_CLASS_PATTERNS = [
+        r"\b(?:buildings?|structures?|houses?|settlements?|residential|commercial|industrial|urban|built[- ]up)\b",
+        r"\b(?:vegetation|crops?|cropland|farmland|pasture|canopy|grassland|agricultural)\b",
+        r"\b(?:forests?|trees?|woodlands?|deforestation|timber)\b",
+        r"\b(?:water(?:[- ]body)?|lakes?|rivers?|reservoirs?|ponds?|floods?|flooding|wetlands?)\b",
+        r"\b(?:bare[- ]ground|bare[- ]soil|soils?|dirt|sand|cleared[- ]land|unpaved)\b",
+        r"\b(?:roads?|highways?|runways?|bridges?|infrastructure|pavement)\b",
+    ]
+
+    # Semantic change verbs, transitions, directions, and qualitative expressions
     SEMANTIC_CHANGE_PATTERNS = [
         r"\bdescribe\b",
+        r"\bexplain\b",
         r"\bhow\s+did\b",
+        r"\bwhy\s+did\b",
+        r"\bwhat\s+does\b",
         r"\btype\s+of\s+land[- ]cover\b",
         r"\btype\s+of\s+change\b",
         r"\bkind\s+of\s+change\b",
-        r"\bincreased\b",
-        r"\bdecreased\b",
-        r"\bbuilt[- ]up\b",
-        r"\bvegetation\b",
-        r"\bforest\b",
+        r"\bnature\s+of\s+change\b",
+        r"\bland[- ]cover\s+change\b",
+        r"\bland[- ]use\s+change\b",
+        r"\bincreased?\b",
+        r"\bdecreased?\b",
+        r"\bexpanded?\b",
+        r"\bshrink(?:ing|s)?\b",
+        r"\bshrunk\b",
+        r"\breduced?\b",
+        r"\blost\b",
+        r"\bloss\b",
+        r"\bcleared?\b",
+        r"\bclearance\b",
+        r"\bnewly\s+created\b",
+        r"\bcreated\b",
+        r"\bdeveloped?\b",
+        r"\bdevelopment\b",
+        r"\bconstructed?\b",
+        r"\bconstruction\b",
+        r"\bappeared\b",
+        r"\bdemolished?\b",
+        r"\bconverted?\b",
+        r"\btransformed?\b",
         r"\bsignificant\s+change\b",
         r"\bwhere\s+did\b",
-        r"\bwhy\s+did\b",
-        r"\bwhat\s+does\b",
+        r"\bwhere\s+were\b",
         r"\bsemantic\b",
         r"\bmeaning\b",
         r"\binterpretation\b",
-        r"\bexpanded\b",
-        r"\bshrink\b",
-        r"\breduced\b",
     ]
 
     GROUNDING_PATTERNS = [
@@ -150,7 +192,22 @@ class AgentRouter:
         # -------------------------------------------------------------------
         is_cross_modal_intent = any(re.search(pat, q_lower) for pat in cls.CROSS_MODAL_PATTERNS)
         is_temporal_intent = any(re.search(pat, q_lower) for pat in cls.TEMPORAL_CHANGE_PATTERNS)
-        is_semantic_change_intent = any(re.search(pat, q_lower) for pat in cls.SEMANTIC_CHANGE_PATTERNS)
+
+        has_semantic_class = any(re.search(pat, q_lower) for pat in cls.SEMANTIC_CLASS_PATTERNS)
+        has_semantic_action = any(re.search(pat, q_lower) for pat in cls.SEMANTIC_CHANGE_PATTERNS)
+        is_pure_total_change = any(re.search(pat, q_lower) for pat in cls.PURE_TOTAL_CHANGE_PATTERNS)
+
+        # Distinguish pure total change queries from semantic change queries:
+        # A query is semantic if it references a semantic class (e.g. buildings, vegetation)
+        # OR requests qualitative/semantic interpretation ("type of land-cover", "increase/decrease", "loss")
+        # unless it is an explicitly pure total change query with zero semantic target.
+        if has_semantic_class:
+            is_semantic_change_intent = True
+        elif is_pure_total_change:
+            is_semantic_change_intent = False
+        else:
+            is_semantic_change_intent = has_semantic_action
+
         is_grounding_intent = any(re.search(pat, q_lower) for pat in cls.GROUNDING_PATTERNS)
         is_caption_intent = any(re.search(pat, q_lower) for pat in cls.CAPTION_PATTERNS)
 

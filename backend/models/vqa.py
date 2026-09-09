@@ -215,12 +215,19 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
 
         elapsed_ms = int((time.perf_counter() - start_time) * 1000)
 
-        # 6. Build evidence bundle
+        # 6. Save Preview Artifact (PNG preview for web display)
+        static_dir = Path("backend/static/previews")
+        static_dir.mkdir(parents=True, exist_ok=True)
+        run_id = f"vqa_{int(time.time() * 1000) % 100000}"
+        preview_filename = f"primary_preview_{run_id}.png"
+        pil_image.save(static_dir / preview_filename, format="PNG")
+
+        # Build evidence bundle
         evidence = EvidenceBundle(
             images=[
                 EvidenceImage(
                     role="primary",
-                    url=f"/api/v1/static/previews/{image_path.name}",
+                    url=f"/api/v1/static/previews/{preview_filename}",
                     width=raw_meta["width"],
                     height=raw_meta["height"],
                     crs=raw_meta.get("crs"),

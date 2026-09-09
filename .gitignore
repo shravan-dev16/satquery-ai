@@ -181,7 +181,8 @@ cython_debug/
 .cursorindexingignore
 
 # Local datasets / downloaded benchmark data
-datasets/
+datasets/*
+!datasets/ui_demo/
 
 # Model weights / checkpoints
 *.pth

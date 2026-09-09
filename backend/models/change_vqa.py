@@ -320,7 +320,8 @@ class ChangeVQASpecialist(BaseSpecialist):
             "5. If open land develops distinct buildings/roofs: from_class is 'bare_ground_or_soil', to_class is 'built_structure' (temporal_direction: 'increased').\n"
             "6. Do NOT guess 'built_structure' unless distinct geometric building roofs or walls are clearly visible.\n"
             "7. If ambiguous, or if changed area is very small (< 0.5%), use 'unknown' and set is_uncertain=true.\n"
-            "8. Output MUST be valid JSON conforming strictly to the requested schema."
+            "8. Output MUST be valid JSON conforming strictly to the requested schema.\n"
+            "9. If the user asks about a specific feature (e.g. buildings) that is not observed, state that fact in the summary, and classify the actual physical transition observed in the red region (temporal_direction: 'modified'). Do not output temporal_direction 'no_change' when physical change is present in the red overlay."
         )
 
         json_format_instructions = (
@@ -666,6 +667,12 @@ class ChangeVQASpecialist(BaseSpecialist):
         raw_direction = str(parsed_dict.get("temporal_direction") or "modified").lower().strip()
         valid_directions = ["increased", "decreased", "modified", "no_change", "uncertain"]
         temporal_direction = raw_direction if raw_direction in valid_directions else "modified"
+
+        # If significant physical change was verified (>500 px) but VLM answered 'no_change'
+        # because the user-inquired target class was absent (e.g. asking about buildings when only soil changed),
+        # guard the physical scene direction as 'modified' to prevent false contradiction with verified spatial facts.
+        if changed_pixels > 500 and temporal_direction == "no_change":
+            temporal_direction = "modified"
 
         predom_trans = str(parsed_dict.get("predominant_transition") or "unspecified_transition")
         parsed_transitions = parsed_dict.get("transitions", [])

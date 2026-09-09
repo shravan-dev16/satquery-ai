@@ -153,11 +153,13 @@
             <div class="candidate-select-container">
               <label for="candidate-select" class="candidate-label">Specialist Engine:</label>
               <select id="candidate-select" class="candidate-select">
-                <option value="auto" selected>Auto-Agent Orchestrator (SIH M7 Dynamic Routing)</option>
-                <option value="change_vqa">Manual Override: TinyCD + Semantic VQA (M5)</option>
-                <option value="optical_sar">Manual Override: Optical + SAR Fusion (M6)</option>
-                <option value="tinycd_raw">Manual Override: TinyCD Only (M3/M4)</option>
-                <option value="cva_raw">Manual Override: CVA Baseline</option>
+                <option value="auto" selected>✨ Auto-Agent Orchestrator (Autonomous M7 Routing)</option>
+                <optgroup label="Developer / Debug Diagnostic Overrides">
+                  <option value="change_vqa">Manual Override: TinyCD + Semantic VQA (M5)</option>
+                  <option value="optical_sar">Manual Override: Optical + SAR Fusion (M6)</option>
+                  <option value="tinycd_raw">Manual Override: TinyCD Only (M3/M4)</option>
+                  <option value="cva_raw">Manual Override: CVA Baseline</option>
+                </optgroup>
               </select>
             </div>
 

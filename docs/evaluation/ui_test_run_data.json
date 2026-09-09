@@ -1,0 +1,536 @@
+[
+  {
+    "test_id": "TEST_A",
+    "name": "Single Image VQA",
+    "status_code": 200,
+    "task": "single_image_vqa",
+    "models": [
+      "Remote-Sensing VQA (Qwen/Qwen2-VL-2B-Instruct)"
+    ],
+    "confidence": 0.79,
+    "confidence_level": "HIGH",
+    "evidence_status": "CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "TaskRouting",
+      "SpecialistSelection",
+      "ModelExecution",
+      "EvidenceNormalization",
+      "ConsistencyCheck",
+      "EvidenceFusion",
+      "EvidenceAssembly",
+      "ConfidenceCalculation"
+    ],
+    "has_report": true,
+    "answer": "The image depicts an overhead view of a parking lot adjacent to a road. The parking lot has a concrete surface with visible cracks and markings, including yellow lines for parking spaces. There is a sidewalk running parallel to the parking lot, which appears to be made of concrete and has a curb. On the right side of the image, there is a road with a yellow line marking the center divider. A black car is visible on the road, and there is a white arrow on the road indicating a direction. The overall scene suggests a suburban or urban setting with a focus on transportation and parking infrastructure.",
+    "url_status": {
+      "/api/v1/static/previews/primary_preview_vqa_30252.png": 200
+    },
+    "parameters": {
+      "model_id": "Qwen/Qwen2-VL-2B-Instruct",
+      "max_new_tokens": 128,
+      "temperature": 0.2,
+      "is_adapted": false,
+      "adapter_path": null
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_B",
+    "name": "Grounding (Harbor)",
+    "status_code": 200,
+    "task": "single_image_grounding",
+    "models": [
+      "Remote-Sensing Region Grounding (Grounding DINO Remote-Sensing Grounding (IDEA-Research/grounding-dino-base))"
+    ],
+    "confidence": 0.6212,
+    "confidence_level": "MEDIUM",
+    "evidence_status": "CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "TaskRouting",
+      "SpecialistSelection",
+      "ModelExecution",
+      "EvidenceNormalization",
+      "ConsistencyCheck",
+      "EvidenceFusion",
+      "EvidenceAssembly",
+      "ConfidenceCalculation"
+    ],
+    "has_report": true,
+    "answer": "Detected 1 grounded region(s) for 'Where is the harbor?' (normalized: 'harbor.').",
+    "url_status": {
+      "/api/v1/static/previews/primary_preview_gnd_36197.png": 200,
+      "/api/v1/static/previews/grounding_preview_gnd_36197.png": 200
+    },
+    "parameters": {
+      "model_id": "IDEA-Research/grounding-dino-base",
+      "original_query": "Where is the harbor?",
+      "normalized_query": "harbor.",
+      "box_threshold": 0.25,
+      "text_threshold": 0.25,
+      "coordinate_convention": "pixel [xmin, ymin, xmax, ymax]",
+      "raw_candidate_count": 3,
+      "degenerate_candidate_count": 0
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_B2",
+    "name": "Grounding (Water Edge-Case)",
+    "status_code": 200,
+    "task": "single_image_grounding",
+    "models": [
+      "Remote-Sensing Region Grounding (Grounding DINO Remote-Sensing Grounding (IDEA-Research/grounding-dino-base))"
+    ],
+    "confidence": 0.05,
+    "confidence_level": "UNSUPPORTED",
+    "evidence_status": "INSUFFICIENT_EVIDENCE",
+    "trace_steps": [
+      "InputValidation",
+      "TaskRouting",
+      "SpecialistSelection",
+      "ModelExecution",
+      "EvidenceNormalization",
+      "ConsistencyCheck",
+      "EvidenceFusion",
+      "EvidenceAssembly",
+      "ConfidenceCalculation"
+    ],
+    "has_report": true,
+    "answer": "[INSUFFICIENT EVIDENCE] No spatial candidate regions satisfied detection confidence thresholds for 'Where is the water body?'. A definitive analytical conclusion cannot be grounded without additional observational data.",
+    "url_status": {
+      "/api/v1/static/previews/primary_preview_gnd_36414.png": 200
+    },
+    "parameters": {
+      "model_id": "IDEA-Research/grounding-dino-base",
+      "original_query": "Where is the water body?",
+      "normalized_query": "water body.",
+      "box_threshold": 0.25,
+      "text_threshold": 0.25,
+      "coordinate_convention": "pixel [xmin, ymin, xmax, ymax]",
+      "raw_candidate_count": 1,
+      "degenerate_candidate_count": 1
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_C",
+    "name": "Pure Bi-Temporal Change",
+    "status_code": 200,
+    "task": "bitemporal_change_detection",
+    "models": [
+      "Bi-Temporal Change Detector (TinyCD)"
+    ],
+    "confidence": 0.99,
+    "confidence_level": "HIGH",
+    "evidence_status": "CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "TemporalValidation",
+      "SpatialCompatibility",
+      "Alignment",
+      "SpecialistSelection",
+      "ModelExecution",
+      "ChangeMaskValidation",
+      "Statistics",
+      "EvidenceAssembly"
+    ],
+    "has_report": true,
+    "answer": "Bi-temporal change detected across 6,400 pixels (9.77% of AOI) (640,000.0 m^2 / 64.00 ha), clustered in 1 major spatial regions.",
+    "url_status": {
+      "/api/v1/static/previews/t1_preview_cd_36684.png": 200,
+      "/api/v1/static/previews/t2_preview_cd_36684.png": 200,
+      "/api/v1/static/previews/change_overlay_cd_36684.png": 200,
+      "/api/v1/static/previews/change_mask_cd_36684.png": 200
+    },
+    "parameters": {
+      "candidate_model": "tinycd",
+      "image1": "tmp7o9lbxhd.tif",
+      "image2": "tmplbda0ie3.tif",
+      "mask_path": "/api/v1/static/previews/change_mask_cd_36684.png",
+      "overlay_path": "/api/v1/static/previews/change_overlay_cd_36684.png",
+      "width": 256,
+      "height": 256,
+      "changed_pixels": 6400,
+      "change_ratio_pct": 9.7656,
+      "total_clusters": 1,
+      "diagnostics": {
+        "method": "Change Vector Analysis (CVA)",
+        "mean_difference": 0.6355,
+        "std_difference": 0.1199,
+        "threshold_used": 0.8154,
+        "raw_changed_pixels": 6400,
+        "cleaned_changed_pixels": 6400
+      },
+      "total_changed_pixels": 6400,
+      "total_changed_area_ha": null,
+      "semantic_class_detected": null,
+      "semantic_changed_area_ha": null,
+      "semantic_area_status": "not_requested_binary_task"
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_D",
+    "name": "Built-up Semantic Change",
+    "status_code": 200,
+    "task": "bitemporal_change_vqa",
+    "models": [
+      "Bi-Temporal Change Detector (TinyCD)",
+      "Bi-Temporal Change Semantic Interpretation & VQA (Qwen/Qwen2-VL-2B-Instruct)"
+    ],
+    "confidence": 0.8075,
+    "confidence_level": "HIGH",
+    "evidence_status": "CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "TemporalValidation",
+      "SpatialCompatibility",
+      "Alignment",
+      "SpecialistSelection",
+      "ModelExecution",
+      "ChangeMaskValidation",
+      "Statistics",
+      "SemanticInterpretation",
+      "EvidenceAssembly"
+    ],
+    "has_report": true,
+    "answer": "Total detected physical surface change is 1,662 pixels across 3 spatial clusters. Semantic interpretation indicates The built-up area increased. (predominant transition: built_structure -> built_structure). Note: Specific built-up / building surface area is not directly measurable from the binary change mask without pixel-level multi-class segmentation; total detected change encompasses all verified physical surface transitions.",
+    "url_status": {
+      "/api/v1/static/previews/t1_preview_cd_36761.png": 200,
+      "/api/v1/static/previews/t2_preview_cd_36761.png": 200,
+      "/api/v1/static/previews/change_overlay_cd_36761.png": 200,
+      "/api/v1/static/previews/semantic_composite_cvqa_36795.png": 200,
+      "/api/v1/static/previews/change_mask_cd_36761.png": 200
+    },
+    "parameters": {
+      "candidate_model": "tinycd",
+      "image1": "tmponp8ckrn.tif",
+      "image2": "tmpj9eo58dr.tif",
+      "mask_path": "/api/v1/static/previews/change_mask_cd_36761.png",
+      "overlay_path": "/api/v1/static/previews/change_overlay_cd_36761.png",
+      "width": 256,
+      "height": 256,
+      "changed_pixels": 1662,
+      "change_ratio_pct": 2.536,
+      "total_clusters": 3,
+      "diagnostics": {
+        "model_name": "TinyCD",
+        "parameters": 316301,
+        "threshold": 0.5,
+        "checkpoint": "levir_best.pth",
+        "mean_probability": 0.0306,
+        "max_probability": 0.9357
+      },
+      "total_changed_pixels": 1662,
+      "total_changed_area_ha": null,
+      "semantic_class_detected": "built-up / building",
+      "semantic_changed_area_ha": null,
+      "semantic_area_status": "unmeasured_from_spatial_evidence",
+      "semantic_area_limitation": "Class-specific surface area is not directly measurable from binary change detection without pixel-level multi-class semantic segmentation."
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_E",
+    "name": "Semantic Quantity: Buildings",
+    "status_code": 200,
+    "task": "bitemporal_change_vqa",
+    "models": [
+      "Bi-Temporal Change Detector (TinyCD)",
+      "Bi-Temporal Change Semantic Interpretation & VQA (Qwen/Qwen2-VL-2B-Instruct)"
+    ],
+    "confidence": 0.8075,
+    "confidence_level": "HIGH",
+    "evidence_status": "CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "TemporalValidation",
+      "SpatialCompatibility",
+      "Alignment",
+      "SpecialistSelection",
+      "ModelExecution",
+      "ChangeMaskValidation",
+      "Statistics",
+      "SemanticInterpretation",
+      "EvidenceAssembly"
+    ],
+    "has_report": true,
+    "answer": "Total detected physical surface change is 1,662 pixels across 3 spatial clusters. Semantic interpretation indicates The red region in Panel 3 shows a new building structure, indicating that buildings were newly created. (predominant transition: built_structure -> built_structure). Note: Specific built-up / building surface area is not directly measurable from the binary change mask without pixel-level multi-class segmentation; total detected change encompasses all verified physical surface transitions.",
+    "url_status": {
+      "/api/v1/static/previews/t1_preview_cd_40375.png": 200,
+      "/api/v1/static/previews/t2_preview_cd_40375.png": 200,
+      "/api/v1/static/previews/change_overlay_cd_40375.png": 200,
+      "/api/v1/static/previews/semantic_composite_cvqa_40409.png": 200,
+      "/api/v1/static/previews/change_mask_cd_40375.png": 200
+    },
+    "parameters": {
+      "candidate_model": "tinycd",
+      "image1": "tmpp9vryysy.tif",
+      "image2": "tmpanhnvjko.tif",
+      "mask_path": "/api/v1/static/previews/change_mask_cd_40375.png",
+      "overlay_path": "/api/v1/static/previews/change_overlay_cd_40375.png",
+      "width": 256,
+      "height": 256,
+      "changed_pixels": 1662,
+      "change_ratio_pct": 2.536,
+      "total_clusters": 3,
+      "diagnostics": {
+        "model_name": "TinyCD",
+        "parameters": 316301,
+        "threshold": 0.5,
+        "checkpoint": "levir_best.pth",
+        "mean_probability": 0.0306,
+        "max_probability": 0.9357
+      },
+      "total_changed_pixels": 1662,
+      "total_changed_area_ha": null,
+      "semantic_class_detected": "built-up / building",
+      "semantic_changed_area_ha": null,
+      "semantic_area_status": "unmeasured_from_spatial_evidence",
+      "semantic_area_limitation": "Class-specific surface area is not directly measurable from binary change detection without pixel-level multi-class semantic segmentation."
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_F",
+    "name": "Semantic Quantity: Vegetation",
+    "status_code": 200,
+    "task": "bitemporal_change_vqa",
+    "models": [
+      "Bi-Temporal Change Detector (TinyCD)",
+      "Bi-Temporal Change Semantic Interpretation & VQA (Qwen/Qwen2-VL-2B-Instruct)"
+    ],
+    "confidence": 0.8728,
+    "confidence_level": "HIGH",
+    "evidence_status": "CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "TemporalValidation",
+      "SpatialCompatibility",
+      "Alignment",
+      "SpecialistSelection",
+      "ModelExecution",
+      "ChangeMaskValidation",
+      "Statistics",
+      "SemanticInterpretation",
+      "EvidenceAssembly"
+    ],
+    "has_report": true,
+    "answer": "Total detected physical surface change is 9,102 pixels across 3 spatial clusters. Semantic interpretation indicates Vegetation was lost in the red region of Panel 3, indicating a decrease in vegetation cover. (predominant transition: forest_or_trees -> bare_ground_or_soil). Note: Specific vegetation / cropland surface area is not directly measurable from the binary change mask without pixel-level multi-class segmentation; total detected change encompasses all verified physical surface transitions.",
+    "url_status": {
+      "/api/v1/static/previews/t1_preview_cd_44566.png": 200,
+      "/api/v1/static/previews/t2_preview_cd_44566.png": 200,
+      "/api/v1/static/previews/change_overlay_cd_44566.png": 200,
+      "/api/v1/static/previews/semantic_composite_cvqa_44605.png": 200,
+      "/api/v1/static/previews/change_mask_cd_44566.png": 200
+    },
+    "parameters": {
+      "candidate_model": "tinycd",
+      "image1": "tmph_q0qa78.tif",
+      "image2": "tmpjfvv93bi.tif",
+      "mask_path": "/api/v1/static/previews/change_mask_cd_44566.png",
+      "overlay_path": "/api/v1/static/previews/change_overlay_cd_44566.png",
+      "width": 256,
+      "height": 256,
+      "changed_pixels": 9102,
+      "change_ratio_pct": 13.8885,
+      "total_clusters": 3,
+      "diagnostics": {
+        "method": "Change Vector Analysis (CVA)",
+        "mean_difference": 0.3209,
+        "std_difference": 0.263,
+        "threshold_used": 0.7154,
+        "raw_changed_pixels": 13142,
+        "cleaned_changed_pixels": 9102
+      },
+      "total_changed_pixels": 9102,
+      "total_changed_area_ha": null,
+      "semantic_class_detected": "vegetation / cropland",
+      "semantic_changed_area_ha": null,
+      "semantic_area_status": "unmeasured_from_spatial_evidence",
+      "semantic_area_limitation": "Class-specific surface area is not directly measurable from binary change detection without pixel-level multi-class semantic segmentation."
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_G",
+    "name": "Semantic Quantity: Water",
+    "status_code": 200,
+    "task": "bitemporal_change_vqa",
+    "models": [
+      "Bi-Temporal Change Detector (TinyCD)",
+      "Bi-Temporal Change Semantic Interpretation & VQA (Qwen/Qwen2-VL-2B-Instruct)"
+    ],
+    "confidence": 0.7982,
+    "confidence_level": "HIGH",
+    "evidence_status": "CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "TemporalValidation",
+      "SpatialCompatibility",
+      "Alignment",
+      "SpecialistSelection",
+      "ModelExecution",
+      "ChangeMaskValidation",
+      "Statistics",
+      "SemanticInterpretation",
+      "EvidenceAssembly"
+    ],
+    "has_report": true,
+    "answer": "Total detected physical surface change is 72 pixels across 1 spatial clusters. Semantic interpretation indicates The water area in Panel 2 (After) has increased compared to Panel 1 (Before). (predominant transition: water_body -> water_body). Note: Specific water body surface area is not directly measurable from the binary change mask without pixel-level multi-class segmentation; total detected change encompasses all verified physical surface transitions.",
+    "url_status": {
+      "/api/v1/static/previews/t1_preview_cd_49066.png": 200,
+      "/api/v1/static/previews/t2_preview_cd_49066.png": 200,
+      "/api/v1/static/previews/change_overlay_cd_49066.png": 200,
+      "/api/v1/static/previews/semantic_composite_cvqa_49101.png": 200,
+      "/api/v1/static/previews/change_mask_cd_49066.png": 200
+    },
+    "parameters": {
+      "candidate_model": "tinycd",
+      "image1": "tmp2hvtemg7.tif",
+      "image2": "tmpvjx83iqd.tif",
+      "mask_path": "/api/v1/static/previews/change_mask_cd_49066.png",
+      "overlay_path": "/api/v1/static/previews/change_overlay_cd_49066.png",
+      "width": 256,
+      "height": 256,
+      "changed_pixels": 72,
+      "change_ratio_pct": 0.1099,
+      "total_clusters": 1,
+      "diagnostics": {
+        "model_name": "TinyCD",
+        "parameters": 316301,
+        "threshold": 0.5,
+        "checkpoint": "levir_best.pth",
+        "mean_probability": 0.0032,
+        "max_probability": 0.8786
+      },
+      "total_changed_pixels": 72,
+      "total_changed_area_ha": null,
+      "semantic_class_detected": "water body",
+      "semantic_changed_area_ha": null,
+      "semantic_area_status": "unmeasured_from_spatial_evidence",
+      "semantic_area_limitation": "Class-specific surface area is not directly measurable from binary change detection without pixel-level multi-class semantic segmentation."
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_H",
+    "name": "Optical + SAR Cross-Modal",
+    "status_code": 200,
+    "task": "optical_sar_analysis",
+    "models": [
+      "Optical-SAR Joint Analysis Specialist"
+    ],
+    "confidence": 0.6347,
+    "confidence_level": "MEDIUM",
+    "evidence_status": "PARTIALLY_CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "ModalityValidation",
+      "SpatialCompatibility",
+      "Alignment",
+      "SpecialistSelection",
+      "OpticalFeatureExtraction",
+      "SARFeatureExtraction",
+      "JointFusion",
+      "RegionExtraction",
+      "EvidenceAssembly"
+    ],
+    "has_report": true,
+    "answer": "Optical-SAR joint analysis focused on identifying water body and built structure completed. Water-covered surfaces were confirmed across 5,676 pixels (8.7% of scene), approx 567,600 m\u00b2 (56.76 ha) in 1 spatial cluster(s), corroborated by characteristic specular non-reflection in SAR backscatter. Built-up structures were confidently identified across 6,400 pixels (9.8% of scene), approx 640,000 m\u00b2 (64.00 ha) in 1 spatial cluster(s), validated by prominent SAR double-bounce microwave reflections and high structural roughness. [Note: Partially consistent; Region 'built_structure_002': Labeled built structure, but SAR demonstrates specular reflection (near-zero backscatter).]",
+    "url_status": {
+      "/api/v1/static/previews/optical_sar_composite_optsar_53581.png": 200,
+      "/api/v1/static/previews/optical_sar_mask_optsar_53581.png": 200
+    },
+    "parameters": {
+      "specialist": "OPTICAL_SAR_FUSION",
+      "query": "Use the optical and SAR images together to identify built-up and water-covered regions.",
+      "target_classes": [
+        "water_body",
+        "built_structure"
+      ],
+      "optical_filename": "tmpauxg3hqd.tif",
+      "sar_filename": "tmpmrud18i3.tif",
+      "raster_dimensions": [
+        256,
+        256
+      ],
+      "total_pixels": 65536,
+      "class_distribution": {
+        "bare_ground_or_soil": 44366,
+        "built_structure": 6400,
+        "unknown": 1494,
+        "vegetation_or_cropland": 7600,
+        "water_body": 5676
+      },
+      "detected_regions_count": 4,
+      "composite_preview": "/api/v1/static/previews/optical_sar_composite_optsar_53581.png",
+      "mask_preview": "/api/v1/static/previews/optical_sar_mask_optsar_53581.png",
+      "is_reversed_input_order": false
+    },
+    "pass": true
+  },
+  {
+    "test_id": "TEST_I",
+    "name": "Combined Integrated Workflow",
+    "status_code": 200,
+    "task": "bitemporal_change_vqa",
+    "models": [
+      "Bi-Temporal Change Detector (TinyCD)",
+      "Bi-Temporal Change Semantic Interpretation & VQA (Qwen/Qwen2-VL-2B-Instruct)"
+    ],
+    "confidence": 0.8075,
+    "confidence_level": "HIGH",
+    "evidence_status": "CONSISTENT",
+    "trace_steps": [
+      "InputValidation",
+      "TemporalValidation",
+      "SpatialCompatibility",
+      "Alignment",
+      "SpecialistSelection",
+      "ModelExecution",
+      "ChangeMaskValidation",
+      "Statistics",
+      "SemanticInterpretation",
+      "EvidenceAssembly"
+    ],
+    "has_report": true,
+    "answer": "Total detected physical surface change is 1,662 pixels across 3 spatial clusters. Semantic interpretation indicates The built-up area has increased, with a change occurring in the region identified as changed_region_08. The SAR evidence supports this physical transition, indicating an increase in the built-up area. (predominant transition: built_structure -> built_structure). Note: Specific built-up / building surface area is not directly measurable from the binary change mask without pixel-level multi-class segmentation; total detected change encompasses all verified physical surface transitions.",
+    "url_status": {
+      "/api/v1/static/previews/t1_preview_cd_53676.png": 200,
+      "/api/v1/static/previews/t2_preview_cd_53676.png": 200,
+      "/api/v1/static/previews/change_overlay_cd_53676.png": 200,
+      "/api/v1/static/previews/semantic_composite_cvqa_53710.png": 200,
+      "/api/v1/static/previews/change_mask_cd_53676.png": 200
+    },
+    "parameters": {
+      "candidate_model": "tinycd",
+      "image1": "tmpmcodaf4f.tif",
+      "image2": "tmpnbiz10mp.tif",
+      "mask_path": "/api/v1/static/previews/change_mask_cd_53676.png",
+      "overlay_path": "/api/v1/static/previews/change_overlay_cd_53676.png",
+      "width": 256,
+      "height": 256,
+      "changed_pixels": 1662,
+      "change_ratio_pct": 2.536,
+      "total_clusters": 3,
+      "diagnostics": {
+        "model_name": "TinyCD",
+        "parameters": 316301,
+        "threshold": 0.5,
+        "checkpoint": "levir_best.pth",
+        "mean_probability": 0.0306,
+        "max_probability": 0.9357
+      },
+      "total_changed_pixels": 1662,
+      "total_changed_area_ha": null,
+      "semantic_class_detected": "built-up / building",
+      "semantic_changed_area_ha": null,
+      "semantic_area_status": "unmeasured_from_spatial_evidence",
+      "semantic_area_limitation": "Class-specific surface area is not directly measurable from binary change detection without pixel-level multi-class semantic segmentation."
+    },
+    "pass": true
+  }
+]

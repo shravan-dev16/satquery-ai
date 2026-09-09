@@ -12,6 +12,7 @@ Executes an operational ExecutionPlan by:
 
 import logging
 from pathlib import Path
+import re
 import time
 from typing import Any, Dict, List, Optional, Union
 
@@ -600,7 +601,55 @@ class AgentExecutor:
 
                 if vqa_output.evidence.semantic_interpretation:
                     spec_output.evidence.semantic_interpretation = vqa_output.evidence.semantic_interpretation
-                    final_answer = vqa_output.evidence.semantic_interpretation.summary
+                    interp = vqa_output.evidence.semantic_interpretation
+                    vqa_summary = interp.summary
+                    direction = interp.temporal_direction
+                    predom = interp.predominant_transition
+
+                    # Extract target semantic class from query if explicitly asked
+                    q_low = query.lower()
+                    target_class = None
+                    for pat, cname in [
+                        (r"\b(?:buildings?|structures?|houses?|settlements?|residential|commercial|industrial|urban|built[- ]up)\b", "built-up / building"),
+                        (r"\b(?:vegetation|crops?|cropland|farmland|pasture|grassland|agricultural)\b", "vegetation / cropland"),
+                        (r"\b(?:forests?|trees?|woodlands?|deforestation|timber)\b", "forest / canopy"),
+                        (r"\b(?:water(?:[- ]body)?|lakes?|rivers?|reservoirs?|ponds?|floods?|flooding|wetlands?)\b", "water body"),
+                        (r"\b(?:bare[- ]ground|bare[- ]soil|soils?|dirt|sand|cleared[- ]land|unpaved)\b", "bare ground / soil"),
+                        (r"\b(?:roads?|highways?|runways?|bridges?|infrastructure|pavement)\b", "road / infrastructure"),
+                    ]:
+                        if re.search(pat, q_low):
+                            target_class = cname
+                            break
+
+                    area_ha = spec_output.parameters_used.get("physical_area_ha")
+                    ha_desc = f"{area_ha:.2f} ha" if area_ha is not None else f"{ch_px:,} pixels"
+                    clusters_desc = f" ({ch_px:,} px across {clusters} spatial clusters)" if area_ha is not None else f" across {clusters} spatial clusters"
+
+                    # Populate explicit semantic area attribution status in parameters
+                    spec_output.parameters_used["total_changed_pixels"] = ch_px
+                    spec_output.parameters_used["total_changed_area_ha"] = area_ha
+                    spec_output.parameters_used["semantic_class_detected"] = target_class
+                    spec_output.parameters_used["semantic_changed_area_ha"] = None
+                    spec_output.parameters_used["semantic_area_status"] = "unmeasured_from_spatial_evidence"
+                    spec_output.parameters_used["semantic_area_limitation"] = (
+                        "Class-specific surface area is not directly measurable from binary change detection "
+                        "without pixel-level multi-class semantic segmentation."
+                    )
+
+                    if ch_px == 0:
+                        final_answer = vqa_summary
+                    elif target_class:
+                        final_answer = (
+                            f"Total detected physical surface change is {ha_desc}{clusters_desc}. "
+                            f"Semantic interpretation indicates {vqa_summary} (predominant transition: {predom}). "
+                            f"Note: Specific {target_class} surface area is not directly measurable from the binary change mask "
+                            f"without pixel-level multi-class segmentation; total detected change encompasses all verified physical surface transitions."
+                        )
+                    else:
+                        final_answer = (
+                            f"{vqa_summary} "
+                            f"Total detected physical change is {ha_desc}{clusters_desc} (predominant transition: {predom})."
+                        )
 
                 for ev_img in vqa_output.evidence.images:
                     if ev_img.role == "semantic_composite":
@@ -645,6 +694,13 @@ class AgentExecutor:
                     )
                 )
                 step_num += 1
+            else:
+                area_ha = spec_output.parameters_used.get("physical_area_ha")
+                spec_output.parameters_used["total_changed_pixels"] = ch_px
+                spec_output.parameters_used["total_changed_area_ha"] = area_ha
+                spec_output.parameters_used["semantic_class_detected"] = None
+                spec_output.parameters_used["semantic_changed_area_ha"] = None
+                spec_output.parameters_used["semantic_area_status"] = "not_requested_binary_task"
 
             # Step N: Evidence Assembly (incorporates M8 Normalization, Consistency, and Fusion)
             cd_items = EvidenceNormalizer.normalize_change_detection(

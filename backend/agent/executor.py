@@ -368,6 +368,12 @@ class AgentExecutor:
                 )
             ]
 
+            params = dict(spec_output.parameters_used)
+            params["agent_intent"] = decision.intent_category
+            params["router_task"] = decision.task.value
+            params["plan_summary"] = "cross-modal validation -> co-registration -> invoke OPTICAL_SAR_FUSION"
+            params["plan_steps"] = [s.step_name for s in plan.steps]
+
             contract = StandardResultContract(
                 task="optical_sar_analysis",
                 status="success",
@@ -378,7 +384,7 @@ class AgentExecutor:
                 evidence=spec_output.evidence,
                 evidence_status=cons_report.status.value,
                 models=models_record,
-                parameters=spec_output.parameters_used,
+                parameters=params,
                 warnings=spec_output.warnings + val_res.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,
@@ -772,6 +778,16 @@ class AgentExecutor:
                 )
             )
 
+            params = dict(spec_output.parameters_used)
+            params["agent_intent"] = decision.intent_category
+            params["router_task"] = decision.task.value
+            params["plan_summary"] = (
+                "temporal validation -> spatial alignment -> invoke CHANGE_DETECT -> invoke CHANGE_VQA"
+                if decision.is_multi_stage
+                else "temporal validation -> spatial alignment -> invoke CHANGE_DETECT"
+            )
+            params["plan_steps"] = [s.step_name for s in plan.steps]
+
             contract = StandardResultContract(
                 task="bitemporal_change_vqa" if decision.is_multi_stage else "bitemporal_change_detection",
                 status="success",
@@ -782,7 +798,7 @@ class AgentExecutor:
                 evidence=spec_output.evidence,
                 evidence_status=cons_report.status.value,
                 models=models_record,
-                parameters=spec_output.parameters_used,
+                parameters=params,
                 warnings=spec_output.warnings + val_res.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,
@@ -1018,6 +1034,12 @@ class AgentExecutor:
                 )
             ]
 
+            params = dict(spec_output.parameters_used)
+            params["agent_intent"] = decision.intent_category
+            params["router_task"] = decision.task.value
+            params["plan_summary"] = f"inspect imagery -> invoke {specialist.capability.identifier}"
+            params["plan_steps"] = [s.step_name for s in plan.steps]
+
             contract = StandardResultContract(
                 task=f"single_image_{task.value}",
                 status="success" if spec_output.success else "partial",
@@ -1028,7 +1050,7 @@ class AgentExecutor:
                 evidence=spec_output.evidence,
                 evidence_status=cons_report.status.value,
                 models=models_record,
-                parameters=spec_output.parameters_used,
+                parameters=params,
                 warnings=spec_output.warnings + validation.warnings + cons_report.warnings + conf_warnings,
                 execution_trace=trace_steps,
                 execution_time_ms=total_elapsed,

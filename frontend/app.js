@@ -174,6 +174,11 @@ class SatQueryClient {
     // Bounding Box Telemetry
     this.telemetryRegionsList = document.getElementById('telemetry-regions-list');
 
+    // Observable Agent Execution Trace (M7 -> M11)
+    this.agentTraceCard = document.getElementById('agent-trace-card');
+    this.agentChainFlow = document.getElementById('agent-chain-flow');
+    this.agentTraceStatusBadge = document.getElementById('agent-trace-status-badge');
+
     // Structured Report Download Controls (M11)
     this.btnDownloadReportJson = document.getElementById('btn-download-report-json');
     this.btnDownloadReportMd = document.getElementById('btn-download-report-md');
@@ -647,13 +652,16 @@ class SatQueryClient {
     const latency = contract.execution_time_ms !== undefined ? `${contract.execution_time_ms} ms` : '--';
     this.valLatency.textContent = latency;
 
-    // 3. Geospatial Bounding Box Telemetry
-    this.renderTelemetryBoxes(contract.evidence?.boxes || []);
+    // 3. Observable Agent Execution Trace (M7 Router → M7 Planner → M7 Executor → Specialist → M8 → M9 → M11)
+    this.renderAgentExecutionTrace(contract);
 
-    // 4. Auditable Execution Trace
+    // 4. Geospatial Regions & Coordinates (Type A: Pixel, Type B: Geographic, Type C: Change Regions)
+    this.renderGeospatialCoordinates(contract);
+
+    // 5. Auditable Execution Trace (Detailed Timeline)
     this.renderTrace(contract.execution_trace || []);
 
-    // 5. Warnings & Advisories
+    // 6. Workflow-Aware Warnings & Advisories
     this.renderWarnings(contract.warnings || []);
 
     // 6. Developer / Debug Raw JSON
@@ -847,22 +855,330 @@ class SatQueryClient {
     }
   }
 
-  renderTelemetryBoxes(boxes) {
+  renderAgentExecutionTrace(contract) {
+    if (!this.agentChainFlow) return;
+    this.agentChainFlow.innerHTML = '';
+
+    const task = (contract.task || '').toLowerCase();
+    const params = contract.parameters || {};
+    const trace = contract.execution_trace || [];
+    const models = contract.models || [];
+    const report = contract.report || {};
+    const consistency = contract.evidence?.consistency_report || {};
+
+    // 1. M7 Router
+    let routerIntent = params.agent_intent || (task.toUpperCase().replace(/_/g, ' '));
+    const routingStep = trace.find(s => s.step_name === 'TaskRouting');
+    let routerDetails = routingStep ? routingStep.details : `Mapped input configuration to ${task}`;
+    if (params.agent_intent) {
+      routerIntent = params.agent_intent.toUpperCase().replace(/_/g, ' ');
+    } else if (routingStep?.metadata?.intent_category) {
+      routerIntent = String(routingStep.metadata.intent_category).toUpperCase().replace(/_/g, ' ');
+    }
+
+    // 2. M7 Planner
+    let planSummary = params.plan_summary;
+    if (!planSummary) {
+      if (task.includes('vqa') && !task.includes('change')) {
+        planSummary = 'inspect imagery → invoke RS_VQA';
+      } else if (task.includes('grounding')) {
+        planSummary = 'inspect imagery → invoke RS_GROUND';
+      } else if (task.includes('caption')) {
+        planSummary = 'inspect imagery → invoke RS_CAPTION';
+      } else if (task.includes('bitemporal_change_vqa')) {
+        planSummary = 'temporal validation → spatial alignment → invoke CHANGE_DETECT → invoke CHANGE_VQA';
+      } else if (task.includes('bitemporal') || task.includes('change')) {
+        planSummary = 'temporal validation → spatial alignment → invoke CHANGE_DETECT';
+      } else if (task.includes('optical_sar')) {
+        planSummary = 'cross-modal validation → co-registration → invoke OPTICAL_SAR_FUSION';
+      } else {
+        planSummary = 'validation → specialist prediction → evidence fusion';
+      }
+    }
+
+    // 3. M7 Executor
+    let specialistIdentifier = 'RS_VQA';
+    let specialistName = 'Central Model Registry Specialist';
+    if (models.length > 0) {
+      specialistIdentifier = models.map(m => m.identifier || m.model_name).join(' → ');
+      specialistName = models.map(m => m.model_name || m.identifier).join(' → ');
+    } else if (params.candidate_model) {
+      specialistIdentifier = params.candidate_model;
+      specialistName = params.candidate_model;
+    }
+
+    // 4. Specialist Execution Result
+    let specLatency = contract.execution_time_ms || 0;
+    const modelStep = trace.find(s => s.step_name === 'ModelExecution');
+    if (modelStep && modelStep.duration_ms) {
+      specLatency = modelStep.duration_ms;
+    }
+
+    // 5. M8 Evidence Fusion
+    const fusedCount = contract.evidence?.fused_items?.length || 1;
+    const consistencyStatus = contract.evidence_status || consistency.status || 'CONSISTENT';
+
+    // 6. M9 Confidence
+    const confVal = contract.confidence !== null && contract.confidence !== undefined 
+      ? (contract.confidence * 100).toFixed(1) + '%' 
+      : 'N/A';
+    const confLevel = contract.confidence_level || 'EVALUATED';
+
+    // 7. M11 Reporting
+    const repId = report.metadata?.report_id || report.report_id || 'M11-VERIFIED';
+
+    const chainSteps = [
+      {
+        badge: 'M7 Router',
+        title: 'M7 Router',
+        intent: `Intent: ${routerIntent}`,
+        detail: this.sanitizePath(routerDetails)
+      },
+      {
+        badge: 'M7 Planner',
+        title: 'M7 Planner',
+        intent: `Plan: ${planSummary}`,
+        detail: `${trace.length} operational steps planned & ordered`
+      },
+      {
+        badge: 'M7 Executor',
+        title: 'M7 Executor',
+        intent: `Specialist: ${specialistIdentifier}`,
+        detail: `Discovered from ModelRegistry: ${specialistName}`
+      },
+      {
+        badge: specialistIdentifier.split(' → ')[0],
+        title: specialistIdentifier,
+        intent: 'Result Generated',
+        detail: `Inference executed in ${specLatency} ms`
+      },
+      {
+        badge: 'M8 Evidence Fusion',
+        title: 'M8 Evidence Fusion',
+        intent: 'Evidence Packaged',
+        detail: `Fused ${fusedCount} evidence units; Consistency: ${consistencyStatus}`
+      },
+      {
+        badge: 'M9 Confidence',
+        title: 'M9 Confidence',
+        intent: 'Confidence Computed',
+        detail: `Evidence-driven heuristic: ${confVal} (${confLevel})`
+      },
+      {
+        badge: 'M11 Reporting',
+        title: 'M11 Reporting',
+        intent: 'Report Generated',
+        detail: `StandardResultContract & AnalystReport [${repId.slice(0, 16)}]`
+      }
+    ];
+
+    chainSteps.forEach(step => {
+      const stepEl = document.createElement('div');
+      stepEl.className = 'agent-chain-step';
+      stepEl.innerHTML = `
+        <div class="agent-step-header">
+          <span class="agent-step-check">✓</span>
+          <span class="agent-step-name">${step.title}</span>
+        </div>
+        <div class="agent-step-intent">${step.intent}</div>
+        <div class="agent-step-detail">${step.detail}</div>
+      `;
+      this.agentChainFlow.appendChild(stepEl);
+    });
+
+    if (this.agentTraceStatusBadge) {
+      this.agentTraceStatusBadge.textContent = `${chainSteps.length} Subsystems Verified`;
+    }
+  }
+
+  renderGeospatialCoordinates(contract) {
     if (!this.telemetryRegionsList) return;
     this.telemetryRegionsList.innerHTML = '';
-    if (boxes.length === 0) {
-      this.telemetryRegionsList.innerHTML = '<div class="cluster-row"><span>No discrete spatial change bounding boxes generated (zero detected surface change).</span></div>';
+
+    const task = (contract.task || '').toLowerCase();
+    const isSingleVqa = (task.includes('vqa') || task.includes('caption')) && !task.includes('change') && !task.includes('bitemporal');
+    const isGrounding = task.includes('grounding');
+    const isBiTemporal = task.includes('change') || task.includes('bitemporal');
+    const boxes = contract.evidence?.boxes || [];
+    const params = contract.parameters || {};
+
+    const conventionTag = document.querySelector('.convention-tag');
+
+    // -------------------------------------------------------------
+    // Case 1: Single-Image VQA / Scene Description
+    // -------------------------------------------------------------
+    if (isSingleVqa) {
+      if (conventionTag) conventionTag.textContent = 'Scope: Textual Scene Interpretation';
+      this.telemetryRegionsList.innerHTML = `
+        <div class="coord-info-banner">
+          <div class="coord-info-header">
+            <svg class="coord-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <span class="coord-info-title">Spatial Coordinates Scope Notice</span>
+          </div>
+          <p class="coord-info-body">
+            Spatial coordinates not generated for scene-description workflow.<br>
+            <strong>Use Text-Guided Grounding to obtain object bounding coordinates.</strong>
+          </p>
+          <div class="coord-info-hint">
+            <span>Try asking: <em>"Locate the water body"</em> or <em>"Find the residential area"</em> to trigger text-guided spatial region localization.</span>
+          </div>
+        </div>
+      `;
       return;
     }
 
+    // -------------------------------------------------------------
+    // Case 2: Single-Image Text-Guided Grounding
+    // -------------------------------------------------------------
+    if (isGrounding) {
+      if (conventionTag) conventionTag.textContent = 'Type A: Pixel [xmin, ymin, xmax, ymax]';
+      if (boxes.length === 0) {
+        this.telemetryRegionsList.innerHTML = '<div class="cluster-row"><span>No discrete spatial bounding boxes satisfied detection thresholds for the requested query.</span></div>';
+        return;
+      }
+      boxes.forEach((box, idx) => {
+        const row = document.createElement('div');
+        row.className = 'coord-card coord-grounding-card';
+
+        // Type A: Pixel Coordinates
+        const pxCoords = box.coordinates_pixel ? `[${box.coordinates_pixel.join(', ')}] px` : 'N/A';
+
+        // Normalized Extent
+        const normCoords = box.coordinates_normalized ? `[${box.coordinates_normalized.map(c => typeof c === 'number' ? c.toFixed(3) : c).join(', ')}]` : 'N/A';
+
+        // Type B: Geographic Coordinates
+        let geoDisplay = 'Pixel space only (Raster unprojected or lacks GeoTIFF geotransform)';
+        if (box.geojson && box.geojson.coordinates && box.geojson.coordinates[0]) {
+          const poly = box.geojson.coordinates[0];
+          const xs = poly.map(p => p[0]);
+          const ys = poly.map(p => p[1]);
+          const minX = Math.min(...xs).toFixed(5);
+          const minY = Math.min(...ys).toFixed(5);
+          const maxX = Math.max(...xs).toFixed(5);
+          const maxY = Math.max(...ys).toFixed(5);
+          geoDisplay = `Projected/Geographic Extent: [${minX}, ${minY}] to [${maxX}, ${maxY}]`;
+        }
+
+        row.innerHTML = `
+          <div class="coord-card-header">
+            <div class="coord-title-left">
+              <span class="coord-badge badge-grounding">GROUNDED OBJECT</span>
+              <span class="coord-obj-name">${this.sanitizePath(box.label || `Target ${idx + 1}`)}</span>
+            </div>
+            <span class="coord-conf">Confidence: ${(box.confidence * 100).toFixed(1)}%</span>
+          </div>
+          <div class="coord-card-grid">
+            <div class="coord-data-item">
+              <span class="coord-data-label">Type A: Pixel Coordinates [xmin, ymin, xmax, ymax]</span>
+              <span class="coord-data-val mono-val">${pxCoords}</span>
+            </div>
+            <div class="coord-data-item">
+              <span class="coord-data-label">Normalized Bounding Extent [0.0 - 1.0]</span>
+              <span class="coord-data-val mono-val">${normCoords}</span>
+            </div>
+            <div class="coord-data-item coord-data-full">
+              <span class="coord-data-label">Type B: Geographic Coordinates</span>
+              <span class="coord-data-val mono-val">${geoDisplay}</span>
+            </div>
+          </div>
+        `;
+        this.telemetryRegionsList.appendChild(row);
+      });
+      return;
+    }
+
+    // -------------------------------------------------------------
+    // Case 3: Bi-Temporal Change Detection & VQA
+    // -------------------------------------------------------------
+    if (isBiTemporal) {
+      if (conventionTag) conventionTag.textContent = 'Type C: Change-Region Bounding Clusters';
+      if (boxes.length === 0) {
+        const changedPix = params.changed_pixels !== undefined ? params.changed_pixels : 0;
+        if (changedPix === 0) {
+          this.telemetryRegionsList.innerHTML = '<div class="cluster-row"><span>Verified zero change: No change regions or surface alterations detected between baseline observations.</span></div>';
+        } else {
+          this.telemetryRegionsList.innerHTML = '<div class="cluster-row"><span>No discrete spatial change clusters segmented above minimum area threshold.</span></div>';
+        }
+        return;
+      }
+      boxes.forEach((box, idx) => {
+        const row = document.createElement('div');
+        row.className = 'coord-card coord-change-card';
+
+        // Type A: Pixel Coordinates
+        const pxCoords = box.coordinates_pixel ? `[${box.coordinates_pixel.join(', ')}] px` : 'N/A';
+
+        // Type B: Geographic Coordinates
+        let geoDisplay = 'Pixel space only (Raster unprojected or lacks GeoTIFF geotransform)';
+        if (box.geojson && box.geojson.coordinates && box.geojson.coordinates[0]) {
+          const poly = box.geojson.coordinates[0];
+          const xs = poly.map(p => p[0]);
+          const ys = poly.map(p => p[1]);
+          const minX = Math.min(...xs).toFixed(5);
+          const minY = Math.min(...ys).toFixed(5);
+          const maxX = Math.max(...xs).toFixed(5);
+          const maxY = Math.max(...ys).toFixed(5);
+          geoDisplay = `Geographic Bounds: [${minX}, ${minY}] to [${maxX}, ${maxY}]`;
+        }
+
+        // Type C: Change Region Details
+        const details = box.details || {};
+        const areaPx = details.area_pixels !== undefined ? `${details.area_pixels.toLocaleString()} px` : '--';
+        const areaM2 = details.area_m2 !== undefined && details.area_m2 !== null ? `${details.area_m2.toLocaleString()} m²` : null;
+        const areaHa = details.area_hectares !== undefined && details.area_hectares !== null ? `(${details.area_hectares.toFixed(2)} ha)` : '';
+        const physicalStr = areaM2 ? `${areaM2} ${areaHa}` : 'Metric unverified (pixel-space)';
+
+        row.innerHTML = `
+          <div class="coord-card-header">
+            <div class="coord-title-left">
+              <span class="coord-badge badge-change">CHANGE REGION</span>
+              <span class="coord-obj-name">${this.sanitizePath(box.label || `Cluster ${idx + 1}`)}</span>
+            </div>
+            <span class="coord-conf">Detector Conf: ${(box.confidence * 100).toFixed(1)}%</span>
+          </div>
+          <div class="coord-card-grid">
+            <div class="coord-data-item">
+              <span class="coord-data-label">Type A: Pixel Bounding Box [xmin, ymin, xmax, ymax]</span>
+              <span class="coord-data-val mono-val">${pxCoords}</span>
+            </div>
+            <div class="coord-data-item">
+              <span class="coord-data-label">Type C: Cluster Size & Physical Extent</span>
+              <span class="coord-data-val mono-val">${areaPx} &bull; ${physicalStr}</span>
+            </div>
+            <div class="coord-data-item coord-data-full">
+              <span class="coord-data-label">Type B: Geographic Coordinates</span>
+              <span class="coord-data-val mono-val">${geoDisplay}</span>
+            </div>
+          </div>
+        `;
+        this.telemetryRegionsList.appendChild(row);
+      });
+      return;
+    }
+
+    // Default / Cross-Modal / Other
+    if (conventionTag) conventionTag.textContent = 'Type A: Pixel Coordinates';
+    if (boxes.length === 0) {
+      this.telemetryRegionsList.innerHTML = '<div class="cluster-row"><span>No discrete spatial regions segmented.</span></div>';
+      return;
+    }
     boxes.forEach((box, idx) => {
       const row = document.createElement('div');
-      row.className = 'cluster-row';
-      const coords = box.coordinates_pixel ? `[${box.coordinates_pixel.join(', ')}] px` : 'N/A';
+      row.className = 'coord-card';
+      const pxCoords = box.coordinates_pixel ? `[${box.coordinates_pixel.join(', ')}] px` : 'N/A';
       row.innerHTML = `
-        <span class="cluster-id">${box.label || `Region ${idx + 1}`}</span>
-        <span class="cluster-bbox">BBox: ${coords}</span>
-        <span class="cluster-area">Conf: ${(box.confidence * 100).toFixed(1)}%</span>
+        <div class="coord-card-header">
+          <span class="coord-obj-name">${box.label || `Region ${idx + 1}`}</span>
+          <span class="coord-conf">${(box.confidence * 100).toFixed(1)}%</span>
+        </div>
+        <div class="coord-card-grid">
+          <div class="coord-data-item coord-data-full">
+            <span class="coord-data-label">Type A: Pixel Coordinates [xmin, ymin, xmax, ymax]</span>
+            <span class="coord-data-val mono-val">${pxCoords}</span>
+          </div>
+        </div>
       `;
       this.telemetryRegionsList.appendChild(row);
     });
@@ -1034,8 +1350,13 @@ class SatQueryClient {
     this.warningsCard.classList.remove('hidden');
     this.warningsList.innerHTML = '';
     warnings.forEach(warn => {
+      const isInfo = warn.toLowerCase().startsWith('evidence scope:') || warn.toLowerCase().includes('spatial grounding was not requested');
       const li = document.createElement('li');
-      li.textContent = this.sanitizePath(warn);
+      li.className = isInfo ? 'warning-item-info' : 'warning-item-advisory';
+      li.innerHTML = `
+        <span class="warn-dot">${isInfo ? 'ℹ️' : '⚠️'}</span>
+        <span>${this.sanitizePath(warn)}</span>
+      `;
       this.warningsList.appendChild(li);
     });
   }

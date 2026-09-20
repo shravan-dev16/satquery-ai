@@ -192,6 +192,8 @@ class ConfidenceEngine:
         else:
             q_evidence = 1.0 if not is_single else 0.90
 
+        is_textual_scene = task_str in ("vqa", "caption", "single_image_vqa", "single_image_caption")
+
         if evidence_bundle is not None:
             has_spatial_evidence = bool(
                 evidence_bundle.masks
@@ -199,7 +201,11 @@ class ConfidenceEngine:
                 or evidence_bundle.regions
                 or evidence_bundle.complementarity_report
             )
-            if not has_spatial_evidence and not evidence_bundle.statistics:
+            if is_textual_scene:
+                # Spatial grounding not requested for textual VQA / scene description
+                factors.append("textual_scene_interpretation")
+                conf_warnings.append("Evidence scope: textual scene interpretation; no explicit spatial grounding generated.")
+            elif not has_spatial_evidence and not evidence_bundle.statistics:
                 if params.get("changed_pixels") == 0 and params.get("change_ratio_pct") == 0.0:
                     factors.append("verified_zero_change_state")
                     q_evidence = max(q_evidence, 0.90)
@@ -213,7 +219,7 @@ class ConfidenceEngine:
 
         if q_evidence >= 0.85:
             factors.append("high_evidence_completeness")
-        elif q_evidence < 0.60:
+        elif q_evidence < 0.60 and not is_textual_scene:
             conf_warnings.append(f"Incomplete spatial evidence bundle (quality: {q_evidence * 100:.0f}%).")
             factors.append("compromised_evidence_quality")
 

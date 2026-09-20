@@ -1937,6 +1937,328 @@ body {
   margin-right: 6px;
 }
 
+/* -------------------------------------------------------------
+   Agent Execution Trace Card (M7 Router → M7 Planner → M7 Executor → Specialist → M8 → M9 → M11)
+   ------------------------------------------------------------- */
+.agent-trace-card {
+  background: var(--bg-surface);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+.agent-trace-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #10B981, #06B6D4, #8B5CF6);
+}
+.agent-trace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.agent-trace-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.agent-trace-icon {
+  width: 24px;
+  height: 24px;
+  stroke: var(--emerald-success);
+  flex-shrink: 0;
+}
+.agent-trace-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+.agent-trace-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.agent-trace-badge {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: var(--emerald-success);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.agent-chain-flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.agent-chain-step {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.agent-chain-step:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(15, 23, 42, 0.85);
+}
+.agent-step-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.agent-step-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--emerald-success);
+  color: var(--emerald-success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.agent-step-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cyan-bright);
+  letter-spacing: 0.03em;
+}
+.agent-step-intent {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+.agent-step-detail {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* -------------------------------------------------------------
+   Workflow-Aware Warnings & Informational Badges
+   ------------------------------------------------------------- */
+.warnings-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.warning-item-advisory {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: #FBBF24;
+  line-height: 1.4;
+  padding: 4px 0;
+}
+.warning-item-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--cyan-primary);
+  line-height: 1.4;
+  padding: 4px 0;
+}
+.warn-dot {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------------
+   Geospatial Regions & Coordinates (3-Coordinate Type Separation)
+   ------------------------------------------------------------- */
+.evidence-telemetry-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.telemetry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.telemetry-header h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.convention-tag {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+}
+
+.coord-info-banner {
+  background: rgba(56, 189, 248, 0.07);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.coord-info-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.coord-info-icon {
+  width: 18px;
+  height: 18px;
+  stroke: var(--cyan-primary);
+  flex-shrink: 0;
+}
+.coord-info-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cyan-bright);
+}
+.coord-info-body {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.coord-info-body strong {
+  color: var(--text-primary);
+}
+.coord-info-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.coord-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.coord-grounding-card {
+  border-left: 3px solid var(--cyan-primary);
+}
+.coord-change-card {
+  border-left: 3px solid var(--amber-warning);
+}
+.coord-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.coord-title-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.coord-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+.badge-grounding {
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--cyan-bright);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+.badge-change {
+  background: rgba(245, 158, 11, 0.2);
+  color: #FCD34D;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+.coord-obj-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.coord-conf {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--emerald-success);
+}
+.coord-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+}
+.coord-data-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.coord-data-full {
+  grid-column: 1 / -1;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+.coord-data-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+.coord-data-val {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+.mono-val {
+  font-family: var(--font-mono);
+}
+
 /* Footer */
 .app-footer {
   display: flex;
@@ -1951,4 +2273,5 @@ body {
 .hidden {
   display: none !important;
 }
+
 

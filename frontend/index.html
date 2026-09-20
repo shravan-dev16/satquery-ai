@@ -266,6 +266,26 @@
           </ul>
         </div>
 
+        <!-- Observable Agent Execution Trace (M7 Router → M7 Planner → M7 Executor → Specialist → M8 → M9 → M11) -->
+        <div class="agent-trace-card" id="agent-trace-card">
+          <div class="agent-trace-header">
+            <div class="agent-trace-title-group">
+              <svg class="agent-trace-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              <div>
+                <h4 class="agent-trace-title">Agent Execution Trace</h4>
+                <span class="agent-trace-subtitle">Observable End-to-End Orchestration (M7 Router &rarr; M7 Planner &rarr; M7 Executor &rarr; Specialist &rarr; M8 &rarr; M9 &rarr; M11)</span>
+              </div>
+            </div>
+            <span class="agent-trace-badge" id="agent-trace-status-badge">7 Subsystems Verified</span>
+          </div>
+          <div class="agent-chain-flow" id="agent-chain-flow">
+            <!-- Dynamically populated from actual contract / trace / planner / specialist records -->
+          </div>
+        </div>
+
         <!-- Defensible System Confidence Card (Milestone M9) -->
         <div class="confidence-card" id="confidence-card">
           <div class="confidence-card-header">

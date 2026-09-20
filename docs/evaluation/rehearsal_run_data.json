@@ -1,0 +1,138 @@
+[
+  {
+    "scenario": "Scenario A: Single-Image VQA",
+    "status": "PASS",
+    "route": "single_image_caption",
+    "confidence": "0.59 (MEDIUM)",
+    "visual_evidence": "RGB view + CRS metadata + token probability breakdown",
+    "notes": "Answer grounded; latency 0.02s"
+  },
+  {
+    "scenario": "Scenario B: Text-Guided Grounding",
+    "status": "PASS",
+    "route": "single_image_grounding",
+    "confidence": "0.05 (UNSUPPORTED)",
+    "visual_evidence": "0 bounding boxes with normalized coordinates",
+    "notes": "Grounding DINO inference in 0.71s"
+  },
+  {
+    "scenario": "Scenario C: Bi-Temporal Change Detection",
+    "status": "PASS",
+    "route": "bitemporal_change_detection",
+    "confidence": "0.99 (HIGH)",
+    "visual_evidence": "1 change mask layer, split-slider diff overlay",
+    "notes": "TinyCD change detector in 0.08s"
+  },
+  {
+    "scenario": "Scenario D: Semantic Change Interpretation",
+    "status": "PASS",
+    "route": "bitemporal_change_vqa",
+    "confidence": "0.7964 (HIGH)",
+    "visual_evidence": "3-panel composite (T1 | T2 | Overlay) + transition cards",
+    "notes": "Multi-specialist chaining in 3.85s"
+  },
+  {
+    "scenario": "Scenario E: Semantic Quantity Safety",
+    "status": "PASS",
+    "route": "bitemporal_change_vqa",
+    "confidence": "0.7964 (HIGH)",
+    "visual_evidence": "Zonal physical cluster masks with qualification disclaimer",
+    "notes": "Guarantees zero false attribution of binary change to single class"
+  },
+  {
+    "scenario": "Scenario F: Optical + SAR Cross-Modal",
+    "status": "PASS",
+    "route": "optical_sar_analysis",
+    "confidence": "0.6347 (MEDIUM)",
+    "visual_evidence": "3-panel false color composite + SAR backscatter dB layer",
+    "notes": "Physics-grounded radar roughness analysis in 0.09s"
+  },
+  {
+    "scenario": "Format: PNG -> PNG Bi-Temporal",
+    "status": "PASS",
+    "route": "bitemporal_change_detection",
+    "confidence": "0.7961 (HIGH)",
+    "visual_evidence": "Pixel coordinate diff layer with Mode B warning",
+    "notes": "No false metric hectares claimed on unprojected web image"
+  },
+  {
+    "scenario": "Format: JPEG -> JPEG Bi-Temporal",
+    "status": "PASS",
+    "route": "bitemporal_change_detection",
+    "confidence": "0.6676 (MEDIUM)",
+    "visual_evidence": "Lossy compression filtered change mask",
+    "notes": "Degrades confidence proportionally to compression noise"
+  },
+  {
+    "scenario": "Format: GeoTIFF -> GeoTIFF Bi-Temporal",
+    "status": "PASS",
+    "route": "bitemporal_change_detection",
+    "confidence": "0.99 (HIGH)",
+    "visual_evidence": "UTM Projected ground coordinate boundaries (ha/m\u00b2)",
+    "notes": "Strict spatial intersection and valid CRS verified"
+  },
+  {
+    "scenario": "Sample: Single-Image VQA (Aerial Scene)",
+    "status": "PASS",
+    "route": "single_image_vqa",
+    "confidence": "0.79 (HIGH)",
+    "visual_evidence": "Automated visualization rendered in UI",
+    "notes": "Pre-filled sample query: 'What is present in this image?...'"
+  },
+  {
+    "scenario": "Sample: Single-Image GeoTIFF VQA (Sentinel-2)",
+    "status": "PASS",
+    "route": "single_image_vqa",
+    "confidence": "0.835 (HIGH)",
+    "visual_evidence": "Automated visualization rendered in UI",
+    "notes": "Pre-filled sample query: 'Describe the land-cover and major featur...'"
+  },
+  {
+    "scenario": "Sample: Text-Guided Region Grounding (Harbor)",
+    "status": "PASS",
+    "route": "single_image_grounding",
+    "confidence": "0.6212 (MEDIUM)",
+    "visual_evidence": "Automated visualization rendered in UI",
+    "notes": "Pre-filled sample query: 'Where is the harbor?...'"
+  },
+  {
+    "scenario": "Sample: Pure Bi-Temporal Change Detection",
+    "status": "PASS",
+    "route": "bitemporal_change_detection",
+    "confidence": "0.99 (HIGH)",
+    "visual_evidence": "Automated visualization rendered in UI",
+    "notes": "Pre-filled sample query: 'What changed between these two dates?...'"
+  },
+  {
+    "scenario": "Sample: Semantic Built-Up Change",
+    "status": "PASS",
+    "route": "bitemporal_change_vqa",
+    "confidence": "0.7964 (HIGH)",
+    "visual_evidence": "Automated visualization rendered in UI",
+    "notes": "Pre-filled sample query: 'Did the built-up area increase?...'"
+  },
+  {
+    "scenario": "Failure Mode 1: Missing primary image",
+    "status": "PASS",
+    "route": "Rejected pre-flight",
+    "confidence": "N/A",
+    "visual_evidence": "None (Clean HTTP 422)",
+    "notes": "Graceful validation rejection without exception"
+  },
+  {
+    "scenario": "Failure Mode 2: Single image for bi-temporal query",
+    "status": "PASS",
+    "route": "Rejected pre-flight",
+    "confidence": "N/A",
+    "visual_evidence": "None (Clean HTTP 400)",
+    "notes": "Actionable user message; zero path leakage"
+  },
+  {
+    "scenario": "Failure Mode 3: Corrupted raster upload",
+    "status": "PASS",
+    "route": "Rejected validator",
+    "confidence": "N/A",
+    "visual_evidence": "None (Clean HTTP 400)",
+    "notes": "Sanitized error message; zero server trace exposed"
+  }
+]

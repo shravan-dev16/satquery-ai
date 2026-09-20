@@ -128,6 +128,9 @@ class ConfidenceEngine:
 
         if spatial_alignment_score is not None:
             spatial_alignment = spatial_alignment_score
+        elif params.get("spatial_alignment_score") is not None:
+            spatial_alignment = float(params["spatial_alignment_score"])
+            spatial_alignment_score = spatial_alignment
 
         # -------------------------------------------------------------------
         # 1. Evaluate Input & Geospatial Quality (Q_input)
@@ -142,8 +145,10 @@ class ConfidenceEngine:
                     factors.append("valid_geospatial_alignment")
             else:
                 conf_warnings.append("Input lacks valid spatial CRS projection.")
-                q_input = min(q_input, 0.70)
-                spatial_alignment = min(spatial_alignment, 0.30)
+                q_input = min(q_input, 0.85)
+                if spatial_alignment_score is None:
+                    spatial_alignment = min(spatial_alignment, 0.30)
+                factors.append("unprojected_local_coordinates")
         elif q_input >= 0.90:
             factors.append("valid_georeferenced_crs")
         elif q_input < 0.75:
@@ -161,6 +166,8 @@ class ConfidenceEngine:
             q_align = max(0.0, min(1.0, float(spatial_alignment)))
             if q_align >= 0.85:
                 factors.append("strong_spatial_co_registration")
+            elif q_align >= 0.70:
+                factors.append("acceptable_spatial_alignment")
             elif q_align < 0.50:
                 conf_warnings.append(f"Substantial spatial misalignment or low overlap ({q_align * 100:.1f}%).")
                 factors.append("low_spatial_overlap")

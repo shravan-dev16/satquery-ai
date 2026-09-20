@@ -6,6 +6,7 @@ input validation, specialist interfaces, execution tracing, and confidence scori
 
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 from pydantic import BaseModel, Field
 
@@ -350,8 +351,8 @@ class SpecialistInput(BaseModel):
     """Uniform input to any registered specialist model."""
     task: TaskType
     query: Optional[str] = None
-    primary_image_path: str
-    secondary_image_path: Optional[str] = None
+    primary_image_path: Union[str, Path]
+    secondary_image_path: Optional[Union[str, Path]] = None
     parameters: Dict[str, Any] = Field(default_factory=dict)
     metadata: Dict[str, Any] = Field(default_factory=dict)
 

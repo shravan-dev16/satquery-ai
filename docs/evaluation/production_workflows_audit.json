@@ -1,0 +1,160 @@
+[
+  {
+    "id": 1,
+    "name": "single_image_vqa",
+    "route": "single_image_vqa",
+    "specialists_invoked": [
+      "RS_VQA"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.835,
+    "answer_excerpt": "The image provided is a satellite image of an area that appears to be a coastal region with some land cover and water bo...",
+    "warnings_count": 3,
+    "status": "PASS"
+  },
+  {
+    "id": 2,
+    "name": "grounding",
+    "route": "single_image_grounding",
+    "specialists_invoked": [
+      "RS_GROUND"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.7158,
+    "answer_excerpt": "Detected 1 grounded region(s) for 'Locate and ground all aircraft or storage tanks.' (normalized: 'd ground all aircraft...",
+    "warnings_count": 1,
+    "status": "PASS"
+  },
+  {
+    "id": 3,
+    "name": "pure_bitemporal_change",
+    "route": "bitemporal_change_detection",
+    "specialists_invoked": [
+      "CHANGE_DETECT"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.99,
+    "answer_excerpt": "Bi-temporal change detected across 6,400 pixels (9.77% of AOI) (640,000.0 m^2 / 64.00 ha), clustered in 1 major spatial ...",
+    "warnings_count": 3,
+    "status": "PASS"
+  },
+  {
+    "id": 4,
+    "name": "building_semantic_change",
+    "route": "bitemporal_change_vqa",
+    "specialists_invoked": [
+      "CHANGE_DETECT",
+      "CHANGE_VQA"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.5465,
+    "answer_excerpt": "Total detected physical surface change is 3,101 pixels across 10 spatial clusters. Semantic interpretation indicates The...",
+    "warnings_count": 4,
+    "status": "PASS"
+  },
+  {
+    "id": 5,
+    "name": "semantic_quantity_query",
+    "route": "bitemporal_change_vqa",
+    "specialists_invoked": [
+      "CHANGE_DETECT",
+      "CHANGE_VQA"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.5229,
+    "answer_excerpt": "Total detected physical surface change is 3,101 pixels across 10 spatial clusters. Semantic interpretation indicates No ...",
+    "warnings_count": 4,
+    "status": "PASS"
+  },
+  {
+    "id": 6,
+    "name": "vegetation_change",
+    "route": "bitemporal_change_vqa",
+    "specialists_invoked": [
+      "CHANGE_DETECT",
+      "CHANGE_VQA"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.8672,
+    "answer_excerpt": "Total detected physical surface change is 16,384 pixels across 1 spatial clusters. Semantic interpretation indicates For...",
+    "warnings_count": 4,
+    "status": "PASS"
+  },
+  {
+    "id": 7,
+    "name": "water_change",
+    "route": "bitemporal_change_vqa",
+    "specialists_invoked": [
+      "CHANGE_DETECT",
+      "CHANGE_VQA"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.8871,
+    "answer_excerpt": "Total detected physical surface change is 16,384 pixels across 1 spatial clusters. Semantic interpretation indicates The...",
+    "warnings_count": 4,
+    "status": "PASS"
+  },
+  {
+    "id": 8,
+    "name": "optical_sar",
+    "route": "optical_sar_analysis",
+    "specialists_invoked": [
+      "OPTICAL_SAR_FUSION"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.6444,
+    "answer_excerpt": "Optical-SAR joint analysis focused on identifying built structure completed. Built-up structures were confidently identi...",
+    "warnings_count": 1,
+    "status": "PASS"
+  },
+  {
+    "id": 9,
+    "name": "png_to_png_bitemporal",
+    "route": "bitemporal_change_detection",
+    "specialists_invoked": [
+      "CHANGE_DETECT"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.7961,
+    "answer_excerpt": "Bi-temporal change detected across 396 pixels (0.60% of AOI), clustered in 5 major spatial regions.",
+    "warnings_count": 6,
+    "status": "PASS"
+  },
+  {
+    "id": 10,
+    "name": "jpeg_to_jpeg_bitemporal",
+    "route": "bitemporal_change_detection",
+    "specialists_invoked": [
+      "CHANGE_DETECT"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.7339,
+    "answer_excerpt": "Bi-temporal change detected across 1,952 pixels (2.98% of AOI), clustered in 19 major spatial regions.",
+    "warnings_count": 7,
+    "status": "PASS"
+  },
+  {
+    "id": 11,
+    "name": "geotiff_to_geotiff_bitemporal",
+    "route": "bitemporal_change_detection",
+    "specialists_invoked": [
+      "CHANGE_DETECT"
+    ],
+    "alignment_result": "N/A (Single image)",
+    "m8_status": "N/A",
+    "m9_confidence": 0.99,
+    "answer_excerpt": "Bi-temporal change detected across 6,400 pixels (9.77% of AOI) (640,000.0 m^2 / 64.00 ha), clustered in 1 major spatial ...",
+    "warnings_count": 3,
+    "status": "PASS"
+  }
+]

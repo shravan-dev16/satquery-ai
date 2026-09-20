@@ -93,8 +93,24 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
 python scripts/generate_fixtures.py
 
 # 6. Run the automated test suite
-pytest
+pytest -q
+
+# 7. Start the application server
+uvicorn backend.main:app --host 127.0.0.1 --port 8000
+
+# 8. Open the web interface in your browser
+# Navigate to: http://127.0.0.1:8000/
+# Interactive API Documentation: http://127.0.0.1:8000/docs
+# Subsystem Health & Telemetry: http://127.0.0.1:8000/health
 ```
+
+### Evaluator Notes & Operational Boundaries
+- **Try a Sample:** The web UI at `http://127.0.0.1:8000/` includes a "Try a Sample" dropdown pre-loaded with verified demonstration scenarios (single-image VQA, text-guided grounding, bi-temporal change, semantic urban change, and optical-SAR cross-modal analysis).
+- **Format Modes:**
+  - **Mode A (GeoTIFF with PCS):** Computes ground-projected physical change areas in hectares ($10,000\,m^2$) and square meters.
+  - **Mode B (PNG/JPEG/local TIFF):** Operates in unprojected pixel space; reports normalized pixel counts and percentages with explicit spatial limitation warnings.
+- **Semantic Quantity Safety:** Total physical change is computed from verified pixel masks. The system explicitly separates total physical changed area from qualitative semantic transitions and does not fabricate unsubstantiated class-specific hectarage.
+- **Hardware Profile:** Tested on NVIDIA GeForce RTX 4070 (12 GB VRAM, peak usage < 6.5 GB). CPU-only fallback is supported with graceful warning emission.
 
 ---
 
@@ -151,6 +167,40 @@ pytest
   - **Defensible Confidence Separation:** Semantic model uncertainty (`semantic_uncertainty`) is strictly separated from system evidence confidence scores.
   - **Interactive UI Integration:** Frontend at `/ui/` updated with 10-step pipeline visual stepper and rich `.semantic-card` displaying temporal direction, predominant transitions, and structured region links.
   - **Automated Tests & Evaluation:** 105 tests passing in ~59s across the repository; empirical smoke test verified on 4 real scenes in `docs/evaluation/M5_SEMANTIC_EVALUATION.md`.
-- **M6 (Optical + SAR Cross-Modal Analysis):** **NEXT** (Verifiable C-band microwave cloud penetration and roughness contrast).
+- **M6 (Optical + SAR Cross-Modal Analysis):** **COMPLETED**
+  - Cross-modal fusion specialist (`OPTICAL_SAR_FUSION`) combining Sentinel-2 multi-spectral optical reflectance with Sentinel-1 dual-polarization ($\text{VV}/\text{VH}$) radar backscatter.
+  - Generates a 3-panel composite and structural roughness analysis.
+- **M7 (Agentic Orchestration & Dynamic Task Routing):** **COMPLETED**
+  - Autonomous task planning and specialist registry delegation based on structured query intent and raster inspection.
+- **M8 (Evidence Fusion & Consistency Checking):** **COMPLETED**
+  - Fusion engine aggregating masks, bounding boxes, and zonal statistics; automated consistency gating detecting contradictions.
+- **M9 (Evidence-Driven Heuristic Confidence):** **COMPLETED**
+  - Multi-factor defensible confidence heuristics penalizing misalignment, missing georeferencing, and detector discrepancies.
+- **M10 / M10.5 (Remote-Sensing Adaptation & Efficiency):** **COMPLETED**
+  - Qwen2-VL-2B adapted with remote-sensing LoRA on VRSBench remote-sensing scenes.
+  - Frozen M10 golden adapter verified (`31e004da959170e69d8b8e7d280943ac02d780be7a70ad80ce5746f4e50d29e2`).
+- **M11 (Reporting & Evidence Packaging):** **COMPLETED**
+  - Downloadable machine-readable JSON reports and executive Markdown intelligence briefings.
+- **M12 (Interactive Web UI & Product Integration):** **COMPLETED**
+  - Interactive web interface with side-by-side raster comparison, dual mask/box visualization, trace drawer, and sample loader.
+- **M13 (Final Hardening, Deployment & Judge Demo Freeze):** **COMPLETED**
+  - Root URL `http://127.0.0.1:8000/` serves the polished judge-facing application.
+  - Format-robust cross-modal analysis verified across TIFF, GeoTIFF, PNG, and JPEG.
+  - 225 pytest tests passing with 0 regressions.
+  - System frozen and verified as `READY_FOR_SIH_DEMO`.
+
+---
+
+## 5. Judge Demonstration Guide
+
+For the step-by-step presentation script during SIH judging, see:
+- [FINAL_JUDGE_DEMO.md](file:///c:/Users/Shravan/Desktop/Projects/satquery-ai/docs/FINAL_JUDGE_DEMO.md)
+- [M13_FINAL_RELEASE_AUDIT.md](file:///c:/Users/Shravan/Desktop/Projects/satquery-ai/docs/evaluation/M13_FINAL_RELEASE_AUDIT.md)
+
+### Canonical Entrypoints
+- **Primary Judge Interface:** `http://127.0.0.1:8000/`
+- **Swagger API Documentation:** `http://127.0.0.1:8000/docs`
+- **Subsystem Health & Telemetry:** `http://127.0.0.1:8000/health`
+
 
 

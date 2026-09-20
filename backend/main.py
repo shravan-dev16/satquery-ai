@@ -5,15 +5,16 @@ Supports single-image VQA, text-guided region grounding, captioning,
 and bi-temporal change detection (Milestone M3).
 """
 
+import json
 from pathlib import Path
 import shutil
 import tempfile
 import time
 from typing import Optional
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile, status
+from fastapi import FastAPI, File, Form, HTTPException, Request, Response, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.agent import AgentExecutor, AgentPlanner, AgentRouter, ExecutionError
@@ -71,6 +72,16 @@ frontend_dir = Path("frontend")
 frontend_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/ui", StaticFiles(directory=str(frontend_dir), html=True), name="ui")
 
+# Mount developer test UI at /test-ui
+test_ui_dir = Path("frontend/test_ui")
+test_ui_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/test-ui", StaticFiles(directory=str(test_ui_dir), html=True), name="test_ui")
+
+# Mount demo samples directory for developer test console
+demo_dir = Path("datasets/ui_demo")
+demo_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/api/v1/demo/files", StaticFiles(directory=str(demo_dir)), name="demo_files")
+
 
 def register_default_specialists():
     """Register specialists in the central ModelRegistry."""
@@ -92,8 +103,55 @@ register_default_specialists()
 
 
 @app.get("/")
-def root():
-    """Root status endpoint."""
+async def root(request: Request):
+    """Canonical entrypoint for SatQuery AI.
+
+    Serves the polished M12 frontend application to web browsers,
+    while preserving backward-compatible JSON status telemetry when requested by API clients.
+    """
+    accept = request.headers.get("accept", "")
+    user_agent = request.headers.get("user-agent", "")
+    is_browser = "text/html" in accept or ("Mozilla" in user_agent and "testclient" not in user_agent.lower())
+    if is_browser:
+        index_file = Path("frontend/index.html")
+        if index_file.exists():
+            return FileResponse(str(index_file), media_type="text/html")
+    return {
+        "app": settings.app_name,
+        "status": "online",
+        "docs": "/docs",
+        "api_v1": settings.api_v1_prefix,
+    }
+
+
+@app.get("/index.css", include_in_schema=False)
+def get_root_css():
+    """Serves root stylesheet for direct root URL navigation."""
+    css_file = Path("frontend/index.css")
+    if css_file.exists():
+        return FileResponse(str(css_file), media_type="text/css")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Stylesheet not found")
+
+
+@app.get("/app.js", include_in_schema=False)
+def get_root_js():
+    """Serves root JavaScript application for direct root URL navigation."""
+    js_file = Path("frontend/app.js")
+    if js_file.exists():
+        return FileResponse(str(js_file), media_type="application/javascript")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Application script not found")
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def get_favicon():
+    """Returns 204 No Content for browser favicon requests."""
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.get("/api", include_in_schema=False)
+@app.get("/api/v1", include_in_schema=False)
+def api_root_status():
+    """Explicit API root telemetry endpoint."""
     return {
         "app": settings.app_name,
         "status": "online",
@@ -121,6 +179,16 @@ def list_models():
         "registered_specialists": registry.list_capabilities(),
         "hardware": settings.hardware.model_dump(),
     }
+
+
+@app.get("/api/v1/demo/manifest")
+def get_demo_manifest():
+    """Returns manifest of UI demo samples for developer testing console."""
+    manifest_path = Path("datasets/ui_demo/manifest.json")
+    if manifest_path.exists():
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
 
 
 @app.post("/api/v1/validate", response_model=ValidationResult)
@@ -210,6 +278,14 @@ def _classify_task_intent(
     return decision.task
 
 
+def _sanitize_error_message(msg: str) -> str:
+    """Sanitizes local server filesystem paths from error messages returned to clients."""
+    import re
+    sanitized = re.sub(r'[A-Za-z]:\\[^"\'\s\n\r]+\\([A-Za-z0-9_.-]+)', r'\1', msg)
+    sanitized = re.sub(r'/(?:tmp|home|var)/[^"\'\s\n\r]+/([A-Za-z0-9_.-]+)', r'\1', sanitized)
+    return sanitized
+
+
 @app.post("/api/v1/analyze", response_model=StandardResultContract)
 async def analyze(
     query: str = Form(..., description="Natural-language question or instruction"),
@@ -272,7 +348,8 @@ async def analyze(
                 task_hint=task_hint,
             )
         except ExecutionError as ee:
-            raise HTTPException(status_code=ee.status_code, detail=ee.message)
+            clean_msg = _sanitize_error_message(ee.message)
+            raise HTTPException(status_code=ee.status_code, detail=clean_msg)
 
     finally:
         if tmp1_path.exists():

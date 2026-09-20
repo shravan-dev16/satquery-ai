@@ -480,7 +480,7 @@ Milestone M8 delivers an auditable, multi-modal evidence normalization, fusion, 
 
 ---
 
-## 11. Milestone M9 Technical Summary: Calibrated Confidence Estimation (COMPLETED)
+## 11. Milestone M9 Technical Summary: Evidence-Driven Heuristic Confidence Estimation (COMPLETED)
 
 ### 11.1 Objective & Architectural Mandate
 SIH26167 problem statement mandates defensible confidence information grounded in empirical evidence, input quality, and consistency checks rather than arbitrary model logits.

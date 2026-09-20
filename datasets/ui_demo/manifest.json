@@ -1,112 +1,142 @@
 [
   {
     "id": "demo-vqa-01",
+    "title": "Single-Image VQA (Aerial Scene)",
     "workflow": "single_image_vqa",
     "files": ["datasets/ui_demo/vqa_sample_1.png"],
     "suggested_query": "What is present in this image?",
     "source_dataset": "VRSBench (Sample 10904_0000)",
-    "notes": "UI integration sample for single-image vision-language question answering"
+    "notes": "Single-image vision-language question answering (routes RS_VQA)"
   },
   {
     "id": "demo-vqa-02",
+    "title": "Single-Image GeoTIFF VQA (Sentinel-2)",
     "workflow": "single_image_vqa",
     "files": ["datasets/ui_demo/vqa_sample_2.tif"],
     "suggested_query": "Describe the land-cover and major features visible in this remote sensing image.",
-    "source_dataset": "Sentinel-2 Multispectral GeoTIFF (tests/fixtures/real_rs_sample.tif)",
-    "notes": "UI integration sample for single-image GeoTIFF multispectral VQA"
-  },
-  {
-    "id": "demo-vqa-03",
-    "workflow": "single_image_vqa",
-    "files": ["datasets/ui_demo/vqa_sample_3.png"],
-    "suggested_query": "What type of scene is shown in this image?",
-    "source_dataset": "VRSBench (Sample 07160_0000)",
-    "notes": "UI integration sample for remote-sensing scene classification and description"
+    "source_dataset": "Sentinel-2 Multispectral GeoTIFF",
+    "notes": "Single-image GeoTIFF multispectral VQA with CRS/bounds telemetry"
   },
   {
     "id": "demo-grounding-01",
+    "title": "Text-Guided Region Grounding (Harbor)",
     "workflow": "text_guided_grounding",
     "files": ["datasets/ui_demo/grounding_harbor.png"],
     "suggested_query": "Where is the harbor?",
-    "source_dataset": "VRSBench Aerial Scene (Sample P0019_0002.png)",
-    "notes": "UI integration sample for text-guided zero-shot bounding box spatial localization"
-  },
-  {
-    "id": "demo-grounding-02",
-    "workflow": "text_guided_grounding",
-    "files": ["datasets/ui_demo/grounding_water.tif"],
-    "suggested_query": "Where is the water body?",
-    "source_dataset": "Sentinel-2 Optical (tests/fixtures/optical_s2_sample.tif)",
-    "notes": "UI integration sample for raster GeoTIFF grounding"
+    "source_dataset": "VRSBench Aerial Scene (P0019_0002)",
+    "notes": "Text-guided zero-shot bounding box spatial localization (routes RS_GROUND)"
   },
   {
     "id": "demo-change-pure-01",
+    "title": "Pure Bi-Temporal Change Detection",
     "workflow": "bitemporal_change_pure",
     "files": [
       "datasets/ui_demo/change_pure_t1.tif",
       "datasets/ui_demo/change_pure_t2.tif"
     ],
     "suggested_query": "What changed between these two dates?",
-    "source_dataset": "LEVIR-CD / DiverseRS bitemporal pair (tests/fixtures/bitemporal)",
-    "notes": "UI integration sample for pure physical change detection (routes CHANGE_DETECT only)"
+    "source_dataset": "LEVIR-CD / DiverseRS bitemporal pair",
+    "notes": "Pure physical change detection (routes CHANGE_DETECT only)"
   },
   {
     "id": "demo-change-urban-01",
+    "title": "Semantic Built-Up Change",
     "workflow": "bitemporal_change_semantic_urban",
     "files": [
       "datasets/ui_demo/change_urban_t1.tif",
       "datasets/ui_demo/change_urban_t2.tif"
     ],
     "suggested_query": "Did the built-up area increase?",
-    "source_dataset": "Bi-temporal Urban Semantic Pair (tests/fixtures/semantic)",
-    "notes": "UI integration sample for semantic change understanding (routes CHANGE_DETECT -> CHANGE_VQA)"
+    "source_dataset": "Bi-temporal Urban Semantic Pair",
+    "notes": "Semantic change understanding (routes CHANGE_DETECT -> CHANGE_VQA)"
   },
   {
     "id": "demo-change-buildings-01",
+    "title": "Semantic Quantity Attribution Check",
     "workflow": "bitemporal_change_semantic_quantity",
     "files": [
       "datasets/ui_demo/change_urban_t1.tif",
       "datasets/ui_demo/change_urban_t2.tif"
     ],
     "suggested_query": "How much buildings were newly created?",
-    "source_dataset": "Bi-temporal Urban Semantic Pair (tests/fixtures/semantic)",
-    "notes": "UI integration sample verifying total change area is distinguished from semantic building area"
+    "source_dataset": "Bi-temporal Urban Semantic Pair",
+    "notes": "Verifies total change area is distinguished from semantic building area without hallucination"
   },
   {
     "id": "demo-change-vegetation-01",
+    "title": "Vegetation Canopy Loss",
     "workflow": "bitemporal_change_semantic_vegetation",
     "files": [
       "datasets/ui_demo/change_forest_t1.tif",
       "datasets/ui_demo/change_forest_t2.tif"
     ],
     "suggested_query": "How much vegetation was lost?",
-    "source_dataset": "Bi-temporal Forest Semantic Pair (tests/fixtures/semantic)",
-    "notes": "UI integration sample verifying semantic vegetation change analysis without area fabrication"
+    "source_dataset": "Bi-temporal Forest Semantic Pair",
+    "notes": "Verifies semantic vegetation change analysis with limitation awareness"
   },
   {
     "id": "demo-change-water-01",
+    "title": "Water Reservoir Dynamics",
     "workflow": "bitemporal_change_semantic_water",
     "files": [
       "datasets/ui_demo/change_water_t1.tif",
       "datasets/ui_demo/change_water_t2.tif"
     ],
     "suggested_query": "How much water area changed?",
-    "source_dataset": "Bi-temporal Water Semantic Pair (tests/fixtures/semantic)",
-    "notes": "UI integration sample verifying semantic water change interpretation and qualified measurement"
+    "source_dataset": "Bi-temporal Water Semantic Pair",
+    "notes": "Verifies semantic water change interpretation and qualified measurement"
   },
   {
     "id": "demo-optical-sar-01",
+    "title": "Optical + SAR Cross-Modal Fusion",
     "workflow": "optical_sar_cross_modal",
     "files": [
       "datasets/ui_demo/optical_multimodal.tif",
       "datasets/ui_demo/sar_multimodal.tif"
     ],
     "suggested_query": "Use the optical and SAR images together to identify built-up and water-covered regions.",
-    "source_dataset": "Optical-SAR Cross-Modal Pair (tests/fixtures/optical_sar)",
-    "notes": "UI integration sample for joint optical-SAR complementarity analysis and composite generation"
+    "source_dataset": "Optical-SAR Cross-Modal Pair",
+    "notes": "Cross-modal complementarity analysis and 3-panel composite (routes OPTICAL_SAR_FUSION)"
+  },
+  {
+    "id": "demo-bitemporal-png-01",
+    "title": "PNG-to-PNG Bi-Temporal Change",
+    "workflow": "bitemporal_png",
+    "files": [
+      "datasets/ui_demo/change_png_t1.png",
+      "datasets/ui_demo/change_png_t2.png"
+    ],
+    "suggested_query": "What changed between these two dates?",
+    "source_dataset": "Robustness 01_building (PNG Benchmark)",
+    "notes": "Standard web raster bi-temporal change with pixel-space statistics"
+  },
+  {
+    "id": "demo-bitemporal-jpeg-01",
+    "title": "JPEG Compressed Bi-Temporal Change",
+    "workflow": "bitemporal_jpeg",
+    "files": [
+      "datasets/ui_demo/change_jpeg_t1.jpg",
+      "datasets/ui_demo/change_jpeg_t2.jpg"
+    ],
+    "suggested_query": "What changed between these two dates?",
+    "source_dataset": "Robustness 08_compression (JPEG Q85)",
+    "notes": "Evaluates compression robustness without format-bias confidence inflation"
+  },
+  {
+    "id": "demo-risk-misaligned-01",
+    "title": "Misaligned / Risk Test (Reduced Confidence & Advisory)",
+    "workflow": "bitemporal_misaligned",
+    "files": [
+      "datasets/ui_demo/misaligned_t1.png",
+      "datasets/ui_demo/misaligned_t2.png"
+    ],
+    "suggested_query": "What changed between these two dates?",
+    "source_dataset": "Robustness 09_misalignment (Spatial Shift)",
+    "notes": "Demonstrates alignment warning, consistency gating, and defensible confidence reduction"
   },
   {
     "id": "demo-killer-workflow-01",
+    "title": "Full Multi-Specialist Executive Workflow",
     "workflow": "bitemporal_change_semantic",
     "files": [
       "datasets/ui_demo/change_urban_t1.tif",
@@ -114,6 +144,6 @@
     ],
     "suggested_query": "Has the built-up area increased, where did the change occur, and what is the confidence?",
     "source_dataset": "Integrated Multi-Specialist Workflow",
-    "notes": "UI integration killer demonstration showing M7 routing, M3 change detection, M5 semantic VLM, M8 consistency, M9 defensible confidence, and M11 reporting"
+    "notes": "End-to-end demonstration showing routing, change detection, semantic VLM, consistency, and reporting"
   }
 ]

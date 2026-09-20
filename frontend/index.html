@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SatQuery AI — Bi-Temporal Remote Sensing Analysis</title>
+  <title>SatQuery AI — Interactive Vision-Language Assistant for Remote Sensing</title>
   <meta name="description" content="Interactive Vision-Language Assistant for Multimodal Remote Sensing (SIH26167 / ISRO)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,27 +39,49 @@
         </div>
         <div class="hardware-badge">
           <span class="hw-icon">⚡</span>
-          <span class="hw-text">RTX 4070 • CUDA 12.4</span>
+          <span class="hw-text">RTX 4070 • 12GB VRAM • CUDA</span>
         </div>
       </div>
     </header>
 
     <!-- Main Container -->
     <main class="main-content">
-      <!-- Section 1: Bi-Temporal Imagery Ingestion -->
+      <!-- Section 1: Ingestion & Demo Showcase -->
       <section class="panel-section">
         <div class="section-title-bar">
-          <span class="section-step">01</span>
-          <h2 class="section-title">Bi-Temporal Imagery Ingestion</h2>
-          <span class="section-hint">Select or drag & drop two multi-temporal remote-sensing observations (GeoTIFF / TIFF / PNG)</span>
+          <div class="section-title-group">
+            <span class="section-step">01</span>
+            <h2 class="section-title">Bi-Temporal Imagery Ingestion & Input Verification</h2>
+          </div>
+          <span class="section-hint">Select or drag & drop remote-sensing observations (GeoTIFF / TIFF / PNG / JPEG)</span>
+        </div>
+
+        <!-- Try a Sample Showcase Toolbar -->
+        <div class="sample-picker-bar">
+          <div class="sample-picker-label">
+            <svg class="sample-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <span class="sample-title">Try a Sample:</span>
+          </div>
+          <select id="demo-sample-select" class="sample-select" aria-label="Curated Demonstration Workflows">
+            <option value="" disabled selected>Loading curated demonstration samples...</option>
+          </select>
+          <button type="button" id="btn-load-sample" class="btn-load-sample">
+            <span>Load Selected Sample</span>
+          </button>
         </div>
 
         <div class="upload-grid">
-          <!-- Time 1 Panel (Before) -->
+          <!-- Time 1 Panel (Primary / T1 / Single) -->
           <div class="upload-card" id="t1-card">
             <div class="card-header-bar">
-              <span class="time-badge time-t1">TIME 1</span>
-              <span class="time-label">Earlier Observation (T1)</span>
+              <span class="time-badge time-t1">PRIMARY / TIME 1</span>
+              <span class="time-label" id="t1-header-label">Earlier Observation (T1) / Single Scene</span>
             </div>
             
             <div class="dropzone" id="t1-dropzone">
@@ -70,8 +92,8 @@
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                   </svg>
                 </div>
-                <p class="dropzone-main-text">Upload <strong>Primary (T1)</strong></p>
-                <p class="dropzone-sub-text">Click to browse or drop GeoTIFF / TIFF</p>
+                <p class="dropzone-main-text">Upload <strong>Primary Raster (T1)</strong></p>
+                <p class="dropzone-sub-text">Click to browse or drop GeoTIFF / TIFF / PNG / JPEG</p>
               </div>
 
               <div class="file-loaded-view hidden" id="t1-loaded-view">
@@ -85,7 +107,7 @@
                   <span class="file-name" id="t1-filename">filename.tif</span>
                   <div class="file-tags">
                     <span class="file-tag" id="t1-filesize">0 KB</span>
-                    <span class="file-tag tag-crs" id="t1-filecrs">CRS: Ready</span>
+                    <span class="file-tag tag-crs" id="t1-filecrs">Ready</span>
                   </div>
                 </div>
                 <button type="button" class="btn-remove-file" id="t1-remove-btn" title="Remove image">&times;</button>
@@ -93,11 +115,11 @@
             </div>
           </div>
 
-          <!-- Time 2 Panel (After) -->
+          <!-- Time 2 Panel (Secondary / T2 / SAR) -->
           <div class="upload-card" id="t2-card">
             <div class="card-header-bar">
-              <span class="time-badge time-t2">TIME 2</span>
-              <span class="time-label">Later Observation (T2)</span>
+              <span class="time-badge time-t2">SECONDARY / TIME 2</span>
+              <span class="time-label" id="t2-header-label">Later Observation (T2) / SAR Microwave (Optional)</span>
             </div>
 
             <div class="dropzone" id="t2-dropzone">
@@ -108,8 +130,8 @@
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                   </svg>
                 </div>
-                <p class="dropzone-main-text">Upload <strong>Secondary (T2)</strong></p>
-                <p class="dropzone-sub-text">Click to browse or drop GeoTIFF / TIFF</p>
+                <p class="dropzone-main-text">Upload <strong>Secondary Observation (T2 / SAR)</strong></p>
+                <p class="dropzone-sub-text">Required for bi-temporal or optical+SAR; leave empty for single image</p>
               </div>
 
               <div class="file-loaded-view hidden" id="t2-loaded-view">
@@ -123,7 +145,7 @@
                   <span class="file-name" id="t2-filename">filename.tif</span>
                   <div class="file-tags">
                     <span class="file-tag" id="t2-filesize">0 KB</span>
-                    <span class="file-tag tag-crs" id="t2-filecrs">CRS: Ready</span>
+                    <span class="file-tag tag-crs" id="t2-filecrs">Ready</span>
                   </div>
                 </div>
                 <button type="button" class="btn-remove-file" id="t2-remove-btn" title="Remove image">&times;</button>
@@ -133,11 +155,17 @@
         </div>
       </section>
 
-      <!-- Section 2: Query & Action Bar -->
+      <!-- Section 2: Query & Auto-Agent Action Bar -->
       <section class="panel-section">
         <div class="section-title-bar">
-          <span class="section-step">02</span>
-          <h2 class="section-title">Analytical Query & Specialist Routing</h2>
+          <div class="section-title-group">
+            <span class="section-step">02</span>
+            <h2 class="section-title">Natural-Language Query & Autonomous Agent Routing</h2>
+          </div>
+          <div class="orchestrator-active-badge">
+            <span class="orchestrator-pulse"></span>
+            <span>Auto-Agent Active (Autonomous Specialist Selection)</span>
+          </div>
         </div>
 
         <div class="query-box-wrapper">
@@ -147,27 +175,14 @@
                 <circle cx="11" cy="11" r="8"/>
                 <path d="M21 21l-4.35-4.35"/>
               </svg>
-              <input type="text" id="query-input" class="query-input" value="What changed between these two dates?" placeholder="Enter remote sensing analytical query...">
-            </div>
-
-            <div class="candidate-select-container">
-              <label for="candidate-select" class="candidate-label">Specialist Engine:</label>
-              <select id="candidate-select" class="candidate-select">
-                <option value="auto" selected>✨ Auto-Agent Orchestrator (Autonomous M7 Routing)</option>
-                <optgroup label="Developer / Debug Diagnostic Overrides">
-                  <option value="change_vqa">Manual Override: TinyCD + Semantic VQA (M5)</option>
-                  <option value="optical_sar">Manual Override: Optical + SAR Fusion (M6)</option>
-                  <option value="tinycd_raw">Manual Override: TinyCD Only (M3/M4)</option>
-                  <option value="cva_raw">Manual Override: CVA Baseline</option>
-                </optgroup>
-              </select>
+              <input type="text" id="query-input" class="query-input" value="What changed between these two dates?" placeholder="Ask a question about the satellite observations...">
             </div>
 
             <button type="button" id="analyze-btn" class="btn-analyze" disabled>
               <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
               </svg>
-              <span>Analyze Query</span>
+              <span>Analyze Imagery</span>
             </button>
           </div>
 
@@ -175,21 +190,22 @@
           <div class="query-suggestions">
             <span class="suggestions-label">Example Queries:</span>
             <button type="button" class="query-pill" data-query="What changed between these two dates?">What changed between these two dates?</button>
-            <button type="button" class="query-pill" data-query="Identify the built-up areas using both optical and SAR information.">Optical + SAR: Built structures</button>
-            <button type="button" class="query-pill" data-query="Where is the water body?">Single Image: Ground water</button>
-            <button type="button" class="query-pill" data-query="Describe the land cover in this scene.">Single Image: Scene description</button>
+            <button type="button" class="query-pill" data-query="Did the built-up area increase?">Did the built-up area increase?</button>
+            <button type="button" class="query-pill" data-query="Where is the harbor?">Where is the harbor?</button>
+            <button type="button" class="query-pill" data-query="Use the optical and SAR images together to identify built-up and water-covered regions.">Optical + SAR Cross-Modal</button>
+            <button type="button" class="query-pill" data-query="What is present in this image?">Single Scene VQA</button>
           </div>
         </div>
       </section>
 
-      <!-- Processing State / Progress Stepper -->
+      <!-- Processing State / Observable Pipeline Stepper -->
       <section class="progress-section hidden" id="progress-container">
         <div class="progress-card">
           <div class="spinner-row">
             <div class="orbital-spinner"></div>
             <div class="progress-text-block">
-              <span class="progress-headline" id="progress-headline">Processing Bi-Temporal Earth Observation Data...</span>
-              <span class="progress-subtext" id="progress-subtext">Executing geospatial validation and alignment foundation...</span>
+              <span class="progress-headline" id="progress-headline">Processing Remote Sensing Data...</span>
+              <span class="progress-subtext" id="progress-subtext">Executing agentic routing and specialist models...</span>
             </div>
           </div>
 
@@ -200,7 +216,7 @@
             <div class="stepper-item" data-step="SpatialCompatibility"><span class="step-num">3</span><span class="step-name">Spatial Overlap</span></div>
             <div class="stepper-item" data-step="Alignment"><span class="step-num">4</span><span class="step-name">Geospatial Align</span></div>
             <div class="stepper-item" data-step="SpecialistSelection"><span class="step-num">5</span><span class="step-name">Model Registry</span></div>
-            <div class="stepper-item" data-step="ModelExecution"><span class="step-num">6</span><span class="step-name">Change Detect</span></div>
+            <div class="stepper-item" data-step="ModelExecution"><span class="step-num">6</span><span class="step-name">Specialist Exec</span></div>
             <div class="stepper-item" data-step="ChangeMaskValidation"><span class="step-num">7</span><span class="step-name">Mask Validation</span></div>
             <div class="stepper-item" data-step="Statistics"><span class="step-num">8</span><span class="step-name">Area Statistics</span></div>
             <div class="stepper-item" data-step="SemanticInterpretation"><span class="step-num">9</span><span class="step-name">Semantic VQA</span></div>
@@ -222,31 +238,44 @@
       <!-- Section 3: Results & Visual Evidence (Populated from Real Backend) -->
       <section class="results-section hidden" id="results-section">
         <div class="section-title-bar">
-          <span class="section-step">03</span>
-          <h2 class="section-title">Analytical Findings & Visual Evidence</h2>
-          <span class="contract-badge">StandardResultContract Verified</span>
+          <div class="section-title-group">
+            <span class="section-step">03</span>
+            <h2 class="section-title">Analytical Findings & Visual Evidence</h2>
+          </div>
+          <span class="contract-badge">StandardResultContract Grounded</span>
         </div>
 
         <!-- Answer Narrative Banner -->
         <div class="answer-banner">
           <div class="answer-header">
-            <span class="answer-tag">AI Remote Sensing Analyst Report</span>
-            <span class="task-tag" id="summary-task" style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; background: rgba(56, 189, 248, 0.15); color: var(--cyan-primary); border: 1px solid rgba(56, 189, 248, 0.3);">Task: Auto Routed</span>
+            <span class="answer-tag">AI Remote Sensing Analyst Finding</span>
+            <span class="task-tag" id="summary-task">Auto-Agent: Routing Evaluated</span>
             <span class="confidence-tag" id="summary-confidence">Confidence: 0.00</span>
           </div>
-          <p class="answer-text" id="summary-answer">...</p>
+          <p class="answer-text" id="summary-answer">Analysis in progress...</p>
+        </div>
+
+        <!-- Warnings & Advisories Banner (When Applicable) -->
+        <div class="warnings-card hidden" id="warnings-card">
+          <div class="warnings-header">
+            <svg class="warn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>System Advisories & Preprocessing Warnings</span>
+          </div>
+          <ul class="warnings-list" id="warnings-list">
+            <!-- Populated dynamically -->
+          </ul>
         </div>
 
         <!-- Defensible System Confidence Card (Milestone M9) -->
         <div class="confidence-card" id="confidence-card">
           <div class="confidence-card-header">
             <div class="confidence-card-left">
-              <span class="confidence-engine-tag">M9 Defensible System Confidence</span>
+              <span class="confidence-engine-tag">Defensible System Confidence</span>
               <span class="confidence-level-badge level-high" id="conf-level-badge">HIGH</span>
               <span class="confidence-overall-score" id="conf-overall-score">0.0%</span>
             </div>
             <div class="confidence-card-right">
-              <span class="confidence-calibration-badge" id="conf-calibration-badge">Heuristic — Multi-Factor Grounded</span>
+              <span class="confidence-calibration-badge" id="conf-calibration-badge">Evidence-Weighted Grounding</span>
             </div>
           </div>
 
@@ -286,11 +315,173 @@
           </div>
         </div>
 
+        <!-- Telemetry Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Changed Pixels</span>
+            <span class="metric-value" id="val-changed-pixels">--</span>
+            <span class="metric-sub" id="sub-changed-pixels">Surface pixel count</span>
+          </div>
+          <div class="metric-card metric-card-primary">
+            <span class="metric-label">Physical Area</span>
+            <span class="metric-value" id="val-physical-area">--</span>
+            <span class="metric-sub" id="sub-physical-area">Geospatial metric area</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Change Ratio</span>
+            <span class="metric-value" id="val-change-ratio">--</span>
+            <span class="metric-sub">AOI fractional coverage</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Spatial Clusters</span>
+            <span class="metric-value" id="val-total-clusters">--</span>
+            <span class="metric-sub">Connected components</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Specialist Engine</span>
+            <span class="metric-value value-engine" id="val-specialist">--</span>
+            <span class="metric-sub" id="sub-specialist">Central Model Registry</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Inference Latency</span>
+            <span class="metric-value" id="val-latency">--</span>
+            <span class="metric-sub">End-to-end execution</span>
+          </div>
+        </div>
+
+        <!-- Adaptive Visual Hub (Switches for Bi-Temporal, Grounding, Single, Optical+SAR) -->
+        <div class="visual-hub-card">
+          <div class="hub-header">
+            <div class="hub-title-group">
+              <h3 class="hub-title" id="hub-main-title">Spatial Evidence Inspection</h3>
+              <span class="hub-subtitle" id="hub-main-subtitle">High-resolution observation comparison and grounded overlays</span>
+            </div>
+            <div class="view-mode-switch" id="bitemporal-mode-switch">
+              <button type="button" class="mode-btn active" id="btn-mode-slider">Comparison Slider</button>
+              <button type="button" class="mode-btn" id="btn-mode-side">Side-by-Side Gallery</button>
+            </div>
+          </div>
+
+          <!-- Mode 1: Interactive Bi-Temporal Split Slider -->
+          <div class="slider-view-container" id="slider-view">
+            <div class="split-slider-frame" id="split-slider-frame">
+              <!-- Under Layer: Time 1 (Before) -->
+              <img id="slider-img-before" class="slider-img slider-img-under" alt="T1 Before Observation">
+              
+              <!-- Over Layer: Time 2 with Change Overlay (Clipped) -->
+              <div class="slider-overlay-wrapper" id="slider-overlay-wrapper">
+                <img id="slider-img-after" class="slider-img slider-img-over" alt="T2 with Change Overlay">
+              </div>
+
+              <!-- Interactive Drag Divider -->
+              <div class="slider-divider" id="slider-divider">
+                <div class="divider-line"></div>
+                <div class="divider-handle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Badges on Image -->
+              <span class="slider-tag tag-before">BEFORE (T1)</span>
+              <span class="slider-tag tag-after">AFTER + CHANGE OVERLAY</span>
+            </div>
+            <p class="slider-caption">Drag the slider left and right to inspect detected surface change against the baseline observation.</p>
+          </div>
+
+          <!-- Mode 2: Bi-Temporal Side-by-Side Gallery -->
+          <div class="side-by-side-grid hidden" id="side-by-side-grid">
+            <div class="gallery-card">
+              <div class="gallery-header">Time 1 (Before)</div>
+              <div class="gallery-img-box"><img id="gallery-t1" class="gallery-img" alt="T1"></div>
+            </div>
+            <div class="gallery-card">
+              <div class="gallery-header">Time 2 (After)</div>
+              <div class="gallery-img-box"><img id="gallery-t2" class="gallery-img" alt="T2"></div>
+            </div>
+            <div class="gallery-card">
+              <div class="gallery-header">Binary Change Mask</div>
+              <div class="gallery-img-box"><img id="gallery-mask" class="gallery-img" alt="Change Mask"></div>
+            </div>
+            <div class="gallery-card">
+              <div class="gallery-header">Semi-Transparent Overlay</div>
+              <div class="gallery-img-box"><img id="gallery-overlay" class="gallery-img" alt="Change Overlay"></div>
+            </div>
+          </div>
+
+          <!-- Mode 3: Grounding / Single-Image View -->
+          <div class="single-view-container hidden" id="single-view-container">
+            <div class="single-view-frame">
+              <img id="single-preview-img" class="single-preview-img" alt="Visual Grounding / Observation Preview">
+              <span class="single-preview-tag" id="single-preview-tag">GROUNDED SPATIAL PREVIEW</span>
+            </div>
+            <p class="single-caption" id="single-caption">Text-guided spatial region localization with bounding box coordinates.</p>
+          </div>
+        </div>
+
+        <!-- 3-Panel Cross-Modal Composite Evidence (Milestone M6) -->
+        <div class="optical-sar-preview-card hidden" id="optical-sar-preview-card">
+          <div class="hub-header">
+            <div class="hub-title-group">
+              <h3 class="hub-title">3-Panel Cross-Modal Composite Evidence</h3>
+              <span class="hub-subtitle">Panel 1: Optical RGB Context &bull; Panel 2: SAR Microwave Backscatter &bull; Panel 3: Joint Fused Land-Cover Map</span>
+            </div>
+          </div>
+          <div class="optical-sar-img-wrapper">
+            <img id="optical-sar-composite-img" class="optical-sar-img" alt="Optical-SAR 3-Panel Composite">
+          </div>
+        </div>
+
+        <!-- Cross-Modal Complementarity Card (Milestone M6) -->
+        <div class="complementarity-card hidden" id="complementarity-card">
+          <div class="complementarity-header">
+            <div class="complementarity-header-left">
+              <span class="complementarity-badge">Cross-Modal Sensor Complementarity</span>
+              <span class="sensor-badge">Optical RGB + SAR Microwave Backscatter</span>
+            </div>
+            <div class="complementarity-header-right">
+              <span class="joint-badge" id="comp-joint-badge">Cross-Sensor Confirmed</span>
+            </div>
+          </div>
+          <div class="complementarity-body">
+            <div class="comp-col">
+              <h5>Optical Visible Reflectance</h5>
+              <p id="comp-optical-text">...</p>
+            </div>
+            <div class="comp-col">
+              <h5>SAR Physical Backscatter & Roughness</h5>
+              <p id="comp-sar-text">...</p>
+            </div>
+            <div class="comp-col comp-col-joint">
+              <h5>Joint Cross-Sensor Finding</h5>
+              <p id="comp-joint-text">...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Semantic Change Interpretation Card (Milestone M5) -->
+        <div class="semantic-card hidden" id="semantic-card">
+          <div class="semantic-header">
+            <div class="semantic-header-left">
+              <span class="semantic-badge">Semantic Change Reasoning</span>
+              <span class="direction-badge" id="semantic-direction-badge">MODIFIED</span>
+            </div>
+            <div class="semantic-header-right">
+              <span class="predom-badge" id="predom-transition-badge">bare_land &rarr; built_up</span>
+              <span class="uncertainty-badge" id="semantic-uncertainty-badge">Model Uncertainty: 15%</span>
+            </div>
+          </div>
+          <div class="semantic-body" id="semantic-transitions-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
         <!-- Evidence Consistency & Reliability Status Card (Milestone M8) -->
         <div class="evidence-status-card" id="evidence-status-card">
           <div class="evidence-status-header">
             <div class="status-header-left">
-              <span class="evidence-status-tag">M8 Evidence Reliability</span>
+              <span class="evidence-status-tag">Evidence Reliability & Consistency</span>
               <span class="consistency-status-badge status-consistent" id="consistency-status-badge">CONSISTENT</span>
             </div>
             <div class="status-header-right">
@@ -317,181 +508,62 @@
           </div>
         </div>
 
-        <!-- Semantic Change Interpretation Card (Milestone M5) -->
-        <div class="semantic-card hidden" id="semantic-card">
-          <div class="semantic-header">
-            <div class="semantic-header-left">
-              <span class="semantic-badge">M5 Semantic Interpretation</span>
-              <span class="direction-badge" id="semantic-direction-badge">MODIFIED</span>
-            </div>
-            <div class="semantic-header-right">
-              <span class="predom-badge" id="predom-transition-badge">bare_land &rarr; built_up</span>
-              <span class="uncertainty-badge" id="semantic-uncertainty-badge">Model Uncertainty: 15%</span>
-            </div>
-          </div>
-          <div class="semantic-body" id="semantic-transitions-container">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-        <!-- Cross-Modal Complementarity Card (Milestone M6) -->
-        <div class="complementarity-card hidden" id="complementarity-card">
-          <div class="complementarity-header">
-            <div class="complementarity-header-left">
-              <span class="complementarity-badge">M6 Cross-Modal Complementarity</span>
-              <span class="sensor-badge">Optical RGB + SAR Microwave Backscatter</span>
-            </div>
-            <div class="complementarity-header-right">
-              <span class="joint-badge" id="comp-joint-badge">Cross-Sensor Confirmed</span>
-            </div>
-          </div>
-          <div class="complementarity-body">
-            <div class="comp-col">
-              <h5>Optical Visible Reflectance</h5>
-              <p id="comp-optical-text">...</p>
-            </div>
-            <div class="comp-col">
-              <h5>SAR Physical Backscatter & Roughness</h5>
-              <p id="comp-sar-text">...</p>
-            </div>
-            <div class="comp-col comp-col-joint">
-              <h5>Joint Cross-Sensor Finding</h5>
-              <p id="comp-joint-text">...</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Telemetry Metrics Grid -->
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <span class="metric-label">Changed Pixels</span>
-            <span class="metric-value" id="val-changed-pixels">--</span>
-            <span class="metric-sub" id="sub-changed-pixels">Surface pixel count</span>
-          </div>
-          <div class="metric-card metric-card-primary">
-            <span class="metric-label">Physical Area</span>
-            <span class="metric-value" id="val-physical-area">--</span>
-            <span class="metric-sub" id="sub-physical-area">Calculated in projected CRS</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Change Ratio</span>
-            <span class="metric-value" id="val-change-ratio">--</span>
-            <span class="metric-sub">AOI fractional coverage</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Spatial Clusters</span>
-            <span class="metric-value" id="val-total-clusters">--</span>
-            <span class="metric-sub">Connected components</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Specialist Engine</span>
-            <span class="metric-value value-engine" id="val-specialist">--</span>
-            <span class="metric-sub" id="sub-specialist">Central Model Registry</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Inference Latency</span>
-            <span class="metric-value" id="val-latency">--</span>
-            <span class="metric-sub">End-to-end execution</span>
-          </div>
-        </div>
-
-        <!-- Visual Comparison Hub -->
-        <div class="visual-hub-card">
-          <div class="hub-header">
-            <div class="hub-title-group">
-              <h3 class="hub-title">Spatial Evidence Inspection</h3>
-              <span class="hub-subtitle">High-resolution bi-temporal comparison with raster overlays</span>
-            </div>
-            <div class="view-mode-switch">
-              <button type="button" class="mode-btn active" id="btn-mode-slider">Split Comparison Slider</button>
-              <button type="button" class="mode-btn" id="btn-mode-side">Side-by-Side Gallery</button>
-            </div>
-          </div>
-
-          <!-- View A: Interactive Before/After Split Slider -->
-          <div class="slider-view-container" id="slider-view">
-            <div class="split-slider-frame" id="split-slider-frame">
-              <!-- Under Layer: Time 1 (Before) -->
-              <img id="slider-img-before" class="slider-img slider-img-under" alt="T1 Before Observation">
-              
-              <!-- Over Layer: Time 2 with Change Overlay (Clipped) -->
-              <div class="slider-overlay-wrapper" id="slider-overlay-wrapper">
-                <img id="slider-img-after" class="slider-img slider-img-over" alt="T2 with Change Overlay">
-              </div>
-
-              <!-- Interactive Drag Divider -->
-              <div class="slider-divider" id="slider-divider">
-                <div class="divider-line"></div>
-                <div class="divider-handle">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/>
-                  </svg>
-                </div>
-              </div>
-
-              <!-- Badges on Image -->
-              <span class="slider-tag tag-before">BEFORE (T1)</span>
-              <span class="slider-tag tag-after">AFTER + CHANGE OVERLAY</span>
-            </div>
-            <p class="slider-caption">Drag the slider left and right to inspect detected physical surface additions against the prior observation.</p>
-          </div>
-
-          <!-- View B: Side-by-Side Gallery -->
-          <div class="side-by-side-grid hidden" id="side-by-side-grid">
-            <div class="gallery-card">
-              <div class="gallery-header">Time 1 (Before)</div>
-              <div class="gallery-img-box"><img id="gallery-t1" class="gallery-img" alt="T1"></div>
-            </div>
-            <div class="gallery-card">
-              <div class="gallery-header">Time 2 (After)</div>
-              <div class="gallery-img-box"><img id="gallery-t2" class="gallery-img" alt="T2"></div>
-            </div>
-            <div class="gallery-card">
-              <div class="gallery-header">Binary Change Mask</div>
-              <div class="gallery-img-box"><img id="gallery-mask" class="gallery-img" alt="Change Mask"></div>
-            </div>
-            <div class="gallery-card">
-              <div class="gallery-header">Semi-Transparent Overlay</div>
-              <div class="gallery-img-box"><img id="gallery-overlay" class="gallery-img" alt="Change Overlay"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3-Panel Cross-Modal Composite Evidence (Milestone M6) -->
-        <div class="optical-sar-preview-card hidden" id="optical-sar-preview-card">
-          <div class="hub-header">
-            <div class="hub-title-group">
-              <h3 class="hub-title">3-Panel Cross-Modal Composite Evidence</h3>
-              <span class="hub-subtitle">Panel 1: Optical RGB Context &bull; Panel 2: SAR Microwave Backscatter &bull; Panel 3: Joint Fused Land-Cover Map</span>
-            </div>
-          </div>
-          <div class="optical-sar-img-wrapper">
-            <img id="optical-sar-composite-img" class="optical-sar-img" alt="Optical-SAR 3-Panel Composite">
-          </div>
-        </div>
-
         <!-- Spatial Telemetry & Bounding Boxes -->
         <div class="evidence-telemetry-card">
           <div class="telemetry-header">
             <h4>Geospatial Regions & Coordinates</h4>
-            <span class="convention-tag">Convention: [xmin, ymin, xmax, ymax]</span>
+            <span class="convention-tag">Format: [xmin, ymin, xmax, ymax]</span>
           </div>
           <div class="telemetry-body" id="telemetry-regions-list">
             <!-- Populated dynamically -->
           </div>
         </div>
 
-        <!-- Collapsible 9-Step Execution Trace (Rule 12) -->
+        <!-- Structured Intelligence Report Downloads (Milestone M11) -->
+        <div class="report-section-card">
+          <div class="report-header-bar">
+            <div class="report-title-group">
+              <svg class="report-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              <div>
+                <h4 class="report-card-title">Structured Intelligence Report</h4>
+                <p class="report-card-sub">Export verified audit trail, quantitative metrics, evidence provenance, and executive briefing</p>
+              </div>
+            </div>
+            <div class="report-btn-group">
+              <button type="button" id="btn-download-report-json" class="btn-report-action">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Download JSON Report
+              </button>
+              <button type="button" id="btn-download-report-md" class="btn-report-action">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Download Markdown Report
+              </button>
+              <button type="button" id="btn-toggle-report-preview" class="btn-report-action btn-report-outline">
+                Toggle Executive Briefing
+              </button>
+            </div>
+          </div>
+          <div class="report-preview-box hidden" id="report-preview-box">
+            <pre id="report-preview-text" class="report-preview-text"></pre>
+          </div>
+        </div>
+
+        <!-- Collapsible Auditable Execution Trace (Rule 12) -->
         <div class="trace-accordion-card">
           <button type="button" class="trace-accordion-header" id="trace-toggle-btn">
             <div class="trace-header-left">
               <svg class="trace-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span class="trace-title">Auditable Execution Trace (Rule 12 Compliance)</span>
+              <span class="trace-title">How SatQuery AI Analyzed This (Auditable Execution Trace)</span>
             </div>
             <div class="trace-header-right">
-              <span class="trace-count-tag" id="trace-steps-count">9 Steps Recorded</span>
+              <span class="trace-count-tag" id="trace-steps-count">0 Steps Recorded</span>
               <svg class="accordion-arrow" id="accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 9l-7 7-7-7"/>
               </svg>
@@ -505,12 +577,46 @@
           </div>
         </div>
 
-        <!-- Warnings Banner -->
-        <div class="warnings-card hidden" id="warnings-card">
-          <div class="warnings-header">System Advisories & Preprocessing Warnings</div>
-          <ul class="warnings-list" id="warnings-list">
-            <!-- Populated dynamically -->
-          </ul>
+        <!-- Collapsible Developer & Diagnostics Console -->
+        <div class="debug-accordion-card">
+          <button type="button" class="debug-accordion-header" id="debug-toggle-btn">
+            <div class="debug-header-left">
+              <svg class="debug-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+              <span class="debug-title">Developer & Diagnostics Console</span>
+            </div>
+            <div class="debug-header-right">
+              <span class="debug-tag">Internal Telemetry</span>
+              <svg class="accordion-arrow" id="debug-accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </button>
+
+          <div class="debug-content hidden" id="debug-content">
+            <div class="debug-grid">
+              <div class="debug-control-group">
+                <label for="candidate-select" class="candidate-label">Manual Specialist Override:</label>
+                <select id="candidate-select" class="candidate-select">
+                  <option value="auto" selected>✨ Auto-Agent Orchestrator (Autonomous M7 Routing)</option>
+                  <optgroup label="Diagnostic Manual Overrides">
+                    <option value="change_vqa">Manual Override: TinyCD + Semantic VQA (M5)</option>
+                    <option value="optical_sar">Manual Override: Optical + SAR Fusion (M6)</option>
+                    <option value="tinycd_raw">Manual Override: TinyCD Only (M3/M4)</option>
+                    <option value="cva_raw">Manual Override: CVA Baseline</option>
+                  </optgroup>
+                </select>
+                <p class="debug-hint">Auto-Agent is the default. Manual overrides exist for diagnostic evaluation only.</p>
+              </div>
+              <div class="debug-json-group">
+                <div class="json-header">Raw StandardResultContract JSON:</div>
+                <pre id="debug-json-viewer" class="debug-json-box">No analysis executed yet.</pre>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -518,7 +624,7 @@
     <!-- Footer -->
     <footer class="app-footer">
       <span>SatQuery AI — Space Technology Domain (SIH26167 / ISRO)</span>
-      <span>Empirically grounded remote-sensing intelligence architecture</span>
+      <span>Empirically grounded multimodal remote-sensing intelligence architecture</span>
     </footer>
   </div>
 

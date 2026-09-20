@@ -190,6 +190,9 @@ datasets/*
 *.ckpt
 *.safetensors
 *.bin
+models/adapters/
+models/checkpoints/
+!models/checkpoints/.gitkeep
 
 # Hugging Face / Transformers local caches
 .cache/

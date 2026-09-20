@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SatQuery AI — Developer Test Console</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="console-header">
+    <div class="console-title-group">
+      <h1 class="console-title">SatQuery AI — Developer Test Console</h1>
+      <span class="console-badge">SIH26167 / ISRO</span>
+      <span class="console-badge" id="backend-target">Origin: ...</span>
+    </div>
+    <div class="status-bar">
+      <div class="status-item">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="health-text">Checking Backend...</span>
+      </div>
+      <div class="status-item">
+        <span style="color: var(--text-muted);">API:</span>
+        <span style="color: var(--accent);">POST /api/v1/analyze</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout Grid -->
+  <main class="console-grid">
+
+    <!-- LEFT COLUMN: CONTROLS & INPUTS -->
+    <section class="controls-column">
+
+      <!-- Workflow Selector (Testing Convenience Only — Auto-Agent remains active) -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Workflow Template</span>
+          <span style="font-size: 10px; color: var(--text-muted); font-weight: normal;">Auto-Agent Active</span>
+        </div>
+        <label class="control-label" for="workflow-select">Select Configuration</label>
+        <select id="workflow-select" class="form-select">
+          <option value="single_vqa" selected>Single Image VQA</option>
+          <option value="grounding">Text-Guided Grounding</option>
+          <option value="bitemporal_pure">Pure Bi-Temporal Change</option>
+          <option value="semantic_change">Semantic Change Analysis</option>
+          <option value="optical_sar">Optical + SAR Cross-Modal</option>
+          <option value="combined">Combined Killer Workflow</option>
+        </select>
+        <p style="font-size: 10px; color: var(--text-muted); margin-top: -4px;">
+          Note: This selector configures input slots only. The backend autonomously determines specialist routing.
+        </p>
+      </div>
+
+      <!-- Demo Samples Quick-Load Panel -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Demo Samples</span>
+          <span style="font-size: 10px; color: var(--accent); font-family: var(--mono-font);" id="demo-count">Loading...</span>
+        </div>
+        <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 6px;">
+          Verified sample rasters from <code>datasets/ui_demo/</code>. Click <strong>Load</strong> to pre-fill inputs & query:
+        </p>
+        <div class="demo-samples-list" id="demo-samples-list">
+          <div style="color: var(--text-muted); font-size: 11px;">Fetching manifest...</div>
+        </div>
+      </div>
+
+      <!-- Dynamic File Inputs -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Input Rasters</span>
+          <span style="font-size: 10px; color: var(--text-muted);" id="file-status-tag">0 Files Loaded</span>
+        </div>
+
+        <div class="file-slot-group" id="file-slots-container">
+          <!-- Primary Image Slot -->
+          <div class="file-slot" id="slot-primary">
+            <div class="file-slot-header">
+              <span class="file-slot-title" id="lbl-primary">Primary Image (T1 / Optical)</span>
+              <span class="file-slot-meta" id="meta-primary">No file</span>
+            </div>
+            <input type="file" id="input-primary" class="file-input-native" accept=".tif,.tiff,.png,.jpg,.jpeg">
+          </div>
+
+          <!-- Secondary Image Slot -->
+          <div class="file-slot" id="slot-secondary">
+            <div class="file-slot-header">
+              <span class="file-slot-title" id="lbl-secondary">Secondary Image (T2 / SAR)</span>
+              <span class="file-slot-meta" id="meta-secondary">No file</span>
+            </div>
+            <input type="file" id="input-secondary" class="file-input-native" accept=".tif,.tiff,.png,.jpg,.jpeg">
+          </div>
+        </div>
+      </div>
+
+      <!-- Query Section & Quick Queries -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Natural Language Query</span>
+        </div>
+        <textarea id="query-input" class="query-textarea" placeholder="Enter remote sensing query...">What is present in this image?</textarea>
+
+        <label class="control-label">Quick Queries (Click to Populate)</label>
+        <div class="quick-queries-grid">
+          <button type="button" class="btn-quick-query" data-query="What is present in this image?">
+            <span class="query-num">1.</span> What is present in this image?
+          </button>
+          <button type="button" class="btn-quick-query" data-query="Where is the harbor?">
+            <span class="query-num">2.</span> Where is the harbor?
+          </button>
+          <button type="button" class="btn-quick-query" data-query="Where is the water body?">
+            <span class="query-num">2b.</span> Where is the water body?
+          </button>
+          <button type="button" class="btn-quick-query" data-query="What changed between these two dates?">
+            <span class="query-num">3.</span> What changed between these two dates?
+          </button>
+          <button type="button" class="btn-quick-query" data-query="Did the built-up area increase?">
+            <span class="query-num">4.</span> Did the built-up area increase?
+          </button>
+          <button type="button" class="btn-quick-query" data-query="How much buildings were newly created?">
+            <span class="query-num">5.</span> How much buildings were newly created?
+          </button>
+          <button type="button" class="btn-quick-query" data-query="How much vegetation was lost?">
+            <span class="query-num">6.</span> How much vegetation was lost?
+          </button>
+          <button type="button" class="btn-quick-query" data-query="How much water area changed?">
+            <span class="query-num">7.</span> How much water area changed?
+          </button>
+          <button type="button" class="btn-quick-query" data-query="Use the optical and SAR images together to identify built-up and water-covered regions.">
+            <span class="query-num">8.</span> Use optical + SAR together...
+          </button>
+          <button type="button" class="btn-quick-query" data-query="Has the built-up area increased, where did the change occur, and does the SAR evidence support it?">
+            <span class="query-num">9.</span> Killer Workflow (Change + SAR Support)
+          </button>
+        </div>
+
+        <button type="button" id="btn-analyze" class="btn-analyze" disabled>
+          <span id="btn-analyze-text">Analyze Query</span>
+        </button>
+      </div>
+
+      <!-- Manual Test Checklist (For Manual Recording) -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Manual Verification Checklist</span>
+        </div>
+        <div class="checklist-grid">
+          <label class="checklist-label"><input type="checkbox" id="chk-vqa"> 1. Single Image VQA</label>
+          <label class="checklist-label"><input type="checkbox" id="chk-grounding"> 2. Grounding</label>
+          <label class="checklist-label"><input type="checkbox" id="chk-pure-change"> 3. Pure Change (TinyCD only)</label>
+          <label class="checklist-label"><input type="checkbox" id="chk-builtup"> 4. Built-Up Semantic Change</label>
+          <label class="checklist-label"><input type="checkbox" id="chk-buildings"> 5. Building Quantity (Attribution check)</label>
+          <label class="checklist-label"><input type="checkbox" id="chk-vegetation"> 6. Vegetation Quantity</label>
+          <label class="checklist-label"><input type="checkbox" id="chk-water"> 7. Water Quantity</label>
+          <label class="checklist-label"><input type="checkbox" id="chk-optical-sar"> 8. Optical + SAR</label>
+          <label class="checklist-label"><input type="checkbox" id="chk-killer"> 9. Killer Workflow</label>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: RESULTS & EVIDENCE -->
+    <section class="results-column">
+
+      <!-- Error Banner -->
+      <div id="error-banner" class="error-banner hidden">
+        <div class="error-title" id="error-title">Request Failed</div>
+        <div class="error-detail" id="error-detail">...</div>
+      </div>
+
+      <!-- Results Empty State -->
+      <div id="results-empty" class="panel-card" style="text-align: center; padding: 48px 16px; color: var(--text-muted);">
+        <p style="font-size: 14px; font-weight: 600; color: var(--text-bright);">No Analysis Executed</p>
+        <p style="font-size: 11px; margin-top: 4px;">Select a demo sample or upload rasters and click <strong>Analyze Query</strong> to execute real backend models.</p>
+      </div>
+
+      <!-- Results Container -->
+      <div id="results-container" class="hidden">
+
+        <!-- Top Status & Route Bar -->
+        <div class="result-header-bar">
+          <div class="route-badge-box">
+            <span class="route-label">Observed Route:</span>
+            <span class="route-tag" id="val-observed-route">--</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="font-family: var(--mono-font); font-size: 11px; color: var(--text-muted);" id="val-task-name">TASK: --</span>
+            <span class="status-badge badge-200" id="val-http-status">HTTP 200</span>
+            <span style="font-family: var(--mono-font); font-size: 11px; color: var(--accent);" id="val-latency">0 ms</span>
+          </div>
+        </div>
+
+        <!-- Answer Callout Box -->
+        <div class="answer-box" id="answer-box">
+          <div style="font-size: 10px; text-transform: uppercase; color: var(--accent); font-weight: bold; margin-bottom: 2px;">
+            Grounded Analytical Conclusion:
+          </div>
+          <div id="val-answer" style="font-size: 13px;">...</div>
+        </div>
+
+        <!-- Semantic Area Disclaimer Box (Shown when class-specific area is unmeasured) -->
+        <div id="semantic-disclaimer-card" class="semantic-disclaimer-box hidden">
+          <strong>⚠️ Scientific Integrity Limitation:</strong>
+          <span id="semantic-disclaimer-text">Semantic-specific area is not directly measurable from current spatial evidence.</span>
+        </div>
+
+        <!-- Key Metrics & Statistics -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Changed Pixels</div>
+            <div class="stat-value" id="stat-changed-pixels">--</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Physical Area</div>
+            <div class="stat-value" id="stat-physical-area">--</div>
+            <div class="stat-note" id="stat-area-note">Ground units</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Change Ratio</div>
+            <div class="stat-value" id="stat-change-ratio">--</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Spatial Clusters</div>
+            <div class="stat-value" id="stat-clusters">--</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Semantic Class</div>
+            <div class="stat-value" id="stat-semantic-class">--</div>
+            <div class="stat-note" id="stat-semantic-status">N/A</div>
+          </div>
+        </div>
+
+        <!-- Evaluation Grid: M9 Confidence & M8 Consistency -->
+        <div class="eval-grid">
+          <!-- M9 Confidence Card -->
+          <div class="panel-card" style="margin-bottom: 0;">
+            <div class="panel-title">
+              <span>Defensible System Confidence (M9)</span>
+              <span class="badge-pill badge-HIGH" id="badge-conf-level">HIGH</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+              <span style="font-size: 20px; font-weight: bold; font-family: var(--mono-font); color: var(--text-bright);" id="val-conf-score">0.0%</span>
+              <span style="font-size: 10px; color: var(--text-muted);" id="conf-calib-type">Multi-factor heuristic</span>
+            </div>
+            <div class="conf-subfactors-list">
+              <div class="conf-subfactor-row">
+                <span style="color: var(--text-muted);">Specialist Score:</span>
+                <span id="sub-specialist">--</span>
+              </div>
+              <div class="conf-subfactor-row">
+                <span style="color: var(--text-muted);">Evidence Quality:</span>
+                <span id="sub-evidence">--</span>
+              </div>
+              <div class="conf-subfactor-row">
+                <span style="color: var(--text-muted);">Spatial Alignment:</span>
+                <span id="sub-alignment">--</span>
+              </div>
+              <div class="conf-subfactor-row">
+                <span style="color: var(--text-muted);">Input Quality:</span>
+                <span id="sub-input">--</span>
+              </div>
+              <div class="conf-subfactor-row">
+                <span style="color: var(--text-muted);">Consistency Penalty:</span>
+                <span id="sub-penalty">0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- M8 Evidence Reliability & Consistency Card -->
+          <div class="panel-card" style="margin-bottom: 0;">
+            <div class="panel-title">
+              <span>Evidence Reliability (M8)</span>
+              <span class="badge-pill badge-HIGH" id="badge-consistency-status">CONSISTENT</span>
+            </div>
+            <div style="font-size: 11px; margin-bottom: 6px; color: var(--text-bright);" id="val-consistency-narrative">
+              Evidence is consistent across specialists.
+            </div>
+            <div style="font-size: 10px; color: var(--text-muted); font-family: var(--mono-font);">
+              Quality Indicator: <span id="val-evidence-quality">100%</span> • Fused Items: <span id="val-fused-count">0</span>
+            </div>
+            <div id="conflicts-box" class="hidden" style="margin-top: 6px; padding: 4px; background: rgba(248,81,73,0.1); border-radius: 3px; font-size: 10px; color: #ff7b72;">
+              <strong>Active Conflicts:</strong>
+              <ul id="conflicts-list" style="margin-left: 14px; margin-top: 2px;"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Artifacts Gallery -->
+        <div class="panel-card" style="margin-top: 12px;">
+          <div class="panel-title">
+            <span>Visual Artifacts</span>
+            <span style="font-size: 10px; color: var(--text-muted);" id="visuals-count">0 Previews</span>
+          </div>
+          <div class="visuals-grid" id="visuals-grid">
+            <!-- Dynamically populated visual previews -->
+          </div>
+        </div>
+
+        <!-- Evidence Items Table (Collapsible) -->
+        <details>
+          <summary>Evidence Units & Provenance (<span id="evidence-units-count">0</span>)</summary>
+          <div class="details-body">
+            <table class="evidence-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Type</th>
+                  <th>Source</th>
+                  <th>Claim</th>
+                  <th>Confidence</th>
+                </tr>
+              </thead>
+              <tbody id="evidence-table-body">
+                <tr><td colspan="5" style="color: var(--text-muted); text-align: center;">No discrete items</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <!-- Execution Trace (Collapsible) -->
+        <details open>
+          <summary>Auditable Execution Trace (<span id="trace-step-count">0 Steps</span>)</summary>
+          <div class="details-body">
+            <div class="trace-timeline" id="trace-timeline">
+              <!-- Dynamically populated trace rows -->
+            </div>
+          </div>
+        </details>
+
+        <!-- M11 Analyst Report Panel (Collapsible) -->
+        <details id="report-panel" class="hidden">
+          <summary>M11 Analyst Report (<span id="report-id-label">--</span>)</summary>
+          <div class="details-body">
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+              <button type="button" class="btn-quick-query" id="btn-view-report-json">View Report JSON</button>
+              <button type="button" class="btn-quick-query" id="btn-view-report-md">View Report Markdown</button>
+              <button type="button" class="btn-quick-query" id="btn-download-report">Download JSON</button>
+            </div>
+            <div id="report-preview-box" class="raw-json-block" style="max-height: 200px; color: #a5d6ff;">
+              Select View Mode above...
+            </div>
+          </div>
+        </details>
+
+        <!-- Raw API Response (Collapsible) -->
+        <details>
+          <summary>Raw API Response (JSON)</summary>
+          <div class="details-body">
+            <div class="json-view-container">
+              <button type="button" class="btn-copy-json" id="btn-copy-json">Copy JSON</button>
+              <pre class="raw-json-block" id="raw-json-pre">{}</pre>
+            </div>
+          </div>
+        </details>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -724,8 +724,12 @@ class AgentExecutor:
             spec_output.evidence.consistency_report = cons_report
             gated_answer = EvidenceGater.gate_answer(final_answer, cons_report)
 
-            input_qual = 1.0 if val_res.images[0].crs else 0.70
-            align_score = min(1.0, overlap_pct / 100.0)
+            sp_align = spec_output.parameters_used.get("spatial_alignment_score")
+            if sp_align is not None:
+                align_score = float(sp_align)
+            else:
+                align_score = min(1.0, overlap_pct / 100.0)
+            input_qual = 1.0 if val_res.images[0].crs else 0.85
 
             spec_outputs_list = [spec_output]
             if decision.is_multi_stage and "vqa_output" in locals():
@@ -737,8 +741,10 @@ class AgentExecutor:
                 consistency_report=cons_report,
                 input_quality=input_qual,
                 spatial_alignment=align_score,
+                spatial_alignment_score=align_score,
                 evidence_bundle=spec_output.evidence,
                 query=query,
+                parameters=spec_output.parameters_used,
                 metadata={"filename_t1": fname1, "filename_t2": fname2},
             )
 

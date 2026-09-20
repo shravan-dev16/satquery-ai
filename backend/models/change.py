@@ -128,10 +128,34 @@ class DeterministicCVASpecialist:
         diff_max = np.max(diff)
         diff_norm = diff / max(diff_max, 1e-6)
 
-        # 3. Adaptive thresholding: T = mu + k * sigma
+        # 3. Adaptive thresholding: T = mu + k * sigma (or Otsu for bimodal distributions)
         mu = float(np.mean(diff_norm))
         sigma = float(np.std(diff_norm))
-        threshold = max(self.min_threshold, min(0.85, mu + self.sigma_factor * sigma))
+
+        if mu > 0.10 and sigma > 0.08:
+            # Bimodal distribution: use Otsu's method to separate changed vs background
+            pixel_counts, bin_edges = np.histogram(diff_norm, bins=128, range=(0.0, 1.0))
+            total = diff_norm.size
+            sum_total = np.dot(np.arange(128), pixel_counts)
+            current_max, otsu_t = 0.0, 0.35
+            weight_bg, sum_bg = 0.0, 0.0
+            for i in range(128):
+                weight_bg += pixel_counts[i]
+                if weight_bg == 0:
+                    continue
+                weight_fg = total - weight_bg
+                if weight_fg == 0:
+                    break
+                sum_bg += i * pixel_counts[i]
+                mean_bg = sum_bg / weight_bg
+                mean_fg = (sum_total - sum_bg) / weight_fg
+                var_between = weight_bg * weight_fg * (mean_bg - mean_fg) ** 2
+                if var_between > current_max:
+                    current_max = var_between
+                    otsu_t = float((bin_edges[i] + bin_edges[i+1]) / 2.0)
+            threshold = max(self.min_threshold, min(0.65, otsu_t))
+        else:
+            threshold = max(self.min_threshold, min(0.65, mu + self.sigma_factor * sigma))
 
         # 4. Raw binary threshold
         raw_mask = (diff_norm >= threshold)
@@ -310,7 +334,12 @@ class ChangeDetectionSpecialist(BaseSpecialist):
         chosen_device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         super().__init__(device=chosen_device)
         self.candidate = candidate
-        self.checkpoint_path = Path(checkpoint_path or "models/checkpoints/levir_best.pth")
+        if checkpoint_path is not None:
+            self.checkpoint_path = Path(checkpoint_path)
+        elif Path("models/checkpoints/tinycd_finetuned.pth").exists():
+            self.checkpoint_path = Path("models/checkpoints/tinycd_finetuned.pth")
+        else:
+            self.checkpoint_path = Path("models/checkpoints/levir_best.pth")
 
         if candidate == "cva":
             self.detector = DeterministicCVASpecialist()
@@ -336,7 +365,22 @@ class ChangeDetectionSpecialist(BaseSpecialist):
     def load(self) -> None:
         if hasattr(self.detector, "load"):
             self.detector.load()
-        self._is_loaded = True
+    def execute(self, inputs: SpecialistInput) -> SpecialistOutput:
+        return self.predict(inputs)
+
+    def execute_change_detection(
+        self,
+        image1_path: Union[str, Path],
+        image2_path: Union[str, Path],
+        query: str = "What changed between these two dates?",
+    ) -> SpecialistOutput:
+        inputs = SpecialistInput(
+            task=TaskType.CHANGE_DETECTION,
+            query=query,
+            primary_image_path=str(image1_path),
+            secondary_image_path=str(image2_path),
+        )
+        return self.predict(inputs)
 
     def predict(self, inputs: SpecialistInput) -> SpecialistOutput:
         start_time = time.perf_counter()
@@ -405,17 +449,24 @@ class ChangeDetectionSpecialist(BaseSpecialist):
         # 4. Compute Physical Area (m^2 and hectares)
         area_m2: Optional[float] = None
         area_ha: Optional[float] = None
-        # Check if CRS is projected in linear meters
-        res_x = abs(transform.a)
-        res_y = abs(transform.e)
+        is_georeferenced = aligned.metadata.get("is_georeferenced", crs_str not in (None, "pixel_grid", "None", ""))
+        alignment_score = float(aligned.metadata.get("alignment_score", 1.0))
 
-        if "326" in crs_str or "327" in crs_str or "utm" in crs_str.lower() or "EPSG:3857" in crs_str:
-            pixel_area_m2 = res_x * res_y
-            area_m2 = round(changed_pixels * pixel_area_m2, 2)
-            area_ha = round(area_m2 / 10000.0, 4)
+        if is_georeferenced and transform is not None and crs_str and crs_str != "pixel_grid":
+            res_x = abs(transform.a)
+            res_y = abs(transform.e)
+
+            if "326" in crs_str or "327" in crs_str or "utm" in crs_str.lower() or "EPSG:3857" in crs_str:
+                pixel_area_m2 = res_x * res_y
+                area_m2 = round(changed_pixels * pixel_area_m2, 2)
+                area_ha = round(area_m2 / 10000.0, 4)
+            else:
+                warnings.append(
+                    f"CRS '{crs_str}' does not use verified linear meter units. Area reported in pixel counts only."
+                )
         else:
             warnings.append(
-                f"CRS '{crs_str}' does not use verified linear meter units. Area reported in pixel counts only."
+                "Geospatial metadata unavailable; physical area in hectares/m² is unverified. Area reported in pixel counts only."
             )
 
         # 5. Connected Component Analysis & Geospatial Polygons
@@ -567,24 +618,24 @@ class ChangeDetectionSpecialist(BaseSpecialist):
                     url=f"/api/v1/static/previews/{t1_preview_filename}",
                     width=width,
                     height=height,
-                    crs=crs_str,
-                    bounds=aligned.bounds,
+                    crs=crs_str if is_georeferenced and crs_str != "pixel_grid" else None,
+                    bounds=aligned.bounds if is_georeferenced else None,
                 ),
                 EvidenceImage(
                     role="secondary",
                     url=f"/api/v1/static/previews/{t2_preview_filename}",
                     width=width,
                     height=height,
-                    crs=crs_str,
-                    bounds=aligned.bounds,
+                    crs=crs_str if is_georeferenced and crs_str != "pixel_grid" else None,
+                    bounds=aligned.bounds if is_georeferenced else None,
                 ),
                 EvidenceImage(
                     role="change_overlay",
                     url=f"/api/v1/static/previews/{overlay_filename}",
                     width=width,
                     height=height,
-                    crs=crs_str,
-                    bounds=aligned.bounds,
+                    crs=crs_str if is_georeferenced and crs_str != "pixel_grid" else None,
+                    bounds=aligned.bounds if is_georeferenced else None,
                 ),
             ],
             masks=[
@@ -624,6 +675,8 @@ class ChangeDetectionSpecialist(BaseSpecialist):
             "changed_pixels": changed_pixels,
             "change_ratio_pct": change_ratio_pct,
             "total_clusters": len(bounding_boxes),
+            "spatial_alignment_score": alignment_score,
+            "is_georeferenced": is_georeferenced,
             "diagnostics": diag,
         }
 

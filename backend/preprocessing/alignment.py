@@ -125,20 +125,96 @@ class BiTemporalValidator:
         except Exception as e:
             return BiTemporalValidationResult(is_valid=False, error=f"Failed to read image T2: {e}", image1_meta=meta1)
 
-        # 3. CRS availability
+        # 3. CRS availability & Mode Selection
         crs1_str = meta1.get("crs")
         crs2_str = meta2.get("crs")
-        if not crs1_str or crs1_str in ["None", "null", ""]:
-            return BiTemporalValidationResult(
-                is_valid=False, error=f"Image T1 ({p1.name}) lacks a valid Coordinate Reference System (CRS).",
-                image1_meta=meta1, image2_meta=meta2
-            )
-        if not crs2_str or crs2_str in ["None", "null", ""]:
-            return BiTemporalValidationResult(
-                is_valid=False, error=f"Image T2 ({p2.name}) lacks a valid Coordinate Reference System (CRS).",
-                image1_meta=meta1, image2_meta=meta2
+        has_crs1 = crs1_str not in (None, "None", "null", "")
+        has_crs2 = crs2_str not in (None, "None", "null", "")
+
+        if not (has_crs1 and has_crs2):
+            # ---------------------------------------------------------------
+            # MODE B: NON-GEOREFERENCED PAIR (PNG, JPEG, local TIFF)
+            # ---------------------------------------------------------------
+            w1, h1 = meta1["width"], meta1["height"]
+            w2, h2 = meta2["width"], meta2["height"]
+            if w1 <= 0 or h1 <= 0 or w2 <= 0 or h2 <= 0:
+                return BiTemporalValidationResult(is_valid=False, error="Non-positive image dimensions detected.", image1_meta=meta1, image2_meta=meta2)
+            if w1 < 16 or h1 < 16 or w2 < 16 or h2 < 16:
+                return BiTemporalValidationResult(is_valid=False, error="Image dimensions are too small (<16px) for bi-temporal analysis.", image1_meta=meta1, image2_meta=meta2)
+
+            warnings.append(
+                "Images lack Coordinate Reference System (CRS); analysis operating in Mode B (pixel coordinate space). Metric ground area measurements are unverified."
             )
 
+            # Compute image-level correspondence using ImageAlignmentEngine
+            try:
+                from backend.preprocessing.bi_temporal_normalizer import ImageAlignmentEngine
+                rgb1, _ = GeoTIFFReader.read_normalized_rgb(p1)
+                rgb2, _ = GeoTIFFReader.read_normalized_rgb(p2)
+                g1 = np.mean(rgb1, axis=2).astype(np.float32)
+                g2 = np.mean(rgb2, axis=2).astype(np.float32)
+
+                if g1.shape != g2.shape:
+                    pil_g2 = Image.fromarray(g2)
+                    pil_g2_res = pil_g2.resize((g1.shape[1], g1.shape[0]), Image.Resampling.BILINEAR)
+                    g2 = np.array(pil_g2_res)
+                    warnings.append(f"Image dimension discrepancy: T1 ({w1}x{h1}) vs T2 ({w2}x{h2}). Resampling applied.")
+
+                align_score, (dx, dy) = ImageAlignmentEngine.compute_alignment(g1, g2)
+            except Exception as e:
+                logger.warning("Mode B alignment estimation failed: %s", e)
+                align_score, (dx, dy) = 0.50, (0.0, 0.0)
+
+            if align_score < 0.15:
+                return BiTemporalValidationResult(
+                    is_valid=False,
+                    error=f"Images have virtually zero visual correspondence or are completely unrelated (alignment score: {align_score:.2f}).",
+                    image1_meta=meta1,
+                    image2_meta=meta2,
+                )
+
+            overlap_info = SpatialOverlapInfo(
+                has_overlap=True,
+                intersection_bounds=None,
+                intersection_area=float(w1 * h1),
+                image1_area=float(w1 * h1),
+                image2_area=float(w2 * h2),
+                overlap_ratio_image1=align_score,
+                overlap_ratio_image2=align_score,
+                common_crs=None,
+                warnings=[f"Image visual alignment score: {align_score:.2f} (offset: {dx:.1f}, {dy:.1f} px)."],
+            )
+            warnings.extend(overlap_info.warnings)
+
+            # 10. Temporal ordering validation
+            t1_date, t2_date, temporal_verified, temp_warn = cls._verify_temporal_order(meta1, meta2, p1, p2)
+            if temp_warn:
+                warnings.append(temp_warn)
+
+            # 11. Modality compatibility
+            mod1 = ModalityDetector.identify(p1)
+            mod2 = ModalityDetector.identify(p2)
+            modality_compatible = (mod1.modality == mod2.modality)
+            if not modality_compatible:
+                warnings.append(
+                    f"Cross-modality pair detected: T1 is '{mod1.modality.value}', T2 is '{mod2.modality.value}'."
+                )
+
+            return BiTemporalValidationResult(
+                is_valid=True,
+                warnings=warnings,
+                image1_meta=meta1,
+                image2_meta=meta2,
+                spatial_overlap=overlap_info,
+                temporal_order_verified=temporal_verified,
+                time1_iso=t1_date.isoformat() if t1_date else None,
+                time2_iso=t2_date.isoformat() if t2_date else None,
+                modality_compatible=modality_compatible,
+            )
+
+        # -------------------------------------------------------------------
+        # MODE A: GEOREFERENCED PAIR (GeoTIFF)
+        # -------------------------------------------------------------------
         # 4. Affine transform
         tf1 = meta1.get("transform")
         tf2 = meta2.get("transform")
@@ -424,7 +500,36 @@ class BiTemporalAligner:
             raise ValueError(f"Cannot align incompatible pair: {val.error}")
 
         overlap = val.spatial_overlap
-        assert overlap is not None and overlap.intersection_bounds is not None
+        if overlap is None or overlap.intersection_bounds is None:
+            # Mode B: Non-georeferenced alignment via BiTemporalNormalizer
+            from backend.preprocessing.bi_temporal_normalizer import BiTemporalNormalizer
+            norm = BiTemporalNormalizer.normalize_pair(p1, p2)
+            metadata = {
+                "image1_name": p1.name,
+                "image2_name": p2.name,
+                "crs": "pixel_grid",
+                "cropped_dimensions": (norm.width, norm.height),
+                "band_count": norm.channels,
+                "alignment_score": norm.alignment_score,
+                "offset_xy": norm.offset_xy,
+                "is_georeferenced": False,
+                "temporal_order_verified": val.temporal_order_verified,
+                "time1_iso": val.time1_iso,
+                "time2_iso": val.time2_iso,
+                "warnings": norm.warnings,
+            }
+            return AlignmentResult(
+                image1_array=norm.image1_array,
+                image2_array=norm.image2_array,
+                crs="pixel_grid",
+                transform=Affine.identity(),
+                bounds=(0.0, 0.0, float(norm.width), float(norm.height)),
+                width=norm.width,
+                height=norm.height,
+                resampling_method="bilinear",
+                metadata=metadata,
+            )
+
         inter_bounds = overlap.intersection_bounds
         common_crs = overlap.common_crs or val.image1_meta["crs"]
 

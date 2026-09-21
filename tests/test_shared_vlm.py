@@ -60,7 +60,8 @@ def test_vqa_and_change_vqa_share_instance():
     os.environ["SATQUERY_SHARED_VLM_RUNTIME"] = "1"
 
     with patch("transformers.AutoProcessor.from_pretrained") as mock_proc, \
-         patch("transformers.Qwen2VLForConditionalGeneration.from_pretrained") as mock_model:
+         patch("transformers.Qwen2VLForConditionalGeneration.from_pretrained") as mock_model, \
+         patch("peft.PeftModel.from_pretrained", side_effect=lambda m, p: m):
         fake_model = MagicMock()
         fake_proc = MagicMock()
         mock_model.return_value = fake_model
@@ -123,7 +124,8 @@ def test_reversibility_toggle():
 
     try:
         with patch("transformers.AutoProcessor.from_pretrained") as mock_proc, \
-             patch("transformers.Qwen2VLForConditionalGeneration.from_pretrained") as mock_model:
+             patch("transformers.Qwen2VLForConditionalGeneration.from_pretrained") as mock_model, \
+             patch("peft.PeftModel.from_pretrained", side_effect=lambda m, p: m):
             mock_model.side_effect = [MagicMock(), MagicMock()]
             mock_proc.side_effect = [MagicMock(), MagicMock()]
 

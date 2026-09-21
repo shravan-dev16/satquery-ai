@@ -191,7 +191,7 @@ class MultiCategoryChangeDataset(Dataset):
         return t1_tensor, t2_tensor, mask_tensor
 
 
-def gather_dataset_samples() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+def gather_dataset_samples(include_oscd: bool = False) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     """Assembles multi-category samples with strict frozen test isolation."""
     train_samples = []
     val_samples = []
@@ -263,6 +263,24 @@ def gather_dataset_samples() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]
                 sample = {"t1": str(a_p), "t2": str(b_p), "label": str(lbl_p) if lbl_p.exists() else None, "category": stem}
                 train_samples.append(sample)
 
+    # 4. Optional OSCD Sentinel-2 Bi-Temporal Change Pairs
+    if include_oscd:
+        oscd_manifest = Path("datasets/external/oscd/oscd_samples.json")
+        if oscd_manifest.exists():
+            with open(oscd_manifest, "r", encoding="utf-8") as f:
+                oscd_data = json.load(f)
+            for item in oscd_data:
+                sample = {
+                    "t1": item["t1_path"],
+                    "t2": item["t2_path"],
+                    "label": item["label_path"],
+                    "category": "oscd_sentinel2",
+                }
+                if item.get("split") == "val":
+                    val_samples.append(sample)
+                else:
+                    train_samples.append(sample)
+
     logger.info("Gathered %d training samples and %d validation samples.", len(train_samples), len(val_samples))
     return train_samples, val_samples
 
@@ -273,9 +291,12 @@ def train_tinycd(
     lr: float = 1e-4,
     device: str = "cuda" if torch.cuda.is_available() else "cpu",
     output_path: Path = Path("models/checkpoints/tinycd_finetuned.pth"),
+    report_path: Optional[Path] = None,
+    include_oscd: bool = False,
 ) -> Dict[str, Any]:
+    output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    logger.info("Initializing TinyCD fine-tuning on %s...", device)
+    logger.info("Initializing TinyCD fine-tuning on %s (Output: %s)...", device, output_path)
 
     # Initialize model
     model = TinyCD(pretrained_backbone=False)
@@ -287,7 +308,7 @@ def train_tinycd(
 
     model = model.to(device)
 
-    train_samples, val_samples = gather_dataset_samples()
+    train_samples, val_samples = gather_dataset_samples(include_oscd=include_oscd)
     train_ds = MultiCategoryChangeDataset(train_samples, is_train=True)
     val_ds = MultiCategoryChangeDataset(val_samples, is_train=False)
 
@@ -312,31 +333,34 @@ def train_tinycd(
             mask = mask.to(device)
 
             optimizer.zero_grad()
-            out = model(t1, t2)
-            loss = criterion(out, mask)
+            pred = model(t1, t2)
+            loss = criterion(pred, mask)
             loss.backward()
             optimizer.step()
 
             train_loss += float(loss.item())
             n_batches += 1
 
-        avg_train_loss = train_loss / max(1, n_batches)
         scheduler.step()
+        avg_train_loss = train_loss / max(1, n_batches)
 
-        # Validation
-        val_loss = 0.0
-        val_iou = 0.0
-        n_val = 0
-        if val_loader is not None and len(val_loader) > 0:
+        # Validation phase
+        if val_loader:
             model.eval()
+            val_loss = 0.0
+            val_iou = 0.0
+            n_val = 0
+
             with torch.no_grad():
                 for t1, t2, mask in val_loader:
                     t1, t2, mask = t1.to(device), t2.to(device), mask.to(device)
-                    out = model(t1, t2)
-                    v_loss = criterion(out, mask)
-                    val_loss += float(v_loss.item())
 
-                    pred = (out > 0.5).float()
+                    pred = model(t1, t2)
+                    loss = criterion(pred, mask)
+                    val_loss += float(loss.item())
+
+                    # Calculate batch IoU
+                    pred = (pred > 0.5).float()
                     intersection = (pred * mask).sum()
                     union = pred.sum() + mask.sum() - intersection
                     iou = (intersection + 1e-6) / (union + 1e-6)
@@ -380,10 +404,10 @@ def train_tinycd(
         "saved_path": str(output_path),
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
-    report_file = REPO_ROOT / "docs" / "evaluation" / "tinycd_finetuning_report.json"
-    report_file.parent.mkdir(parents=True, exist_ok=True)
-    report_file.write_text(json.dumps(report, indent=2))
-    logger.info("Saved TinyCD training report to %s", report_file)
+    target_report = report_path or (REPO_ROOT / "docs" / "evaluation" / "tinycd_finetuning_report.json")
+    target_report.parent.mkdir(parents=True, exist_ok=True)
+    target_report.write_text(json.dumps(report, indent=2))
+    logger.info("Saved TinyCD training report to %s", target_report)
     return report
 
 
@@ -392,5 +416,17 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--lr", type=float, default=1e-4)
+    parser.add_argument("--output-path", type=str, default="models/checkpoints/tinycd_finetuned.pth")
+    parser.add_argument("--report-path", type=str, default=None)
+    parser.add_argument("--include-oscd", action="store_true")
     args = parser.parse_args()
-    train_tinycd(epochs=args.epochs, batch_size=args.batch_size, lr=args.lr)
+
+    rep_p = Path(args.report_path) if args.report_path else None
+    train_tinycd(
+        epochs=args.epochs,
+        batch_size=args.batch_size,
+        lr=args.lr,
+        output_path=Path(args.output_path),
+        report_path=rep_p,
+        include_oscd=args.include_oscd,
+    )

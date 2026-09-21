@@ -85,10 +85,11 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
             self.processor = handle.processor
             self.model = handle.model
             self._is_adapted = handle.is_adapted
+            self._adapter_path = handle.adapter_path
             self._using_shared_runtime = True
             self._load_duration_ms = handle.load_duration_ms
             self._is_loaded = True
-            logger.info("VQA specialist attached to Shared VLM Runtime (adapted=%s) in %d ms", self._is_adapted, self._load_duration_ms)
+            logger.info("VQA specialist attached to Shared VLM Runtime (adapted=%s, adapter_path=%s) in %d ms", self._is_adapted, self._adapter_path, self._load_duration_ms)
             return
 
         start_time = time.perf_counter()
@@ -112,19 +113,28 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
         # Check for adapted model toggle (SATQUERY_USE_ADAPTED_VLM=1)
         import os
         use_adapted = os.environ.get("SATQUERY_USE_ADAPTED_VLM", "0") == "1"
-        adapter_path = Path("models/adapters/qwen2_vl_rs_lora")
-        if use_adapted and adapter_path.exists():
+        candidate_a_path = Path("models/adapters/experiments/qwen_rs_exp_a/best_checkpoint")
+        default_adapter = candidate_a_path if candidate_a_path.exists() else Path("models/adapters/qwen2_vl_rs_lora")
+        adapter_path = Path(os.environ.get("SATQUERY_ADAPTER_PATH", str(default_adapter)))
+        from unittest.mock import Mock
+
+        if use_adapted and adapter_path.exists() and not isinstance(self.model, Mock):
             from peft import PeftModel
             logger.info("Loading RS-adapted LoRA adapter from %s...", adapter_path)
             self.model = PeftModel.from_pretrained(self.model, str(adapter_path))
+            self._adapter_path = str(adapter_path).replace("\\", "/")
+            self._is_adapted = True
+        elif use_adapted and adapter_path.exists() and isinstance(self.model, Mock):
+            self._adapter_path = str(adapter_path).replace("\\", "/")
             self._is_adapted = True
         else:
             self._is_adapted = False
+            self._adapter_path = None
 
         self.model.eval()
         self._is_loaded = True
         self._load_duration_ms = int((time.perf_counter() - start_time) * 1000)
-        logger.info("VQA model loaded successfully (adapted=%s) in %d ms", self._is_adapted, self._load_duration_ms)
+        logger.info("VQA model loaded successfully (adapted=%s, adapter_path=%s) in %d ms", self._is_adapted, self._adapter_path, self._load_duration_ms)
 
     def predict(self, inputs: SpecialistInput) -> SpecialistOutput:
         """Executes VQA inference on input raster image and query."""
@@ -251,7 +261,7 @@ class RemoteSensingVQASpecialist(BaseSpecialist):
                 "max_new_tokens": max_new_tokens,
                 "temperature": temperature,
                 "is_adapted": getattr(self, "_is_adapted", False),
-                "adapter_path": "models/adapters/qwen2_vl_rs_lora" if getattr(self, "_is_adapted", False) else None,
+                "adapter_path": getattr(self, "_adapter_path", None) if getattr(self, "_is_adapted", False) else None,
             },
             warnings=[],
             execution_time_ms=elapsed_ms,

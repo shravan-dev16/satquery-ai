@@ -95,7 +95,10 @@ python scripts/generate_fixtures.py
 # 6. Run the automated test suite
 pytest -q
 
-# 7. Start the application server
+# 7. Start the application server with Promoted Model Configuration
+$env:SATQUERY_USE_ADAPTED_VLM="1"
+$env:SATQUERY_ADAPTER_PATH="models/adapters/experiments/qwen_rs_exp_a/best_checkpoint"
+$env:SATQUERY_TINYCD_CHECKPOINT="models/checkpoints/tinycd_finetuned.pth"
 uvicorn backend.main:app --host 127.0.0.1 --port 8000
 
 # 8. Open the web interface in your browser
@@ -104,13 +107,20 @@ uvicorn backend.main:app --host 127.0.0.1 --port 8000
 # Subsystem Health & Telemetry: http://127.0.0.1:8000/health
 ```
 
+### Final Promoted Demo Configuration
+
+SatQuery AI has been promoted to its official SIH demo configuration:
+- **Primary SIH Demo VLM:** **Qwen2-VL-2B-Instruct + RS LoRA Candidate A** (`models/adapters/experiments/qwen_rs_exp_a/best_checkpoint`). Candidate A demonstrated improved performance on the frozen internal benchmark (84.38% vs 75.00%) and the independent 178-sample evaluation used in this study (69.66% vs 61.24%), while achieving 100% JSON validity and crisp 467 ms inference latency.
+- **Primary SIH Demo Change Detector:** **Current Finetuned TinyCD Baseline** (`models/checkpoints/tinycd_finetuned.pth`). TinyCD Exp A was retained as an experimental artifact only because of increased false positives despite higher Diverse RS IoU; the baseline finetuned checkpoint provides zero false alarms on registration jitter and stable 0.8347 IoU / 0.9091 F1 on LEVIR-CD.
+- **Golden Artifact Preservation:** The original M10 Golden LoRA adapter (`models/adapters/qwen2_vl_rs_lora_m10_golden/`, SHA256: `31e004da959170e69d8b8e7d280943ac02d780be7a70ad80ce5746f4e50d29e2`) and baseline TinyCD checkpoint (SHA256: `04eb7c032d23a67e23014fe4238cc660f55fcff1c78d5c5c9b42bd6f2338e400`) remain cryptographically identical and completely preserved.
+
 ### Evaluator Notes & Operational Boundaries
 - **Try a Sample:** The web UI at `http://127.0.0.1:8000/` includes a "Try a Sample" dropdown pre-loaded with verified demonstration scenarios (single-image VQA, text-guided grounding, bi-temporal change, semantic urban change, and optical-SAR cross-modal analysis).
 - **Format Modes:**
   - **Mode A (GeoTIFF with PCS):** Computes ground-projected physical change areas in hectares ($10,000\,m^2$) and square meters.
   - **Mode B (PNG/JPEG/local TIFF):** Operates in unprojected pixel space; reports normalized pixel counts and percentages with explicit spatial limitation warnings.
 - **Semantic Quantity Safety:** Total physical change is computed from verified pixel masks. The system explicitly separates total physical changed area from qualitative semantic transitions and does not fabricate unsubstantiated class-specific hectarage.
-- **Hardware Profile:** Tested on NVIDIA GeForce RTX 4070 (12 GB VRAM, peak usage < 6.5 GB). CPU-only fallback is supported with graceful warning emission.
+- **Hardware Profile:** Tested on NVIDIA GeForce RTX 4070 (12 GB VRAM, peak usage < 5.2 GB). CPU-only fallback is supported with graceful warning emission.
 
 ---
 

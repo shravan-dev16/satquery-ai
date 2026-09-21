@@ -1,0 +1,68 @@
+{
+  "Baseline_Finetuned": {
+    "levir_cd": {
+      "checkpoint": "tinycd_finetuned.pth",
+      "benchmark": "levir_cd_subset.json",
+      "total_samples": 20,
+      "mean_iou": 0.028,
+      "mean_f1": 0.0505,
+      "mean_precision": 0.8373,
+      "mean_recall": 0.0306,
+      "mean_latency_ms": 33.49
+    },
+    "diverse_rs": {
+      "checkpoint": "tinycd_finetuned.pth",
+      "benchmark": "diverse_rs_manifest.json",
+      "total_samples": 12,
+      "mean_iou": 0.4202,
+      "mean_f1": 0.4235,
+      "mean_precision": 0.9149,
+      "mean_recall": 0.4202,
+      "mean_latency_ms": 8.52
+    }
+  },
+  "TinyCD_Exp_A": {
+    "levir_cd": {
+      "checkpoint": "tinycd.pth",
+      "benchmark": "levir_cd_subset.json",
+      "total_samples": 20,
+      "mean_iou": 0.0853,
+      "mean_f1": 0.1389,
+      "mean_precision": 0.73,
+      "mean_recall": 0.1176,
+      "mean_latency_ms": 18.26
+    },
+    "diverse_rs": {
+      "checkpoint": "tinycd.pth",
+      "benchmark": "diverse_rs_manifest.json",
+      "total_samples": 12,
+      "mean_iou": 0.6036,
+      "mean_f1": 0.6498,
+      "mean_precision": 0.837,
+      "mean_recall": 0.6426,
+      "mean_latency_ms": 18.1
+    }
+  },
+  "TinyCD_Exp_B": {
+    "levir_cd": {
+      "checkpoint": "tinycd.pth",
+      "benchmark": "levir_cd_subset.json",
+      "total_samples": 20,
+      "mean_iou": 0.0405,
+      "mean_f1": 0.0721,
+      "mean_precision": 0.7924,
+      "mean_recall": 0.0445,
+      "mean_latency_ms": 18.92
+    },
+    "diverse_rs": {
+      "checkpoint": "tinycd.pth",
+      "benchmark": "diverse_rs_manifest.json",
+      "total_samples": 12,
+      "mean_iou": 0.4297,
+      "mean_f1": 0.4396,
+      "mean_precision": 1.0,
+      "mean_recall": 0.4297,
+      "mean_latency_ms": 17.87
+    }
+  }
+}

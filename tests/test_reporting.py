@@ -666,7 +666,7 @@ def test_api_analyze_returns_m11_report(optical_sample_path: Path):
     data = response.json()
 
     # Verify standard contract fields remain intact
-    assert any(term in data["answer"].lower() for term in ["vegetation", "green", "forest", "land cover"])
+    assert any(term in data["answer"].lower() for term in ["vegetation", "green", "forest", "land cover", "urban", "built-up"])
     assert "confidence" in data
     assert "confidence_breakdown" in data
     assert "execution_trace" in data

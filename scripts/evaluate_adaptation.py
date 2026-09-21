@@ -35,10 +35,14 @@ def evaluate(
     output_report_path: str = "docs/evaluation/m10_baseline_full.json",
     model_mode_label: str = "Unadapted Zero-Shot Baseline",
     use_adapted_flag: bool = False,
+    adapter_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     print("=" * 75)
     print(f"SatQuery AI M10 Full Evaluation: {model_mode_label}")
     print(f"Flag SATQUERY_USE_ADAPTED_VLM: {'1' if use_adapted_flag else '0'}")
+    if adapter_path:
+        print(f"Adapter Path: {adapter_path}")
+        os.environ["SATQUERY_ADAPTER_PATH"] = adapter_path
     print("=" * 75)
 
     os.environ["SATQUERY_USE_ADAPTED_VLM"] = "1" if use_adapted_flag else "0"
@@ -340,11 +344,26 @@ def evaluate(
 
 
 if __name__ == "__main__":
-    is_adapted = "--adapted" in sys.argv or os.environ.get("SATQUERY_USE_ADAPTED_VLM", "0") == "1"
-    label = "Adapted RS-LoRA Candidate" if is_adapted else "Unadapted Zero-Shot Baseline"
-    out_file = (
+    import argparse
+    parser = argparse.ArgumentParser(description="Evaluate Remote-Sensing VLM Adaptation")
+    parser.add_argument("--adapted", action="store_true", help="Enable adapted RS-LoRA VLM")
+    parser.add_argument("--adapter_path", type=str, default=None, help="Path to LoRA adapter directory")
+    parser.add_argument("--test_json", type=str, default="datasets/adaptation/test.json", help="Path to test JSON")
+    parser.add_argument("--output_report", type=str, default=None, help="Path to output JSON report")
+    parser.add_argument("--label", type=str, default=None, help="Model label for reporting")
+    args = parser.parse_args()
+
+    is_adapted = args.adapted or bool(args.adapter_path) or os.environ.get("SATQUERY_USE_ADAPTED_VLM", "0") == "1"
+    label = args.label or ("Adapted RS-LoRA Candidate" if is_adapted else "Unadapted Zero-Shot Baseline")
+    out_file = args.output_report or (
         "docs/evaluation/m10_adapted_full.json"
         if is_adapted
         else "docs/evaluation/m10_baseline_full.json"
     )
-    evaluate(output_report_path=out_file, model_mode_label=label, use_adapted_flag=is_adapted)
+    evaluate(
+        test_json_path=args.test_json,
+        output_report_path=out_file,
+        model_mode_label=label,
+        use_adapted_flag=is_adapted,
+        adapter_path=args.adapter_path,
+    )

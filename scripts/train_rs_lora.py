@@ -351,6 +351,9 @@ def train_full_rs_lora(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Full Resumable LoRA Training for M10")
+    parser.add_argument("--train_json", type=str, default="datasets/adaptation/train.json")
+    parser.add_argument("--val_json", type=str, default="datasets/adaptation/val.json")
+    parser.add_argument("--output_dir", type=str, default="models/adapters/qwen2_vl_rs_lora")
     parser.add_argument("--epochs", type=int, default=2)
     parser.add_argument("--lr", type=float, default=1.2e-4)
     parser.add_argument("--grad_accum", type=int, default=4)
@@ -362,6 +365,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     train_full_rs_lora(
+        train_json_path=args.train_json,
+        val_json_path=args.val_json,
+        output_dir=args.output_dir,
         epochs=args.epochs,
         learning_rate=args.lr,
         grad_accum_steps=args.grad_accum,

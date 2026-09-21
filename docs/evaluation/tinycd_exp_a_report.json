@@ -1,0 +1,28 @@
+{
+  "model": "TinyCD",
+  "parameters": 316301,
+  "epochs": 3,
+  "best_val_loss": 0.7506,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.537,
+      "val_loss": 0.7725,
+      "val_iou": 0.0572
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.412,
+      "val_loss": 0.7506,
+      "val_iou": 0.0526
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.3304,
+      "val_loss": 0.7515,
+      "val_iou": 0.056
+    }
+  ],
+  "saved_path": "models\\checkpoints\\experiments\\tinycd_exp_a\\tinycd.pth",
+  "timestamp": "2026-09-20T13:59:44Z"
+}

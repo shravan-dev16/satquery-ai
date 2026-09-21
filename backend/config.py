@@ -4,6 +4,7 @@ Defines environment variables, runtime hardware limits, model registry defaults,
 and storage paths.
 """
 
+import os
 from pathlib import Path
 from pydantic import BaseModel, Field
 
@@ -13,6 +14,48 @@ DATASETS_DIR = BASE_DIR / "datasets"
 MODELS_DIR = BASE_DIR / "models"
 FIXTURES_DIR = BASE_DIR / "tests" / "fixtures"
 REPORTS_DIR = BASE_DIR / "reports" / "generated"
+
+# Automatically load .env if present (without external dependencies)
+_env_file = BASE_DIR / ".env"
+if _env_file.exists():
+    with open(_env_file, "r", encoding="utf-8") as _f:
+        for _line in _f:
+            _line = _line.strip()
+            if _line and not _line.startswith("#") and "=" in _line:
+                _k, _v = _line.split("=", 1)
+                _k = _k.strip()
+                _v = _v.strip().strip("'\"")
+                if _k and _k not in os.environ:
+                    os.environ[_k] = _v
+
+
+class ModelConfig(BaseModel):
+    """Configuration for specialist models and adapter checkpoints."""
+
+    use_adapted_vlm: bool = Field(
+        default_factory=lambda: os.environ.get("SATQUERY_USE_ADAPTED_VLM", "1") == "1",
+        description="Enable RS-adapted LoRA VLM adapter",
+    )
+    adapter_path: str = Field(
+        default_factory=lambda: os.environ.get(
+            "SATQUERY_ADAPTER_PATH",
+            "models/adapters/experiments/qwen_rs_exp_a/best_checkpoint"
+            if (BASE_DIR / "models/adapters/experiments/qwen_rs_exp_a/best_checkpoint").exists()
+            else "models/adapters/qwen2_vl_rs_lora",
+        ),
+        description="Filesystem path to RS VLM LoRA checkpoint",
+    )
+    tinycd_checkpoint: str = Field(
+        default_factory=lambda: os.environ.get(
+            "SATQUERY_TINYCD_CHECKPOINT",
+            "models/checkpoints/tinycd_finetuned.pth",
+        ),
+        description="Filesystem path to primary TinyCD checkpoint",
+    )
+    shared_vlm_runtime: bool = Field(
+        default_factory=lambda: os.environ.get("SATQUERY_SHARED_VLM_RUNTIME", "1") != "0",
+        description="Deduplicate VLM memory across RS_VQA and CHANGE_VQA",
+    )
 
 
 class HardwareConfig(BaseModel):
@@ -59,8 +102,10 @@ class SystemSettings(BaseModel):
     api_v1_prefix: str = "/api/v1"
     debug: bool = False
     hardware: HardwareConfig = Field(default_factory=HardwareConfig)
+    models: ModelConfig = Field(default_factory=ModelConfig)
     validation: ValidationThresholds = Field(default_factory=ValidationThresholds)
     confidence: ConfidenceWeights = Field(default_factory=ConfidenceWeights)
 
 
 settings = SystemSettings()
+

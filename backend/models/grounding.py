@@ -257,8 +257,8 @@ class GroundingDinoSpecialist(BaseSpecialist):
         self,
         model_id: Optional[str] = None,
         device: Optional[str] = None,
-        box_threshold: float = 0.25,
-        text_threshold: float = 0.25,
+        box_threshold: float = 0.20,
+        text_threshold: float = 0.20,
     ) -> None:
         chosen_device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         super().__init__(device=chosen_device)

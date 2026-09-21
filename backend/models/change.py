@@ -11,6 +11,7 @@ Milestone M3:
 from dataclasses import dataclass
 import gc
 import logging
+import os
 from pathlib import Path
 import time
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -336,6 +337,8 @@ class ChangeDetectionSpecialist(BaseSpecialist):
         self.candidate = candidate
         if checkpoint_path is not None:
             self.checkpoint_path = Path(checkpoint_path)
+        elif os.environ.get("SATQUERY_TINYCD_CHECKPOINT") and Path(os.environ.get("SATQUERY_TINYCD_CHECKPOINT")).exists():
+            self.checkpoint_path = Path(os.environ.get("SATQUERY_TINYCD_CHECKPOINT"))
         elif Path("models/checkpoints/tinycd_finetuned.pth").exists():
             self.checkpoint_path = Path("models/checkpoints/tinycd_finetuned.pth")
         else:
@@ -666,6 +669,7 @@ class ChangeDetectionSpecialist(BaseSpecialist):
 
         parameters_used = {
             "candidate_model": "cva" if candidate_req == "cva" else self.candidate,
+            "checkpoint_path": str(self.checkpoint_path).replace("\\", "/") if self.checkpoint_path else None,
             "image1": p1.name,
             "image2": p2.name,
             "mask_path": f"/api/v1/static/previews/{mask_filename}",

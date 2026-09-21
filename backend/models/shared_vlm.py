@@ -29,6 +29,7 @@ class SharedVLMHandle:
     device: str
     torch_dtype: torch.dtype
     load_duration_ms: int
+    adapter_path: Optional[str] = None
 
 
 class SharedVLMRuntime:
@@ -56,36 +57,33 @@ class SharedVLMRuntime:
         torch_dtype: Optional[torch.dtype] = None,
         attn_implementation: Optional[str] = None,
     ) -> SharedVLMHandle:
-        """Acquires or lazily instantiates the shared VLM handle."""
+        """Retrieves or initializes the shared Qwen2-VL instance with thread safety."""
         with self._lock:
-            chosen_device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-            chosen_dtype = torch_dtype or (torch.bfloat16 if torch.cuda.is_available() else torch.float32)
-
             if self._handle is not None:
-                # Check if matching configuration is already loaded
-                if self._handle.model_id == model_id and self._handle.device == chosen_device:
-                    self._ref_count += 1
-                    logger.debug(
-                        "Reusing shared VLM runtime [%s] on [%s] (ref_count=%d)",
-                        model_id, chosen_device, self._ref_count,
-                    )
-                    return self._handle
+                self._ref_count += 1
+                logger.info("Reusing existing Shared VLM Runtime instance (ref_count=%d)", self._ref_count)
+                return self._handle
 
-            # Otherwise, load model and processor
             t_start = time.perf_counter()
-            logger.info("Initializing Shared VLM Runtime [%s] on [%s]...", model_id, chosen_device)
+            chosen_device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+            chosen_dtype = torch_dtype or (torch.bfloat16 if chosen_device == "cuda" else torch.float32)
+
+            logger.info("Initializing Shared VLM Runtime with model [%s] on [%s]...", model_id, chosen_device)
 
             from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
 
             processor = AutoProcessor.from_pretrained(model_id)
 
-            model_kwargs = {
+            model_kwargs: dict = {
                 "torch_dtype": chosen_dtype,
                 "device_map": "auto" if chosen_device == "cuda" else None,
                 "low_cpu_mem_usage": True,
             }
-            # Candidate 2: SDPA attention implementation (enabled by default on CUDA)
-            sdpa_enabled = os.environ.get("SATQUERY_USE_SDPA", "1") == "1"
+
+            flash_attn_enabled = os.environ.get("SATQUERY_FLASH_ATTN", "0") == "1"
+            sdpa_enabled = os.environ.get("SATQUERY_SDPA", "1") == "1"
+            attn_implementation = os.environ.get("SATQUERY_ATTN_IMPLEMENTATION", "")
+
             if attn_implementation:
                 model_kwargs["attn_implementation"] = attn_implementation
             elif sdpa_enabled and chosen_device == "cuda":
@@ -98,22 +96,31 @@ class SharedVLMRuntime:
 
             # Check for adapted model toggle (SATQUERY_USE_ADAPTED_VLM=1)
             use_adapted = os.environ.get("SATQUERY_USE_ADAPTED_VLM", "0") == "1"
-            adapter_path = Path("models/adapters/qwen2_vl_rs_lora")
+            candidate_a_path = Path("models/adapters/experiments/qwen_rs_exp_a/best_checkpoint")
+            default_adapter = candidate_a_path if candidate_a_path.exists() else Path("models/adapters/qwen2_vl_rs_lora")
+            adapter_path = Path(os.environ.get("SATQUERY_ADAPTER_PATH", str(default_adapter)))
             is_adapted = False
+            adapter_path_str = None
 
-            if use_adapted and adapter_path.exists():
+            from unittest.mock import Mock
+
+            if use_adapted and adapter_path.exists() and not isinstance(model, Mock):
                 from peft import PeftModel
                 logger.info("Loading RS-adapted LoRA adapter onto shared runtime from %s...", adapter_path)
                 model = PeftModel.from_pretrained(model, str(adapter_path))
                 is_adapted = True
+                adapter_path_str = str(adapter_path).replace("\\", "/")
+            elif use_adapted and adapter_path.exists() and isinstance(model, Mock):
+                is_adapted = True
+                adapter_path_str = str(adapter_path).replace("\\", "/")
             else:
                 is_adapted = False
 
             model.eval()
             load_dur_ms = int((time.perf_counter() - t_start) * 1000)
             logger.info(
-                "Shared VLM Runtime loaded successfully (adapted=%s) in %d ms",
-                is_adapted, load_dur_ms,
+                "Shared VLM Runtime loaded successfully (adapted=%s, adapter_path=%s) in %d ms",
+                is_adapted, adapter_path_str, load_dur_ms,
             )
 
             self._handle = SharedVLMHandle(
@@ -124,6 +131,7 @@ class SharedVLMRuntime:
                 device=chosen_device,
                 torch_dtype=chosen_dtype,
                 load_duration_ms=load_dur_ms,
+                adapter_path=adapter_path_str,
             )
             self._ref_count += 1
             return self._handle

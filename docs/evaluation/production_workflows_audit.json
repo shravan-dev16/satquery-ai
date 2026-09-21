@@ -8,9 +8,9 @@
     ],
     "alignment_result": "N/A (Single image)",
     "m8_status": "N/A",
-    "m9_confidence": 0.835,
-    "answer_excerpt": "The image provided is a satellite image of an area that appears to be a coastal region with some land cover and water bo...",
-    "warnings_count": 3,
+    "m9_confidence": 0.99,
+    "answer_excerpt": "yes",
+    "warnings_count": 2,
     "status": "PASS"
   },
   {
@@ -51,9 +51,9 @@
     ],
     "alignment_result": "N/A (Single image)",
     "m8_status": "N/A",
-    "m9_confidence": 0.5465,
-    "answer_excerpt": "Total detected physical surface change is 3,101 pixels across 10 spatial clusters. Semantic interpretation indicates The...",
-    "warnings_count": 4,
+    "m9_confidence": 0.8241,
+    "answer_excerpt": "Total detected physical surface change is 3,101 pixels across 10 spatial clusters. Semantic interpretation indicates New...",
+    "warnings_count": 3,
     "status": "PASS"
   },
   {
@@ -66,9 +66,9 @@
     ],
     "alignment_result": "N/A (Single image)",
     "m8_status": "N/A",
-    "m9_confidence": 0.5229,
+    "m9_confidence": 0.7964,
     "answer_excerpt": "Total detected physical surface change is 3,101 pixels across 10 spatial clusters. Semantic interpretation indicates No ...",
-    "warnings_count": 4,
+    "warnings_count": 3,
     "status": "PASS"
   },
   {

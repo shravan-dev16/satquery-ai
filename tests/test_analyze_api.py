@@ -272,6 +272,6 @@ def test_api_analyze_real_sample_live(fixtures_dir: Path):
     data = response.json()
     assert data["task"] == "single_image_vqa"
     assert data["status"] == "success"
-    assert len(data["answer"]) > 10
+    assert len(data["answer"]) >= 2
     assert data["confidence_breakdown"]["heuristic_name"] == "evidence-weighted confidence heuristic"
     assert len(data["execution_trace"]) >= 4

@@ -1,0 +1,143 @@
+{
+  "Baseline_Finetuned": {
+    "checkpoint_path": "models\\checkpoints\\tinycd_finetuned.pth",
+    "levir_cd": {
+      "benchmark": "LEVIR-CD",
+      "total_pairs": 20,
+      "mean_iou": 0.028,
+      "mean_f1": 0.0505,
+      "mean_precision": 0.8372,
+      "mean_recall": 0.0306,
+      "mean_false_positive_pixels": 114.8,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 61.33
+    },
+    "diverse_rs": {
+      "benchmark": "Diverse_RS",
+      "total_pairs": 12,
+      "mean_iou": 0.4202,
+      "mean_f1": 0.4235,
+      "mean_precision": 0.9149,
+      "mean_recall": 0.4202,
+      "mean_false_positive_pixels": 1.4,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 68.91
+    },
+    "oscd_change": {
+      "benchmark": "OSCD_Change",
+      "total_pairs": 20,
+      "mean_iou": 0.0,
+      "mean_f1": 0.0,
+      "mean_precision": 0.95,
+      "mean_recall": 0.0,
+      "mean_false_positive_pixels": 7.8,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 78.88
+    },
+    "zero_change_negatives": {
+      "benchmark": "OSCD_Zero_Change_Negatives",
+      "total_pairs": 3,
+      "mean_iou": 0.3333,
+      "mean_f1": 0.3333,
+      "mean_precision": 1.0,
+      "mean_recall": 0.3333,
+      "mean_false_positive_pixels": 0.0,
+      "zero_change_accuracy_pct": 33.33,
+      "mean_latency_ms": 84.2
+    }
+  },
+  "TinyCD_Exp_A": {
+    "checkpoint_path": "models\\checkpoints\\experiments\\tinycd_exp_a\\tinycd.pth",
+    "levir_cd": {
+      "benchmark": "LEVIR-CD",
+      "total_pairs": 20,
+      "mean_iou": 0.0853,
+      "mean_f1": 0.1389,
+      "mean_precision": 0.7301,
+      "mean_recall": 0.1176,
+      "mean_false_positive_pixels": 620.3,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 66.66
+    },
+    "diverse_rs": {
+      "benchmark": "Diverse_RS",
+      "total_pairs": 12,
+      "mean_iou": 0.6036,
+      "mean_f1": 0.6498,
+      "mean_precision": 0.837,
+      "mean_recall": 0.6426,
+      "mean_false_positive_pixels": 2380.7,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 74.62
+    },
+    "oscd_change": {
+      "benchmark": "OSCD_Change",
+      "total_pairs": 20,
+      "mean_iou": 0.0039,
+      "mean_f1": 0.0073,
+      "mean_precision": 1.0,
+      "mean_recall": 0.0039,
+      "mean_false_positive_pixels": 0.0,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 82.21
+    },
+    "zero_change_negatives": {
+      "benchmark": "OSCD_Zero_Change_Negatives",
+      "total_pairs": 3,
+      "mean_iou": 0.3333,
+      "mean_f1": 0.3333,
+      "mean_precision": 1.0,
+      "mean_recall": 0.3333,
+      "mean_false_positive_pixels": 0.0,
+      "zero_change_accuracy_pct": 33.33,
+      "mean_latency_ms": 84.0
+    }
+  },
+  "TinyCD_Exp_B": {
+    "checkpoint_path": "models\\checkpoints\\experiments\\tinycd_exp_b\\tinycd.pth",
+    "levir_cd": {
+      "benchmark": "LEVIR-CD",
+      "total_pairs": 20,
+      "mean_iou": 0.0406,
+      "mean_f1": 0.0722,
+      "mean_precision": 0.7908,
+      "mean_recall": 0.0446,
+      "mean_false_positive_pixels": 160.0,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 64.98
+    },
+    "diverse_rs": {
+      "benchmark": "Diverse_RS",
+      "total_pairs": 12,
+      "mean_iou": 0.4296,
+      "mean_f1": 0.4395,
+      "mean_precision": 1.0,
+      "mean_recall": 0.4296,
+      "mean_false_positive_pixels": 0.0,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 64.17
+    },
+    "oscd_change": {
+      "benchmark": "OSCD_Change",
+      "total_pairs": 20,
+      "mean_iou": 0.0,
+      "mean_f1": 0.0,
+      "mean_precision": 0.95,
+      "mean_recall": 0.0,
+      "mean_false_positive_pixels": 5.8,
+      "zero_change_accuracy_pct": null,
+      "mean_latency_ms": 79.28
+    },
+    "zero_change_negatives": {
+      "benchmark": "OSCD_Zero_Change_Negatives",
+      "total_pairs": 3,
+      "mean_iou": 0.3333,
+      "mean_f1": 0.3333,
+      "mean_precision": 1.0,
+      "mean_recall": 0.3333,
+      "mean_false_positive_pixels": 0.0,
+      "zero_change_accuracy_pct": 33.33,
+      "mean_latency_ms": 71.12
+    }
+  }
+}

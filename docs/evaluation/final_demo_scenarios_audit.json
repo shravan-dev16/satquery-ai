@@ -1,0 +1,133 @@
+{
+  "timestamp": "2026-09-21T09:20:35",
+  "status": "ALL_PASSED",
+  "telemetry": {
+    "vlm_active_path": "models/adapters/experiments/qwen_rs_exp_a/best_checkpoint",
+    "warm_vqa_latency_ms": 467,
+    "vqa_confidence": 0.99,
+    "grounding_boxes_count": 2,
+    "grounding_confidence": 0.6156,
+    "tinycd_active_path": "models/checkpoints/tinycd_finetuned.pth",
+    "change_detection_latency_ms": 629,
+    "change_confidence": 0.99,
+    "change_vqa_latency_ms": 19028,
+    "semantic_change_confidence": 0.7964,
+    "semantic_quantity_confidence": 0.7964,
+    "optical_sar_confidence": 0.6347,
+    "peak_vram_mb": 5153,
+    "vlm_model_load_success": true
+  },
+  "scenarios": [
+    {
+      "scenario_id": "A",
+      "name": "VQA",
+      "query": "What is visible in this scene?",
+      "task": "single_image_vqa",
+      "models": [
+        "RS_VQA"
+      ],
+      "confidence": 0.99,
+      "latency_ms": 15409,
+      "answer_summary": "Analysis completed.",
+      "verifications": {
+        "candidate_a_loaded": true,
+        "answer_generated": true,
+        "confidence_shown": true,
+        "trace_shown": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "scenario_id": "B",
+      "name": "GROUNDING",
+      "query": "Locate the water body.",
+      "task": "single_image_grounding",
+      "models": [
+        "RS_GROUND"
+      ],
+      "confidence": 0.6156,
+      "latency_ms": 6267,
+      "answer_summary": "Detected 2 grounded region(s) for 'Locate the water body.' (normalized: 'water body.').",
+      "verifications": {
+        "specialist_invoked": true,
+        "bounding_box_present": true,
+        "pixel_coords_present": true,
+        "geo_coords_conforming": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "scenario_id": "C",
+      "name": "CHANGE",
+      "query": "What changed between these two dates?",
+      "task": "bitemporal_change_detection",
+      "models": [
+        "CHANGE_DETECT"
+      ],
+      "confidence": 0.99,
+      "latency_ms": 629,
+      "answer_summary": "Bi-temporal change detected across 6,400 pixels (9.77% of AOI) (640,000.0 m^2 / 64.00 ha), clustered in 1 major spatial ...",
+      "verifications": {
+        "specialist_invoked": true,
+        "change_mask_present": true,
+        "change_regions_present": true,
+        "metric_area_present": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "scenario_id": "D",
+      "name": "SEMANTIC_CHANGE",
+      "query": "Has the built-up area increased, decreased, or remained unchanged?",
+      "task": "bitemporal_change_vqa",
+      "models": [
+        "CHANGE_DETECT",
+        "CHANGE_VQA"
+      ],
+      "confidence": 0.7964,
+      "latency_ms": 19028,
+      "answer_summary": "Total detected physical surface change is 3,101 pixels across 10 spatial clusters. Semantic interpretation indicates The...",
+      "verifications": {
+        "sequence_invoked": true,
+        "semantic_interpretation": true,
+        "physical_change_separate": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "scenario_id": "E",
+      "name": "SEMANTIC_QUANTITY",
+      "query": "By how many hectares did the built-up area increase?",
+      "task": "bitemporal_change_vqa",
+      "models": [
+        "CHANGE_DETECT",
+        "CHANGE_VQA"
+      ],
+      "confidence": 0.7964,
+      "latency_ms": 14472,
+      "answer_summary": "Total detected physical surface change is 3,101 pixels across 10 spatial clusters. Semantic interpretation indicates The...",
+      "verifications": {
+        "anti_hallucination_guarded": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "scenario_id": "F",
+      "name": "OPTICAL_SAR",
+      "query": "Analyze optical and SAR features together.",
+      "task": "optical_sar_analysis",
+      "models": [
+        "OPTICAL_SAR_FUSION"
+      ],
+      "confidence": 0.6347,
+      "latency_ms": 173,
+      "answer_summary": "Comprehensive Optical-SAR multi-sensor land-cover analysis completed. Predominant identified classes: bare ground or soi...",
+      "verifications": {
+        "specialist_invoked": true,
+        "complementarity_evidence": true,
+        "confidence_shown": true
+      },
+      "verdict": "PASS"
+    }
+  ]
+}

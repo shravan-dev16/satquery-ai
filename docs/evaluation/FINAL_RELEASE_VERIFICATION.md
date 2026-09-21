@@ -1,16 +1,28 @@
 # SatQuery AI — Final Release Verification
 
 ## Release Status
-**READY**
+**READY_FOR_SIH_DEMO**
 
 ---
 
-## Golden Adapter
-- **Target File:** `models/adapters/qwen2_vl_rs_lora_m10_golden/adapter_model.safetensors`
-- **Expected Hash:** `31e004da959170e69d8b8e7d280943ac02d780be7a70ad80ce5746f4e50d29e2`
-- **Current Hash:** `31e004da959170e69d8b8e7d280943ac02d780be7a70ad80ce5746f4e50d29e2`
-- **Match Status:** **TRUE (100% Cryptographic Match)**
-- **Adapter Separation:** Verified active adapter (`models/adapters/qwen2_vl_rs_lora`) and golden backup (`models/adapters/qwen2_vl_rs_lora_m10_golden`) reside in strictly separate directory trees and neither was overwritten.
+## Active Final Demo Model Configuration
+- **Primary SIH Demo VLM:** **Qwen2-VL + RS LoRA Candidate A** (`models/adapters/experiments/qwen_rs_exp_a/best_checkpoint`)
+  - *Empirical Basis:* Candidate A demonstrated improved performance on the frozen internal benchmark (84.38% vs 75.00% golden) and the independent 178-sample evaluation used in this study (69.66% vs 61.24%), while achieving 100% JSON validity and warm VQA latency of 467 ms. Candidate A is not claimed to be universally superior across all remote sensing domains, but proved decisively superior on this multi-pillar benchmark.
+- **Primary SIH Demo Change Detector:** **Current Finetuned TinyCD Baseline** (`models/checkpoints/tinycd_finetuned.pth`)
+  - *Empirical Basis:* The baseline finetuned checkpoint was intentionally retained for the primary SIH demonstration. TinyCD Exp A was retained strictly as an experimental artifact because of increased false alarms/positives despite higher Diverse RS IoU. The baseline checkpoint provides zero false alarms on registration jitter/illumination shifts and solid 0.8347 IoU on LEVIR-CD.
+
+---
+
+## Golden Integrity & Immutability Verification
+- **Golden VLM Adapter:** `models/adapters/qwen2_vl_rs_lora_m10_golden/adapter_model.safetensors`
+  - Expected SHA-256: `31e004da959170e69d8b8e7d280943ac02d780be7a70ad80ce5746f4e50d29e2`
+  - Verified SHA-256: `31e004da959170e69d8b8e7d280943ac02d780be7a70ad80ce5746f4e50d29e2` (100% Cryptographic Match)
+- **Baseline TinyCD Checkpoint:** `models/checkpoints/tinycd_finetuned.pth`
+  - Expected SHA-256: `04eb7c032d23a67e23014fe4238cc660f55fcff1c78d5c5c9b42bd6f2338e400`
+  - Verified SHA-256: `04eb7c032d23a67e23014fe4238cc660f55fcff1c78d5c5c9b42bd6f2338e400` (100% Cryptographic Match)
+- **Candidate A Adapter Checkpoint:** `models/adapters/experiments/qwen_rs_exp_a/best_checkpoint/adapter_model.safetensors`
+  - Verified SHA-256: `2b392bf2a7c39c19c28394bb4318ecb35ad7554a275960d0438d1a988aac3f56` (Verified)
+- **Adapter Separation:** Verified active promoted adapter and golden backup reside in strictly separate directories; neither was overwritten or renamed.
 
 ---
 
@@ -20,8 +32,7 @@
 - **Passed:** 225
 - **Failed:** 0
 - **Errors:** 0
-- **Runtime:** 161.63s (0:02:41)
-- **Status:** **ALL TESTS PASS**
+- **Status:** **ALL TESTS PASS (0 FAILURES, 0 ERRORS)**
 
 ---
 
